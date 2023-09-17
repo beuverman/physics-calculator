@@ -1,48 +1,67 @@
 package physics;
 
-public class Equation {
-    private Quantity value;
-    private String equation;
+import collections.BinaryTreeNode;
+
+public class Equation extends collections.LinkedBinaryTree<EquationTreeOp>{
+    String equation;
+
+    public Equation() {
+        super();
+    }
+
+    public Equation(EquationTreeOp element, Equation leftSubtree, Equation rightSubtree) {
+        root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
+    }
 
     public Equation(String equation) {
         this.equation = equation;
+
+        parseEquation();
     }
 
-    public Quantity compute() {
-        String[] split = equation.split(" ");
-        Quantity quantity;
-        char op = 0;
+    public Quantity evaluate() {
+        return evaluateNode(root);
+    }
 
-        for (int i = 0; i < split.length; i++) {
-            //quantities
-            if (i % 2 == 0) {
-                quantity = new Quantity(split[i]);
+    private void parseEquation() {
+        int space = equation.indexOf(' ');
 
-                //evaluate
-                if (value == null) {
-                    value = quantity;
-                }
-                else if (op != 0) {
-                    switch (op) {
-                        case '+' -> value = value.add(quantity);
-                        case '-' -> value = value.subtract(quantity);
-                        case '*' -> value = value.multiply(quantity);
-                        case '/' -> value = value.divide(quantity);
-                    }
 
-                    op = 0;
-                }
-            }
-            //operations
-            else {
-                op = split[i].charAt(0);
-            }
+        //base case
+        if (space == -1)
+            root = new BinaryTreeNode<>(new EquationTreeOp(new Quantity(equation)));
+        //recursive
+        else
+            root = new BinaryTreeNode<>(
+                new EquationTreeOp(equation.charAt(space + 1)),
+                new Equation(equation.substring(0, space)),
+                new Equation(equation.substring(space + 3)));
+    }
+
+    public Quantity evaluateNode(BinaryTreeNode<EquationTreeOp> root) {
+        Quantity ret, left, right;
+        EquationTreeOp temp;
+
+        temp = root.getElement();
+
+        if (temp.isOperator()) {
+            left = evaluateNode(root.getLeft());
+            right = evaluateNode(root.getRight());
+            ret = computeTerm(temp.getOperator(), left, right);
         }
+        else
+            ret = temp.getValue();
 
-        return value;
+        return ret;
     }
 
-    public static String evaluate(String str) {
-        return null;
+    private static Quantity computeTerm(char operator, Quantity left, Quantity right) {
+        return switch (operator) {
+            case '+' -> left.add(right);
+            case '-' -> left.subtract(right);
+            case '*' -> left.multiply(right);
+            case '/' -> left.divide(right);
+            default -> throw new IllegalStateException("Unexpected value: " + operator);
+        };
     }
 }
