@@ -1,6 +1,6 @@
 package physics;
 
-import physics.exceptions.IncompatibleUnitsException;
+import physics.exceptions.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -93,8 +93,13 @@ public class Quantity {
      * @param n Power to be raised by
      * @return Returns this quantity to the nth power
      */
-    public Quantity pow(int n) {
-        return new Quantity(value.pow(n), unit.multiply(n));
+    public Quantity pow(Quantity n) {
+        //Check if exponent is integer and dimensionless
+        //TODO: remove integer constraint
+        if (n.value.stripTrailingZeros().scale() > 0 || !n.isDimensionless())
+            throw new InvalidExponentException();
+
+        return new Quantity(value.pow(n.value.intValueExact()), unit.multiply(n.value.intValueExact()));
     }
 
     /**
@@ -104,6 +109,14 @@ public class Quantity {
      */
     public boolean equals(Quantity quantity) {
         return (value.equals(quantity.value) && unit.equals(quantity.unit));
+    }
+
+    /**
+     * Checks whether the quantity has dimensions
+     * @return Returns true if dimensionless and false otherwise
+     */
+    public boolean isDimensionless() {
+        return unit.isDimensionless();
     }
 
     /**

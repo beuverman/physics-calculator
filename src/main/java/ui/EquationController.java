@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import physics.Equation;
 import physics.exceptions.IncompatibleUnitsException;
+import physics.exceptions.InvalidExponentException;
 
 public class EquationController {
     @FXML
@@ -27,7 +28,7 @@ public class EquationController {
         try {
             result = eq.evaluate().toString();
         }
-        catch (IncompatibleUnitsException e) {
+        catch (IncompatibleUnitsException | InvalidExponentException e) {
             result = e.getMessage();
         }
         catch (Exception e) {

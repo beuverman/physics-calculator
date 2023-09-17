@@ -2,9 +2,7 @@ package physics;
 
 import collections.BinaryTreeNode;
 
-public class Equation extends collections.LinkedBinaryTree<EquationTreeOp>{
-    String equation;
-
+public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
     public Equation() {
         super();
     }
@@ -14,18 +12,15 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp>{
     }
 
     public Equation(String equation) {
-        this.equation = equation;
-
-        parseEquation();
+        parseEquation(equation);
     }
 
     public Quantity evaluate() {
         return evaluateNode(root);
     }
 
-    private void parseEquation() {
+    private void parseEquation(String equation) {
         int space = equation.indexOf(' ');
-
 
         //base case
         if (space == -1)
@@ -61,6 +56,7 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp>{
             case '-' -> left.subtract(right);
             case '*' -> left.multiply(right);
             case '/' -> left.divide(right);
+            case '^' -> left.pow(right);
             default -> throw new IllegalStateException("Unexpected value: " + operator);
         };
     }

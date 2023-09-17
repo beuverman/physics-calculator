@@ -1,6 +1,7 @@
 package physics;
 
 public class Unit {
+    private static final Unit DIMENSIONLESS = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0});
     private static final Unit SECOND = new Unit(new int[]{1, 0, 0, 0, 0, 0, 0});
     private static final Unit METRE = new Unit(new int[]{0, 1, 0, 0, 0, 0, 0});
     private static final Unit KILOGRAM = new Unit(new int[]{0, 0, 1, 0, 0, 0, 0});
@@ -125,6 +126,10 @@ public class Unit {
         }
 
         return new Unit(ret);
+    }
+
+    public boolean isDimensionless() {
+        return this.equals(DIMENSIONLESS);
     }
 
     public String toString() {
