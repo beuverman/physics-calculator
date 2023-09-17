@@ -25,7 +25,7 @@ public class EquationController {
         String result;
 
         try {
-            result = eq.compute().toString();
+            result = eq.evaluate().toString();
         }
         catch (IncompatibleUnitsException e) {
             result = e.getMessage();
