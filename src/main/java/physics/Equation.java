@@ -1,8 +1,18 @@
 package physics;
 
 import collections.BinaryTreeNode;
+import collections.CircularArrayQueue;
+
+import java.util.AbstractQueue;
+import java.util.Stack;
 
 public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
+    private static final int NUMBER = 0;
+    private static final int OPERATOR = 1;
+    private static final int FUNCTION = 2;
+    private static final int LBRACKET = 3;
+    private static final int RBRACKET = 4;
+
     public Equation() {
         super();
     }
@@ -19,18 +29,98 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
         return evaluateNode(root);
     }
 
+    //Implementation of shunting yard algorithm
     private void parseEquation(String equation) {
-        int space = equation.indexOf(' ');
+        String[] tokens = equation.split(" ");
+        int type;
+        CircularArrayQueue<String> output = new CircularArrayQueue<>();
+        Stack<String> operators = new Stack<>();
 
-        //base case
-        if (space == -1)
-            root = new BinaryTreeNode<>(new EquationTreeOp(new Quantity(equation)));
-        //recursive
-        else
-            root = new BinaryTreeNode<>(
-                new EquationTreeOp(equation.charAt(space + 1)),
-                new Equation(equation.substring(0, space)),
-                new Equation(equation.substring(space + 3)));
+
+        for (String token : tokens) {
+            type = identifyToken(token);
+
+            if (type == NUMBER) {
+                output.enqueue(token);
+            }
+            else if (type == OPERATOR) {
+                while (!operators.isEmpty() && identifyToken(operators.peek()) != LBRACKET && precedence(operators.peek(), token) >= 0)
+                    output.enqueue(operators.pop());
+                operators.push(token);
+            }
+            else if (type == FUNCTION) {
+
+            }
+            else if (type == LBRACKET) {
+                operators.push(token);
+            }
+            else if (type == RBRACKET) {
+                while (!operators.isEmpty() && identifyToken(operators.peek()) != LBRACKET) {
+                    output.enqueue(operators.pop());
+                }
+                operators.pop();
+
+                if (!operators.isEmpty() && identifyToken(operators.peek()) == FUNCTION)
+                    output.enqueue(operators.pop());
+            }
+        }
+
+        while (!operators.isEmpty()) {
+            output.enqueue(operators.pop());
+        }
+
+        buildTree(output);
+    }
+
+    //converts postfix notation to an expression tree
+    private void buildTree(CircularArrayQueue<String> tokens) {
+        Stack<Equation> stack = new Stack<>();
+        Equation left, right;
+        String token;
+        int type;
+
+        while (tokens.size() > 1) {
+            token = tokens.dequeue();
+            type = identifyToken(token);
+
+            if (type == NUMBER) {
+                stack.push(new Equation(new EquationTreeOp(new Quantity(token)), null, null));
+            }
+            else  {
+                right = stack.pop();
+                stack.push(new Equation(new EquationTreeOp(token), stack.pop(), right));
+            }
+        }
+
+        right = stack.pop();
+        root = new BinaryTreeNode<>(new EquationTreeOp(tokens.dequeue()), stack.pop(), right);
+    }
+
+    private static int identifyToken(String token) {
+        if (token.length() == 1) {
+            if ("+-*/^".contains(token))
+                return OPERATOR;
+            if ("(".contains(token))
+                return LBRACKET;
+            if (")".contains(token))
+                return RBRACKET;
+        }
+
+        return NUMBER;
+    }
+
+    private static int precedence(String op1, String op2) {
+        int a = 0, b = 0;
+        String[] operators = {"+-", "*/", "^"};
+
+        for (int i = 0; i < 2; i++) {
+            if (operators[i].contains(op1))
+                a = i;
+            if (operators[i].contains(op2))
+                b = i;
+        }
+
+        return a - b;
     }
 
     public Quantity evaluateNode(BinaryTreeNode<EquationTreeOp> root) {
@@ -59,5 +149,9 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
             case '^' -> left.pow(right);
             default -> throw new IllegalStateException("Unexpected value: " + operator);
         };
+    }
+
+    public String toString() {
+        return "(" + root.getLeft().toString() + root + root.getRight().toString() + ")";
     }
 }

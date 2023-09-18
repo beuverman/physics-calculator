@@ -15,6 +15,10 @@ public class EquationTreeOp {
         this.operator = operator;
     }
 
+    public EquationTreeOp(String operator) {
+        this(operator.charAt(0));
+    }
+
     public boolean isOperator() {
         return isOperator;
     }
