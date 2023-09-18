@@ -1,7 +1,12 @@
 package physics;
 
 import collections.BinaryTreeNode;
+
+import java.util.ArrayList;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static physics.TokenType.*;
 
 public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
@@ -26,7 +31,7 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
 
     //Implementation of shunting yard algorithm
     private void parseEquation(String equation) {
-        String[] tokens = equation.split(" ");
+        String[] tokens = tokenizer(equation);
         TokenType type;
         Equation right;
         Stack<Equation> output = new Stack<>();
@@ -73,6 +78,24 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
         right = output.pop();
         root = new BinaryTreeNode<>(new EquationTreeOp(operators.pop()), output.pop(), right);
 
+    }
+
+    private static String[] tokenizer(String equation) {
+        Pattern pattern = Pattern.compile("([0-9.]+[A-Za-z]*|[()^+/*-])");
+        Matcher matcher = pattern.matcher(equation);
+        ArrayList<String> tokens = new ArrayList<>();
+        String[] out;
+
+        while (matcher.find()) {
+            tokens.add(matcher.group(0));
+        }
+
+        out = new String[tokens.size()];
+        for (int i = 0; i < out.length; i++) {
+            out[i] = tokens.get(i);
+        }
+
+        return out;
     }
 
     private static TokenType identifyToken(String token) {
