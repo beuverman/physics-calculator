@@ -1,29 +1,44 @@
 package physics;
 
+import static physics.TokenType.*;
+
 public class EquationTreeOp {
-    private boolean isOperator;
-    private char operator;
+    private TokenType type;
+    private String operator;
     private Quantity value;
 
     public EquationTreeOp(Quantity value) {
-        isOperator = false;
+        type = NUMBER;
         this.value = value;
     }
 
     public EquationTreeOp(char operator) {
-        isOperator = true;
-        this.operator = operator;
+        type = OPERATOR;
+        this.operator = String.valueOf(operator);
     }
 
     public EquationTreeOp(String operator) {
-        this(operator.charAt(0));
+        if (operator.length() == 1)
+            type = OPERATOR;
+        else
+            type = FUNCTION;
+
+        this.operator = operator;
     }
 
     public boolean isOperator() {
-        return isOperator;
+        return type == OPERATOR;
+    }
+
+    public boolean isFunction() {
+        return type == FUNCTION;
     }
 
     public char getOperator() {
+        return operator.charAt(0);
+    }
+
+    public String getFunction() {
         return operator;
     }
 
@@ -33,9 +48,9 @@ public class EquationTreeOp {
 
     public String toString()
     {
-        if (isOperator)
-            return Character.toString(operator);
-        else
+        if (type == NUMBER)
             return value.toString();
+        else
+            return operator;
     }
 }

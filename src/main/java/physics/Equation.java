@@ -51,7 +51,7 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
                 operators.push(token);
             }
             else if (type == FUNCTION) {
-
+                operators.push(token);
             }
             else if (type == LBRACKET) {
                 operators.push(token);
@@ -64,23 +64,21 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
                 operators.pop();
 
                 if (!operators.isEmpty() && identifyToken(operators.peek()) == FUNCTION) {
-                    right = output.pop();
-                    output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), right));
+                    output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), null));
                 }
             }
         }
 
-        while (operators.size() > 1) {
+        while (!operators.isEmpty()) {
             right = output.pop();
             output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), right));
         }
 
-        right = output.pop();
-        root = new BinaryTreeNode<>(new EquationTreeOp(operators.pop()), output.pop(), right);
+        root = output.pop().root;
     }
 
     private static String[] tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("([0-9.]+[A-Za-z]*|[()^+/*-])");
+        Pattern pattern = Pattern.compile("(sin|cos|tan)|([0-9.]+[A-Za-z]*|[()^+/*-])");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<String> tokens = new ArrayList<>();
         String[] out;
@@ -98,10 +96,12 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
     }
 
     private static TokenType identifyToken(String token) {
-        if ("(".equals(token))
+        if (token.equals("("))
             return LBRACKET;
-        if (")".equals(token))
+        if (token.equals(")"))
             return RBRACKET;
+        if (token.equals("sin") || token.equals("cos") || token.equals("tan"))
+            return FUNCTION;
         if (token.length() == 1)
             for (String operatorGroup : OPERATORS)
                 if (operatorGroup.contains(token))
@@ -113,7 +113,7 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
     private static int precedence(String op1, String op2) {
         int a = 0, b = 0;
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < OPERATORS.length; i++) {
             if (OPERATORS[i].contains(op1))
                 a = i;
             if (OPERATORS[i].contains(op2))
@@ -134,10 +134,21 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
             right = evaluateNode(root.getRight());
             ret = computeTerm(temp.getOperator(), left, right);
         }
+        else if (temp.isFunction()) {
+            ret = computeTerm(temp.getFunction(), evaluateNode(root.getLeft()));
+        }
         else
             ret = temp.getValue();
 
         return ret;
+    }
+
+    private static Quantity computeTerm(String function, Quantity x) {
+        if (function.equals("sin")) return Quantity.sin(x);
+        if (function.equals("cos")) return Quantity.cos(x);
+        if (function.equals("tan")) return Quantity.tan(x);
+
+        throw new IllegalStateException("Unexpected value: " + function);
     }
 
     private static Quantity computeTerm(char operator, Quantity left, Quantity right) {
