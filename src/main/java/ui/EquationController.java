@@ -1,12 +1,11 @@
 package ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import physics.Equation;
 import physics.exceptions.IncompatibleUnitsException;
-import physics.exceptions.InvalidExponentException;
+import physics.exceptions.InvalidDimensionException;
 
 public class EquationController {
     @FXML
@@ -21,7 +20,7 @@ public class EquationController {
             eq = new Equation(((TextField)ke.getSource()).getText());
             result = eq.evaluate().toString();
         }
-        catch (IncompatibleUnitsException | InvalidExponentException e) {
+        catch (IncompatibleUnitsException | InvalidDimensionException e) {
             result = e.getMessage();
         }
         catch (Exception e) {

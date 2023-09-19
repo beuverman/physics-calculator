@@ -1,5 +1,6 @@
 package physics;
 
+import ch.obermuhlner.math.big.BigDecimalMath;
 import physics.exceptions.*;
 
 import java.math.BigDecimal;
@@ -7,8 +8,9 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 public class Quantity {
-    private static final RoundingMode ROUNDINGMODE = RoundingMode.HALF_EVEN;
-    private static final MathContext MC = MathContext.DECIMAL128;
+    private static final RoundingMode RM = RoundingMode.HALF_EVEN;
+    private static final MathContext MC = new MathContext(100, RM);
+    private static final int SCALE = 10;
 
     private BigDecimal value;
     private Unit unit;
@@ -18,7 +20,17 @@ public class Quantity {
      */
     public Quantity() {
         value = new BigDecimal(0, MC);
+        value = value.setScale(SCALE, RM);
         unit = new Unit(0, 0, 0, 0, 0, 0, 0);
+    }
+
+    /**
+     * Creates a dimensionless quantity with a given value
+     * @param value The value of the quantity
+     */
+    private Quantity(BigDecimal value) {
+        this.value = value;
+        this.unit = new Unit();
     }
 
     /**
@@ -35,6 +47,7 @@ public class Quantity {
         for (int i = str.length() - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
                 value = new BigDecimal(str.substring(0, i + 1), MC);
+                value = value.setScale(SCALE, RM);
 
                 if (i == str.length() - 1)
                     unit = new Unit();
@@ -85,7 +98,7 @@ public class Quantity {
      * @return Returns the quotient
      */
     public Quantity divide(Quantity divisor) {
-        return new Quantity(value.divide(divisor.value, ROUNDINGMODE), unit.subtract(divisor.unit));
+        return new Quantity(value.divide(divisor.value, RM), unit.subtract(divisor.unit));
     }
 
     /**
@@ -94,12 +107,50 @@ public class Quantity {
      * @return Returns this quantity to the nth power
      */
     public Quantity pow(Quantity n) {
-        //Check if exponent is integer and dimensionless
-        //TODO: remove integer constraint
-        if (n.value.stripTrailingZeros().scale() > 0 || !n.isDimensionless())
-            throw new InvalidExponentException();
+        //Check if exponent is dimensionless
+        if (!n.isDimensionless())
+            throw new InvalidDimensionException();
+        if (!BigDecimalMath.isIntValue(n.value) && !this.isDimensionless())
+            throw new InvalidDimensionException();
 
-        return new Quantity(value.pow(n.value.intValueExact()), unit.multiply(n.value.intValueExact()));
+        return new Quantity(BigDecimalMath.pow(value, n.value, MC),
+                this.isDimensionless() ? unit : unit.multiply(n.value.intValue()));
+    }
+
+    /**
+     * Computes the sin of the given quantity
+     * @param x Quantity to compute sin of
+     * @return Returns the sin of the given quantity
+     */
+    public static Quantity sin(Quantity x) {
+        if (!x.isDimensionless())
+            throw new InvalidDimensionException();
+
+        return new Quantity(BigDecimalMath.sin(x.value, MC));
+    }
+
+    /**
+     * Computes the cos of the given quantity
+     * @param x Quantity to compute cos of
+     * @return Returns the cos of the given quantity
+     */
+    public static Quantity cos(Quantity x) {
+        if (!x.isDimensionless())
+            throw new InvalidDimensionException();
+
+        return new Quantity(BigDecimalMath.cos(x.value, MC));
+    }
+
+    /**
+     * Computes the tan of the given quantity
+     * @param x Quantity to compute tan of
+     * @return Returns the tan of the given quantity
+     */
+    public static Quantity tan(Quantity x) {
+        if (!x.isDimensionless())
+            throw new InvalidDimensionException();
+
+        return new Quantity(BigDecimalMath.tan(x.value, MC));
     }
 
     /**
@@ -124,6 +175,6 @@ public class Quantity {
      * @return Returns a string representation of this quantity
      */
     public String toString() {
-        return value.toEngineeringString() + unit.toString();
+        return value.stripTrailingZeros().toPlainString() + unit.toString();
     }
 }
