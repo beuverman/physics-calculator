@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ch.obermuhlner.big.math" type="repository">
+    <properties maven-id="ch.obermuhlner:big-math:2.3.2" />
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/ch/obermuhlner/big-math/2.3.2/big-math-2.3.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

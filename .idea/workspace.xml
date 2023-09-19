@@ -9,10 +9,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Improved operator precedence">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added big math dependency">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/ch_obermuhlner_big_math.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Physics Calculator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Physics Calculator.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,15 +39,20 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/out/artifacts/Physics_Calculator_jar/Physics Calculator.jar" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/physics/Quantity.java" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.JavaFX" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.repository.indices" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/main/java/physics/Quantity.java" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -132,7 +140,14 @@
       <option name="project" value="LOCAL" />
       <updated>1694914881972</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Tweaked error handling">
+      <created>1695087730195</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1695087730195</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -151,7 +166,9 @@
     <MESSAGE value="Additional files" />
     <MESSAGE value="Converted Equation.java to function as an expression tree" />
     <MESSAGE value="Removed deprecated Main.java" />
-    <option name="LAST_COMMIT_MESSAGE" value="Removed deprecated Main.java" />
+    <MESSAGE value="Tweaked error handling" />
+    <MESSAGE value="Added big math dependency" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added big math dependency" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
