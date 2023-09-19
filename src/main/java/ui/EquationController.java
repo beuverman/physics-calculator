@@ -10,22 +10,15 @@ import physics.exceptions.InvalidExponentException;
 
 public class EquationController {
     @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
-
-    @FXML
     private TextField equationResult;
 
     @FXML
     protected void onEquationKeyTyped(KeyEvent ke) {
-        Equation eq = new Equation(((TextField)ke.getSource()).getText());
+        Equation eq;
         String result;
 
         try {
+            eq = new Equation(((TextField)ke.getSource()).getText());
             result = eq.evaluate().toString();
         }
         catch (IncompatibleUnitsException | InvalidExponentException e) {

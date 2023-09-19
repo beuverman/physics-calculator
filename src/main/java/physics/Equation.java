@@ -77,7 +77,6 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
 
         right = output.pop();
         root = new BinaryTreeNode<>(new EquationTreeOp(operators.pop()), output.pop(), right);
-
     }
 
     private static String[] tokenizer(String equation) {
