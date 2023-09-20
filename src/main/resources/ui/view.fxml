@@ -6,8 +6,14 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.EquationController">
    <FlowPane alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="400.0">
       <children>
-         <TextField onKeyTyped="#onEquationKeyTyped" />
-         <TextField fx:id="equationResult" editable="false" />
+         <VBox fx:id="equationVBox" prefHeight="200.0" prefWidth="100.0">
+            <children>
+               <TextField onKeyTyped="#onEquationKeyTyped" />
+            </children></VBox>
+         <VBox fx:id="resultVBox" prefHeight="200.0" prefWidth="100.0">
+            <children>
+               <TextField editable="false" />
+            </children></VBox>
       </children>
    </FlowPane>
 </Pane>
