@@ -5,6 +5,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import physics.Equation;
+import physics.Parsing;
 import physics.exceptions.IncompatibleUnitsException;
 import physics.exceptions.InvalidDimensionException;
 
@@ -26,7 +27,7 @@ public class EquationController {
         int index = equationVBox.getChildren().indexOf(box);
 
         try {
-            eq = new Equation(box.getText());
+            eq = new Equation(Parsing.tokenizer(box.getText()));
             result = eq.evaluate().toString();
         }
         catch (IncompatibleUnitsException | InvalidDimensionException e) {

@@ -2,26 +2,21 @@ package physics;
 
 import collections.BinaryTreeNode;
 
-import java.util.ArrayList;
 import java.util.Stack;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static physics.TokenType.*;
 
-public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
+public class Equation extends collections.LinkedBinaryTree<Token> {
     //low to high precedence
-    private static final String[] OPERATORS = {"+-", "*/", "^"};
 
     public Equation() {
         super();
     }
 
-    public Equation(EquationTreeOp element, Equation leftSubtree, Equation rightSubtree) {
+    public Equation(Token element, Equation leftSubtree, Equation rightSubtree) {
         root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
     }
 
-    public Equation(String equation) {
+    public Equation(Token[] equation) {
         parseEquation(equation);
     }
 
@@ -30,23 +25,23 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
     }
 
     //Implementation of shunting yard algorithm
-    private void parseEquation(String equation) {
-        String[] tokens = tokenizer(equation);
+    private void parseEquation(Token[] tokens) {
         TokenType type;
         Equation right;
         Stack<Equation> output = new Stack<>();
-        Stack<String> operators = new Stack<>();
+        Stack<Token> operators = new Stack<>();
 
-        for (String token : tokens) {
-            type = identifyToken(token);
+        for (Token token : tokens) {
+            type = token.getType();
 
             if (type == NUMBER) {
-                output.push(new Equation(new EquationTreeOp(new Quantity(token)), null, null));
+                output.push(new Equation(token, null, null));
             }
             else if (type == OPERATOR) {
-                while (!operators.isEmpty() && identifyToken(operators.peek()) != LBRACKET && precedence(operators.peek(), token) >= 0) {
+                while (!operators.isEmpty() && operators.peek().getType() != LBRACKET
+                        && precedence(operators.peek().getOperator(), token.getOperator()) >= 0) {
                     right = output.pop();
-                    output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), right));
+                    output.push(new Equation(operators.pop(), output.pop(), right));
                 }
                 operators.push(token);
             }
@@ -57,75 +52,42 @@ public class Equation extends collections.LinkedBinaryTree<EquationTreeOp> {
                 operators.push(token);
             }
             else if (type == RBRACKET) {
-                while (!operators.isEmpty() && identifyToken(operators.peek()) != LBRACKET) {
+                while (!operators.isEmpty() && operators.peek().getType() != LBRACKET) {
                     right = output.pop();
-                    output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), right));
+                    output.push(new Equation(operators.pop(), output.pop(), right));
                 }
                 operators.pop();
 
-                if (!operators.isEmpty() && identifyToken(operators.peek()) == FUNCTION) {
-                    output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), null));
+                if (!operators.isEmpty() && operators.peek().getType() == FUNCTION) {
+                    output.push(new Equation(operators.pop(), output.pop(), null));
                 }
             }
         }
 
         while (!operators.isEmpty()) {
             right = output.pop();
-            output.push(new Equation(new EquationTreeOp(operators.pop()), output.pop(), right));
+            output.push(new Equation(operators.pop(), output.pop(), right));
         }
 
         root = output.pop().root;
     }
 
-    private static String[] tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("(sin|cos|tan)|([0-9.]+[A-Za-z]*|[()^+/*-])");
-        Matcher matcher = pattern.matcher(equation);
-        ArrayList<String> tokens = new ArrayList<>();
-        String[] out;
-
-        while (matcher.find()) {
-            tokens.add(matcher.group(0));
-        }
-
-        out = new String[tokens.size()];
-        for (int i = 0; i < out.length; i++) {
-            out[i] = tokens.get(i);
-        }
-
-        return out;
-    }
-
-    private static TokenType identifyToken(String token) {
-        if (token.equals("("))
-            return LBRACKET;
-        if (token.equals(")"))
-            return RBRACKET;
-        if (token.equals("sin") || token.equals("cos") || token.equals("tan"))
-            return FUNCTION;
-        if (token.length() == 1)
-            for (String operatorGroup : OPERATORS)
-                if (operatorGroup.contains(token))
-                    return OPERATOR;
-
-        return NUMBER;
-    }
-
-    private static int precedence(String op1, String op2) {
+    private static int precedence(char op1, char op2) {
         int a = 0, b = 0;
 
-        for (int i = 0; i < OPERATORS.length; i++) {
-            if (OPERATORS[i].contains(op1))
+        for (int i = 0; i < Token.OPERATORS.length; i++) {
+            if (Token.OPERATORS[i].indexOf(op1) != -1)
                 a = i;
-            if (OPERATORS[i].contains(op2))
+            if (Token.OPERATORS[i].indexOf(op2) != -1)
                 b = i;
         }
 
         return a - b;
     }
 
-    public Quantity evaluateNode(BinaryTreeNode<EquationTreeOp> root) {
+    public Quantity evaluateNode(BinaryTreeNode<Token> root) {
         Quantity ret, left, right;
-        EquationTreeOp temp;
+        Token temp;
 
         temp = root.getElement();
 

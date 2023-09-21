@@ -57,6 +57,10 @@ public class Quantity {
                 return;
             }
         }
+
+        value = new BigDecimal(1, MC);
+        value = value.setScale(SCALE, RM);
+        unit = new Unit(str);
     }
 
     /**
