@@ -1,41 +1,41 @@
 package physics;
 
-public class Unit {
-    private static final Unit DIMENSIONLESS = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0});
-    private static final Unit SECOND = new Unit(new int[]{1, 0, 0, 0, 0, 0, 0});
-    private static final Unit METRE = new Unit(new int[]{0, 1, 0, 0, 0, 0, 0});
-    private static final Unit KILOGRAM = new Unit(new int[]{0, 0, 1, 0, 0, 0, 0});
-    private static final Unit AMPERE = new Unit(new int[]{0, 0, 0, 1, 0, 0, 0});
-    private static final Unit KELVIN = new Unit(new int[]{0, 0, 0, 0, 1, 0, 0});
-    private static final Unit MOLE = new Unit(new int[]{0, 0, 0, 0, 0, 1, 0});
-    private static final Unit CANDELA = new Unit(new int[]{0, 0, 0, 0, 0, 0, 1});
-    private static final Unit HERTZ = new Unit(new int[]{-1, 0, 0, 0, 0, 0, 0});
-    private static final Unit NEWTON = new Unit(new int[]{-2, 1, 1, 0, 0, 0, 0});
-    private static final Unit PASCAL = new Unit(new int[]{-2, -1, 1, 0, 0, 0, 0});
-    private static final Unit JOULE = new Unit(new int[]{-2, 2, 1, 0, 0, 0, 0});
-    private static final Unit WATT = new Unit(new int[]{-3, 2, 1, 0, 0, 0, 0});
-    private static final Unit COULOMB = new Unit(new int[]{1, 0, 0, 1, 0, 0, 0});
-    private static final Unit VOLT = new Unit(new int[]{-3, 2, 1, -1, 0, 0, 0});
-    private static final Unit FARAD = new Unit(new int[]{4, -2, -1, 2, 0, 0, 0});
-    private static final Unit OHM = new Unit(new int[]{-3, 2, 1, -2, 0, 0, 0});
-    private static final Unit SIEMENS = new Unit(new int[]{3, -2, -1, 2, 0, 0, 0});
-    private static final Unit WEBER = new Unit(new int[]{-2, 2, 1, -1, 0, 0, 0});
-    private static final Unit TESLA = new Unit(new int[]{-2, 0, 1, -1, 0, 0, 0});
-    private static final Unit HENRY = new Unit(new int[]{-2, 2, 1, -2, 0, 0, 0});
+public class Dimension {
+    private static final Dimension DIMENSIONLESS = new Dimension(new int[]{ 0, 0, 0, 0, 0, 0,0});
+    private static final Dimension SECOND = new Dimension(new int[]{1, 0, 0, 0, 0, 0, 0});
+    private static final Dimension METRE = new Dimension(new int[]{0, 1, 0, 0, 0, 0, 0});
+    private static final Dimension KILOGRAM = new Dimension(new int[]{0, 0, 1, 0, 0, 0, 0});
+    private static final Dimension AMPERE = new Dimension(new int[]{0, 0, 0, 1, 0, 0, 0});
+    private static final Dimension KELVIN = new Dimension(new int[]{0, 0, 0, 0, 1, 0, 0});
+    private static final Dimension MOLE = new Dimension(new int[]{0, 0, 0, 0, 0, 1, 0});
+    private static final Dimension CANDELA = new Dimension(new int[]{0, 0, 0, 0, 0, 0, 1});
+    private static final Dimension HERTZ = new Dimension(new int[]{-1, 0, 0, 0, 0, 0, 0});
+    private static final Dimension NEWTON = new Dimension(new int[]{-2, 1, 1, 0, 0, 0, 0});
+    private static final Dimension PASCAL = new Dimension(new int[]{-2, -1, 1, 0, 0, 0, 0});
+    private static final Dimension JOULE = new Dimension(new int[]{-2, 2, 1, 0, 0, 0, 0});
+    private static final Dimension WATT = new Dimension(new int[]{-3, 2, 1, 0, 0, 0, 0});
+    private static final Dimension COULOMB = new Dimension(new int[]{1, 0, 0, 1, 0, 0, 0});
+    private static final Dimension VOLT = new Dimension(new int[]{-3, 2, 1, -1, 0, 0, 0});
+    private static final Dimension FARAD = new Dimension(new int[]{4, -2, -1, 2, 0, 0, 0});
+    private static final Dimension OHM = new Dimension(new int[]{-3, 2, 1, -2, 0, 0, 0});
+    private static final Dimension SIEMENS = new Dimension(new int[]{3, -2, -1, 2, 0, 0, 0});
+    private static final Dimension WEBER = new Dimension(new int[]{-2, 2, 1, -1, 0, 0, 0});
+    private static final Dimension TESLA = new Dimension(new int[]{-2, 0, 1, -1, 0, 0, 0});
+    private static final Dimension HENRY = new Dimension(new int[]{-2, 2, 1, -2, 0, 0, 0});
     //private static final Unit LUMEN = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0});
     //private static final Unit LUX = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0})0;
-    private static final Unit BECQUEREL = new Unit(new int[]{-1, 0, 0, 0, 0, 0, 0});
-    private static final Unit SIEVERT = new Unit(new int[]{-2, 2, 0, 0, 0, 0, 0});
+    private static final Dimension BECQUEREL = new Dimension(new int[]{-1, 0, 0, 0, 0, 0, 0});
+    private static final Dimension SIEVERT = new Dimension(new int[]{-2, 2, 0, 0, 0, 0, 0});
 
     private int[] dimensions = new int[7];
 
-    public Unit() {
+    public Dimension() {
         for (int i = 0; i < 7; i++) {
             dimensions[i] = 0;
         }
     }
 
-    public Unit(int T, int L, int M, int I, int theta, int N, int J) {
+    public Dimension(int T, int L, int M, int I, int theta, int N, int J) {
         dimensions[0] = T;
         dimensions[1] = L;
         dimensions[2] = M;
@@ -45,12 +45,12 @@ public class Unit {
         dimensions[6] = J;
     }
 
-    private Unit(int[] dimensions) {
+    private Dimension(int[] dimensions) {
         this.dimensions = dimensions;
     }
 
-    public Unit(String unit) {
-        switch (unit) {
+    public Dimension(String dimension) {
+        switch (dimension) {
             case "s" -> setDimensions(SECOND.getDimensions());
             case "m" -> setDimensions(METRE.getDimensions());
             case "kg" -> setDimensions(KILOGRAM.getDimensions());
@@ -73,7 +73,7 @@ public class Unit {
             case "H" -> setDimensions(HENRY.getDimensions());
             case "Bq" -> setDimensions(BECQUEREL.getDimensions());
             case "SV" -> setDimensions(SIEVERT.getDimensions());
-            default -> throw new RuntimeException("Unrecognized unit");
+            default -> throw new RuntimeException("Unrecognized dimension");
         }
     }
 
@@ -85,7 +85,7 @@ public class Unit {
         return dimensions.clone();
     }
 
-    public boolean equals(Unit units) {
+    public boolean equals(Dimension units) {
         for (int i = 0; i < dimensions.length; i++) {
             if (dimensions[i] != units.dimensions[i])
                 return false;
@@ -94,38 +94,38 @@ public class Unit {
         return true;
     }
 
-    public Unit invert() {
+    public Dimension invert() {
         int[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
             ret[i] *= -1;
         }
 
-        return new Unit(ret);
+        return new Dimension(ret);
     }
 
-    public Unit add(Unit units) {
+    public Dimension add(Dimension units) {
         int[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
             ret[i] += units.dimensions[i];
         }
 
-        return new Unit(ret);
+        return new Dimension(ret);
     }
 
-    public Unit subtract(Unit units) {
+    public Dimension subtract(Dimension units) {
         return add(units.invert());
     }
 
-    public Unit multiply(int n) {
+    public Dimension multiply(int n) {
         int[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
             ret[i] *= n;
         }
 
-        return new Unit(ret);
+        return new Dimension(ret);
     }
 
     public boolean isDimensionless() {

@@ -10,10 +10,11 @@ import java.math.RoundingMode;
 public class Quantity {
     private static final RoundingMode RM = RoundingMode.HALF_EVEN;
     private static final MathContext MC = new MathContext(100, RM);
-    private static final int SCALE = 10;
+    private static final int SCALE = 100;
+    private static final int OUTPUT_PRECISION = 6;
 
     private BigDecimal value;
-    private Unit unit;
+    private Dimension dimension;
 
     /**
      * Creates a dimensionless quantity of value 0
@@ -21,7 +22,7 @@ public class Quantity {
     public Quantity() {
         value = new BigDecimal(0, MC);
         value = value.setScale(SCALE, RM);
-        unit = new Unit(0, 0, 0, 0, 0, 0, 0);
+        dimension = new Dimension(0, 0, 0, 0, 0, 0, 0);
     }
 
     /**
@@ -30,37 +31,56 @@ public class Quantity {
      */
     private Quantity(BigDecimal value) {
         this.value = value;
-        this.unit = new Unit();
+        this.dimension = new Dimension();
     }
 
     /**
      * Creates a quantity with given value and dimensions
      * @param value Value of the quantity
-     * @param unit Dimensions of the quantity
+     * @param dimension Dimensions of the quantity
      */
-    private Quantity(BigDecimal value, Unit unit) {
+    private Quantity(BigDecimal value, Dimension dimension) {
         this.value = value;
-        this.unit = unit;
+        this.dimension = dimension;
     }
 
     public Quantity(String str) {
+        int separator = -1;
+        Quantity temp;
+
         for (int i = str.length() - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
-                value = new BigDecimal(str.substring(0, i + 1), MC);
-                value = value.setScale(SCALE, RM);
-
-                if (i == str.length() - 1)
-                    unit = new Unit();
-                else
-                    unit = new Unit(str.substring(i + 1));
-
-                return;
+                separator = i + 1;
+                break;
             }
         }
 
-        value = new BigDecimal(1, MC);
+        if (separator == -1) {
+            value = new BigDecimal(1, MC);
+            temp = Units.identify(str);
+        }
+        else if (separator == str.length()) {
+            value = new BigDecimal(str.substring(0, separator), MC);
+            temp = null;
+        }
+        else {
+            value = new BigDecimal(str.substring(0, separator), MC);
+            temp = Units.identify(str.substring(separator));
+        }
+
+        if (temp == null)
+            if (separator == -1)
+                dimension = new Dimension(str);
+            else if (separator == str.length())
+                dimension = new Dimension();
+            else
+                dimension = new Dimension(str.substring(separator));
+        else {
+            value = value.multiply(temp.value);
+            dimension = temp.dimension;
+        }
+
         value = value.setScale(SCALE, RM);
-        unit = new Unit(str);
     }
 
     /**
@@ -69,10 +89,10 @@ public class Quantity {
      * @return Returns the sum
      */
     public Quantity add(Quantity augend) {
-        if (!unit.equals(augend.unit))
-            throw new IncompatibleUnitsException(unit.toString(), augend.unit.toString());
+        if (!dimension.equals(augend.dimension))
+            throw new IncompatibleUnitsException(dimension.toString(), augend.dimension.toString());
 
-        return new Quantity(value.add(augend.value), unit);
+        return new Quantity(value.add(augend.value), dimension);
     }
 
     /**
@@ -81,10 +101,10 @@ public class Quantity {
      * @return Returns the difference
      */
     public Quantity subtract(Quantity subtrahend) {
-        if (!unit.equals(subtrahend.unit))
-            throw new IncompatibleUnitsException(unit.toString(), subtrahend.unit.toString());
+        if (!dimension.equals(subtrahend.dimension))
+            throw new IncompatibleUnitsException(dimension.toString(), subtrahend.dimension.toString());
 
-        return new Quantity(value.subtract(subtrahend.value), unit);
+        return new Quantity(value.subtract(subtrahend.value), dimension);
     }
 
     /**
@@ -93,7 +113,7 @@ public class Quantity {
      * @return Returns the product
      */
     public Quantity multiply(Quantity multiplicand) {
-        return new Quantity(value.multiply(multiplicand.value), unit.add(multiplicand.unit));
+        return new Quantity(value.multiply(multiplicand.value), dimension.add(multiplicand.dimension));
     }
 
     /**
@@ -102,7 +122,7 @@ public class Quantity {
      * @return Returns the quotient
      */
     public Quantity divide(Quantity divisor) {
-        return new Quantity(value.divide(divisor.value, RM), unit.subtract(divisor.unit));
+        return new Quantity(value.divide(divisor.value, RM), dimension.subtract(divisor.dimension));
     }
 
     /**
@@ -118,7 +138,7 @@ public class Quantity {
             throw new InvalidDimensionException();
 
         return new Quantity(BigDecimalMath.pow(value, n.value, MC),
-                this.isDimensionless() ? unit : unit.multiply(n.value.intValue()));
+                this.isDimensionless() ? dimension : dimension.multiply(n.value.intValue()));
     }
 
     /**
@@ -163,7 +183,7 @@ public class Quantity {
      * @return Returns true for the same value and dimensions and false otherwise
      */
     public boolean equals(Quantity quantity) {
-        return (value.equals(quantity.value) && unit.equals(quantity.unit));
+        return (value.equals(quantity.value) && dimension.equals(quantity.dimension));
     }
 
     /**
@@ -171,7 +191,7 @@ public class Quantity {
      * @return Returns true if dimensionless and false otherwise
      */
     public boolean isDimensionless() {
-        return unit.isDimensionless();
+        return dimension.isDimensionless();
     }
 
     /**
@@ -179,6 +199,6 @@ public class Quantity {
      * @return Returns a string representation of this quantity
      */
     public String toString() {
-        return value.stripTrailingZeros().toPlainString() + unit.toString();
+        return value.round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)).toEngineeringString() + dimension.toString();
     }
 }
