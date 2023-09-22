@@ -34,7 +34,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         for (Token token : tokens) {
             type = token.getType();
 
-            if (type == NUMBER) {
+            if (type == NUMBER || type == UNIT) {
                 output.push(new Equation(token, null, null));
             }
             else if (type == OPERATOR) {

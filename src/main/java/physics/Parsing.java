@@ -8,7 +8,7 @@ import static physics.TokenType.*;
 
 public class Parsing {
     public static Token[] tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("([0-9.]+|[A-Za-z]+|[()^+/*-])");
+        Pattern pattern = Pattern.compile("([0-9.]+|[()^+/*-])|(sin|cos|tan)|[QRYZEPTGMkhadcmµnpfzyrq]?(?:s|m|g|A|K|mol|cd|Hz|N|Pa|J|W|C|V|F|O|S|Wb|T|H|lm|lx|Bq|Gy|Sv|min|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal)");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
         Token[] out;
@@ -18,12 +18,11 @@ public class Parsing {
             tokens.add(new Token(matcher.group()));
 
             if (index > 0 && tokens.get(index).getType() == UNIT && tokens.get(index - 1).getType() == NUMBER) {
-                tokens.add(new Token(tokens.get(index).getValue().multiply(tokens.get(index - 1).getValue())));
-                tokens.remove(index);
-                tokens.remove(index - 1);
-            }
-            else
+                tokens.add(new Token("*"));
                 index++;
+            }
+
+            index++;
         }
 
         out = new Token[tokens.size()];
