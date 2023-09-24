@@ -117,14 +117,18 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         return switch (operator) {
             case '+' -> left.add(right);
             case '-' -> left.subtract(right);
-            case '*' -> left.multiply(right);
-            case '/' -> left.divide(right);
+            case '*', Token.IMPLICIT_M -> left.multiply(right);
+            case '/', Token.IMPLICIT_D -> left.divide(right);
             case '^' -> left.pow(right);
             default -> throw new IllegalStateException("Unexpected value: " + operator);
         };
     }
 
     public String toString() {
+        if (root.getLeft() == null && root.getRight() == null)
+            return root.getElement().toString();
+        if (root.getRight() == null)
+            return root.getElement().toString() + "(" + root.getLeft().getElement().toString() + ")";
         return "(" + root.getLeft().toString() + root + root.getRight().toString() + ")";
     }
 }

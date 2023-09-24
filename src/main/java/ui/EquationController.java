@@ -29,12 +29,8 @@ public class EquationController {
         try {
             eq = new Equation(Parsing.tokenizer(box.getText()));
             result = eq.evaluate().toString();
-        }
-        catch (IncompatibleUnitsException | InvalidDimensionException e) {
+        } catch (Exception e) {
             result = e.getMessage();
-        }
-        catch (Exception e) {
-            result = "Error";
         }
 
         ((TextField)resultVBox.getChildren().get(index)).setText(result);

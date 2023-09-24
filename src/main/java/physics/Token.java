@@ -3,7 +3,9 @@ package physics;
 import static physics.TokenType.*;
 
 public class Token {
-    public static final String[] OPERATORS = {"+-", "*/", "^"};
+    public static final char IMPLICIT_M = 9994;
+    public static final char IMPLICIT_D = 9995;
+    public static final String[] OPERATORS = {"+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
 
     private TokenType type;
     private String token;
@@ -21,6 +23,10 @@ public class Token {
     public Token(Quantity token) {
         type = NUMBER;
         value = token;
+    }
+
+    public Token(char token) {
+        this(String.valueOf(token));
     }
 
     public TokenType getType() {

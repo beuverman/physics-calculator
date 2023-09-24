@@ -12,14 +12,21 @@ public class Parsing {
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
         Token[] out;
+        TokenType type = null, prevType;
         int index = 0;
 
         while (matcher.find()) {
             tokens.add(new Token(matcher.group()));
+            prevType = type;
+            type = tokens.get(index).getType();
 
-            if (index > 0 && tokens.get(index).getType() == UNIT && tokens.get(index - 1).getType() == NUMBER) {
-                tokens.add(new Token("*"));
+            //Implicit multiplication or division by units has higher precedence
+            if (index > 0 && type == UNIT && prevType == NUMBER) {
+                tokens.add(index, new Token(Token.IMPLICIT_M));
                 index++;
+            }
+            else if (index > 1 && type == UNIT && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '/' && tokens.get(index - 2).getType() == UNIT) {
+                tokens.set(index - 1, new Token(Token.IMPLICIT_D));
             }
 
             index++;

@@ -74,4 +74,8 @@ public class BinaryTreeNode<T>
     public void setLeft(BinaryTreeNode<T> node) {
         left = node;
     }
+
+    public String toString() {
+        return element.toString();
+    }
 }
