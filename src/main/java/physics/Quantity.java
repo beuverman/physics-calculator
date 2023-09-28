@@ -44,6 +44,12 @@ public class Quantity {
         this.dimension = dimension;
     }
 
+    protected Quantity(String value, Dimension dimensions) {
+        this.value = new BigDecimal(value);
+        this.value = this.value.setScale(SCALE, RM);
+        dimension = dimensions;
+    }
+
     public Quantity(String str) {
         int separator = -1;
         Quantity temp;
@@ -199,6 +205,6 @@ public class Quantity {
      * @return Returns a string representation of this quantity
      */
     public String toString() {
-        return value.round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)).toEngineeringString() + dimension.toString();
+        return value.round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)) + dimension.toString();
     }
 }

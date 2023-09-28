@@ -9,13 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Implemented non-standard SI units">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Unit multiplication and division now have slightly higher precedence than normal">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/collections/BinaryTreeNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/collections/BinaryTreeNode.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Token.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Units.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,7 +58,7 @@
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/main/java/physics/Quantity.java" />
   </component>
   <component name="RecentsManager">
@@ -190,7 +189,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695263503354</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Unit multiplication and division now have slightly higher precedence than normal">
+      <created>1695516225454</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1695516225454</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -215,25 +221,16 @@
     <MESSAGE value="Implemented basic trig functions&#10;Fixed bug where ^ had same precedence as + and -" />
     <MESSAGE value="Added dynamic number of text fields" />
     <MESSAGE value="Reworked tokens to recognize numbers and units separately." />
-    <option name="LAST_COMMIT_MESSAGE" value="Reworked tokens to recognize numbers and units separately." />
+    <MESSAGE value="Unit multiplication and division now have slightly higher precedence than normal" />
+    <option name="LAST_COMMIT_MESSAGE" value="Unit multiplication and division now have slightly higher precedence than normal" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/physics/Units.java</url>
-          <line>4</line>
-          <option name="timeStamp" value="41" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/physics/Units.java</url>
-          <line>17</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ui/EquationController.java</url>
-          <line>29</line>
-          <option name="timeStamp" value="54" />
+          <url>file://$PROJECT_DIR$/src/main/java/physics/Parsing.java</url>
+          <line>10</line>
+          <option name="timeStamp" value="64" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

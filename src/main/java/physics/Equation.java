@@ -106,11 +106,12 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     }
 
     private static Quantity computeTerm(String function, Quantity x) {
-        if (function.equals("sin")) return Quantity.sin(x);
-        if (function.equals("cos")) return Quantity.cos(x);
-        if (function.equals("tan")) return Quantity.tan(x);
-
-        throw new IllegalStateException("Unexpected value: " + function);
+        return switch (function) {
+            case "sin" -> Quantity.sin(x);
+            case "cos" -> Quantity.cos(x);
+            case "tan" -> Quantity.tan(x);
+            default -> throw new IllegalStateException("Unexpected value: " + function);
+        };
     }
 
     private static Quantity computeTerm(char operator, Quantity left, Quantity right) {
