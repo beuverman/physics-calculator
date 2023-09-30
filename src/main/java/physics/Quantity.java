@@ -52,7 +52,7 @@ public class Quantity {
 
     public Quantity(String str) {
         int separator = -1;
-        Quantity temp;
+        Quantity a = null, b;
 
         for (int i = str.length() - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
@@ -61,29 +61,43 @@ public class Quantity {
             }
         }
 
+        //just unit
         if (separator == -1) {
-            value = new BigDecimal(1, MC);
-            temp = Units.identify(str);
-        }
-        else if (separator == str.length()) {
-            value = new BigDecimal(str.substring(0, separator), MC);
-            temp = null;
-        }
-        else {
-            value = new BigDecimal(str.substring(0, separator), MC);
-            temp = Units.identify(str.substring(separator));
-        }
+            //Need a more robust solution than exceptions for every unit that start with a valid prefix
+            if (!str.equals("m") && !str.equals("mol") && !str.equals("cd") && !str.equals("h") && !str.equals("Pa") && !str.equals("T") &&
+                    !str.equals("Gy") && !str.equals("min") && !str.equals("au") && !str.equals("ha") && !str.equals("pc") && !str.equals("atm") && !str.equals("cal"))
+                a = Units.getPrefix(str.substring(0, 1));
 
-        if (temp == null)
-            if (separator == -1)
-                dimension = new Dimension(str);
-            else if (separator == str.length())
-                dimension = new Dimension();
+            if (a != null)
+                str = str.substring(1);
             else
-                dimension = new Dimension(str.substring(separator));
+                a = new Quantity(new BigDecimal(1, MC));
+
+            b = Units.getUnit(str);
+            if (b == null) {
+                dimension = new Dimension(str);
+                value = a.value;
+
+                if (str.equals("g"))
+                    value = value.movePointLeft(3);
+            }
+            else {
+                value = a.multiply(b).value;
+                dimension = a.multiply(b).dimension;
+            }
+        }
+        //just number
+        else if (separator == str.length()) {
+            value = new BigDecimal(str, MC);
+            dimension = new Dimension();
+        }
+        //unit and number
         else {
-            value = value.multiply(temp.value);
-            dimension = temp.dimension;
+            a = new Quantity(str.substring(0, separator));
+            b = new Quantity(str.substring(separator));
+
+            value = a.multiply(b).value;
+            dimension = b.dimension;
         }
 
         value = value.setScale(SCALE, RM);

@@ -3,16 +3,19 @@ package physics;
 import java.math.BigDecimal;
 
 public class Units extends Quantity {
+    private static final String[] smallPrefixes = {"d", "c", "m", "u", "n", "p", "f", "a", "z", "y", "r", "q"};
+    private static final String[] bigPrefixes = {"da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q"};
+
     private static final Units[] UNITS = new Units[]{
-        new Units("1.602176634e-19J",    "eV"),  // electron volt
-        new Units("60s",                 "min"), // minute
-        new Units("3600s",               "h"),   // hour
-        new Units("149597870700m",       "au"),  // astronomical unit
-        new Units("1.66053906660e-27kg", "Da"),  // dalton
-        new Units("3.0857e16m",          "pc"),  // parsec
-        new Units("100000Pa",            "bar"), // bar
-        new Units("101325Pa",            "atm"), // atmosphere
-        new Units("4184J",               "cal")  // calorie
+        new Units("1.602176634e-19",   new Dimension(-2, 2, 1, 0, 0, 0, 0), "eV"),  // electron volt
+        new Units("60",                new Dimension(1, 0, 0, 0, 0, 0, 0),  "min"), // minute
+        new Units("3600",              new Dimension(1, 0, 0, 0, 0, 0, 0),  "h"),   // hour
+        new Units("149597870700",      new Dimension(0, 1, 0, 0, 0, 0, 0),  "au"),  // astronomical unit
+        new Units("1.66053906660e-27", new Dimension(0, 0, 1, 0, 0, 0, 0),  "Da"),  // dalton
+        new Units("3.0857e16",         new Dimension(0, 1, 0, 0, 0, 0, 0),  "pc"),  // parsec
+        new Units("100000",            new Dimension(-2, -1, 1, 0, 0, 0, 0),"bar"), // bar
+        new Units("101325",            new Dimension(-2, -1, 1, 0, 0, 0, 0),"atm"), // atmosphere
+        new Units("4184",              new Dimension(-2, 2, 1, 0, 0, 0, 0), "cal")  // calorie
     };
 
     private static final Units[] CONSTANTS = new Units[]{
@@ -48,7 +51,7 @@ public class Units extends Quantity {
         this.alias = alias;
     }
 
-    public static Quantity identify(String str) {
+    public static Quantity getUnit(String str) {
         if (UNITS == null)
             return null;
 
@@ -64,6 +67,26 @@ public class Units extends Quantity {
         for (Units unit : CONSTANTS) {
             if (unit.alias.equals(str))
                 return unit;
+        }
+
+        return null;
+    }
+
+    public static Quantity getPrefix(String str) {
+        int pow;
+
+        for (int i = 0; i < smallPrefixes.length; i++) {
+            if (str.equals(smallPrefixes[i]) || str.equals(bigPrefixes[i])) {
+                pow = switch (i) {
+                    case 0 -> 1;
+                    case 1 -> 2;
+                    default -> (i - 1) * 3;
+                };
+
+                if (str.equals(smallPrefixes[i]))
+                    pow *= -1;
+                return new Quantity("1e" + pow);
+            }
         }
 
         return null;
