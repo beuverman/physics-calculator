@@ -90,6 +90,14 @@ public class Quantity {
     }
 
     /**
+     * Returns the negative of this quantity
+     * @return Returns a quantity that has the negative value of this quantity
+     */
+    public Quantity negate() {
+        return new Quantity(value.negate(), dimension);
+    }
+
+    /**
      * Returns a quantity that is the sum of the given quantities
      * @param augend The quantity to be added
      * @return Returns the sum

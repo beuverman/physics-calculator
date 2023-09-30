@@ -20,7 +20,11 @@ public class Parsing {
         while (matcher.find()) {
             current = matcher.group();
             if (current.contains("con(")) {
-                tokens.add(new Token(Units.getConstant(current.substring(4, current.length() - 1))));
+                Quantity constant = Units.getConstant(current.substring(4, current.length() - 1));
+                if (constant == null)
+                    throw new RuntimeException("Unrecognized constant");
+
+                tokens.add(new Token(constant));
                 index++;
                 type = NUMBER;
                 continue;
@@ -28,15 +32,23 @@ public class Parsing {
 
             tokens.add(new Token(current));
             prevType = type;
-            type = tokens.get(index).getType();
+            type = tokens.get(index).type;
 
             //Implicit multiplication or division by units has higher precedence
             if (index > 0 && type == UNIT && prevType == NUMBER) {
                 tokens.add(index, new Token(Token.IMPLICIT_M));
                 index++;
             }
-            else if (index > 1 && type == UNIT && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '/' && tokens.get(index - 2).getType() == UNIT) {
+            else if (index > 1 && type == UNIT && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '/' && tokens.get(index - 2).type == UNIT) {
                 tokens.set(index - 1, new Token(Token.IMPLICIT_D));
+            }
+            //negation instead of subtraction
+            else if ((index == 1 && type.equals(NUMBER) && prevType == OPERATOR && tokens.get(0).getOperator() == '-') ||
+                    (index > 1 && type.equals(NUMBER) && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '-' &&
+                    (tokens.get(index - 2).type == OPERATOR || tokens.get(index - 2).type == LBRACKET))) {
+                tokens.set(index, new Token(tokens.get(index).getValue().negate()));
+                tokens.remove(index - 1);
+                index--;
             }
 
             index++;

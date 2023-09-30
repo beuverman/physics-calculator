@@ -32,13 +32,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         Stack<Token> operators = new Stack<>();
 
         for (Token token : tokens) {
-            type = token.getType();
+            type = token.type;
 
             if (type == NUMBER || type == UNIT) {
                 output.push(new Equation(token, null, null));
             }
             else if (type == OPERATOR) {
-                while (!operators.isEmpty() && operators.peek().getType() != LBRACKET
+                while (!operators.isEmpty() && operators.peek().type != LBRACKET
                         && precedence(operators.peek().getOperator(), token.getOperator()) >= 0) {
                     right = output.pop();
                     output.push(new Equation(operators.pop(), output.pop(), right));
@@ -52,13 +52,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
                 operators.push(token);
             }
             else if (type == RBRACKET) {
-                while (!operators.isEmpty() && operators.peek().getType() != LBRACKET) {
+                while (!operators.isEmpty() && operators.peek().type != LBRACKET) {
                     right = output.pop();
                     output.push(new Equation(operators.pop(), output.pop(), right));
                 }
                 operators.pop();
 
-                if (!operators.isEmpty() && operators.peek().getType() == FUNCTION) {
+                if (!operators.isEmpty() && operators.peek().type == FUNCTION) {
                     output.push(new Equation(operators.pop(), output.pop(), null));
                 }
             }

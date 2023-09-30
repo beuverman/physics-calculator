@@ -7,7 +7,7 @@ public class Token {
     public static final char IMPLICIT_D = 9995;
     public static final String[] OPERATORS = {"+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
 
-    private TokenType type;
+    public final TokenType type;
     private String token;
     private Quantity value;
 
@@ -27,10 +27,6 @@ public class Token {
 
     public Token(char token) {
         this(String.valueOf(token));
-    }
-
-    public TokenType getType() {
-        return type;
     }
 
     public boolean isOperator() {
