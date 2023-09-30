@@ -1,64 +1,54 @@
 package physics;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static physics.TokenType.*;
 
 public class Parsing {
-    public static Token[] tokenizer(String equation) {
+    public static List<Token> tokenizer(String equation) {
         Pattern pattern = Pattern.compile("([0-9.]+)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|con\\([a-zA-Z0-9]+\\))|" +
                 "([QRYZEPTGMkhadcmµnpfzyrq]?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|Ω|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
-        Token[] out;
-        TokenType type = null, prevType;
         String current;
-        int index = 0;
+        Token token = null, prev = null, prevPrev;
 
         while (matcher.find()) {
             current = matcher.group();
+            prevPrev = prev;
+            prev = token;
+
             if (current.contains("con(")) {
                 Quantity constant = Units.getConstant(current.substring(4, current.length() - 1));
                 if (constant == null)
                     throw new RuntimeException("Unrecognized constant");
 
-                tokens.add(new Token(constant));
-                index++;
-                type = NUMBER;
-                continue;
+                token = new Token(constant);
             }
+            else
+                token = new Token(current);
 
-            tokens.add(new Token(current));
-            prevType = type;
-            type = tokens.get(index).type;
-
-            //Implicit multiplication or division by units has higher precedence
-            if (index > 0 && type == UNIT && prevType == NUMBER) {
-                tokens.add(index, new Token(Token.IMPLICIT_M));
-                index++;
+            //Implicit multiplication
+            if (tokens.size() > 0 && token.type == UNIT && prev.type == NUMBER) {
+                tokens.add(new Token(Token.IMPLICIT_M));
             }
-            else if (index > 1 && type == UNIT && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '/' && tokens.get(index - 2).type == UNIT) {
-                tokens.set(index - 1, new Token(Token.IMPLICIT_D));
+            //Implicit division
+            else if (tokens.size() > 1 && token.type == UNIT && prev.isOperator() && prev.getOperator() == '/' && prevPrev.type == UNIT) {
+                tokens.set(tokens.size() - 1, new Token(Token.IMPLICIT_D));
             }
             //negation instead of subtraction
-            else if ((index == 1 && type.equals(NUMBER) && prevType == OPERATOR && tokens.get(0).getOperator() == '-') ||
-                    (index > 1 && type.equals(NUMBER) && prevType == OPERATOR && tokens.get(index - 1).getOperator() == '-' &&
-                    (tokens.get(index - 2).type == OPERATOR || tokens.get(index - 2).type == LBRACKET))) {
-                tokens.set(index, new Token(tokens.get(index).getValue().negate()));
-                tokens.remove(index - 1);
-                index--;
+            else if ((tokens.size() > 0 && token.type.equals(NUMBER) && prev.isOperator() && prev.getOperator() == '-') &&
+                    (tokens.size() == 1 || prevPrev.isOperator() || prevPrev.type == LBRACKET)) {
+                token = new Token(token.getValue().negate());
+                tokens.remove(tokens.size() - 1);
             }
 
-            index++;
+            tokens.add(token);
         }
 
-        out = new Token[tokens.size()];
-        for (int i = 0; i < out.length; i++) {
-            out[i] = tokens.get(i);
-        }
-
-        return out;
+        return tokens;
     }
 }

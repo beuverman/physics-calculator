@@ -2,6 +2,7 @@ package physics;
 
 import collections.BinaryTreeNode;
 
+import java.util.List;
 import java.util.Stack;
 import static physics.TokenType.*;
 
@@ -16,7 +17,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
     }
 
-    public Equation(Token[] equation) {
+    public Equation(List<Token> equation) {
         parseEquation(equation);
     }
 
@@ -25,7 +26,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     }
 
     //Implementation of shunting yard algorithm
-    private void parseEquation(Token[] tokens) {
+    private void parseEquation(List<Token> tokens) {
         TokenType type;
         Equation right;
         Stack<Equation> output = new Stack<>();
