@@ -9,11 +9,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Rudimentary implementation of SI prefixes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Improvements to SI prefixes">
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Units.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1696105168691</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Improvements to SI prefixes">
+      <created>1696312060888</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1696312060888</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -253,7 +257,8 @@
     <MESSAGE value="Added negative numbers&#10;Made Token.type public final" />
     <MESSAGE value="Refactored token parsing" />
     <MESSAGE value="Rudimentary implementation of SI prefixes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rudimentary implementation of SI prefixes" />
+    <MESSAGE value="Improvements to SI prefixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improvements to SI prefixes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

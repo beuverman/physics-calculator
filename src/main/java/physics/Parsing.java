@@ -32,7 +32,8 @@ public class Parsing {
                 token = new Token(current);
 
             //Implicit multiplication
-            if (tokens.size() > 0 && token.type == UNIT && (prev.type == NUMBER || prev.type == UNIT)) {
+            if (tokens.size() > 0 && (((token.type == UNIT || token.type == LBRACKET) && (prev.type == NUMBER || prev.type == UNIT)) ||
+                    (prev.type == RBRACKET && (token.type == NUMBER || token.type == UNIT)))) {
                 tokens.add(new Token(Token.IMPLICIT_M));
             }
             //Implicit division
