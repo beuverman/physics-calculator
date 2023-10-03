@@ -52,7 +52,7 @@ public class Quantity {
 
     public Quantity(String str) {
         int separator = -1;
-        Quantity a = null, b;
+        Quantity a, b;
 
         for (int i = str.length() - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
@@ -63,28 +63,36 @@ public class Quantity {
 
         //just unit
         if (separator == -1) {
-            //Need a more robust solution than exceptions for every unit that start with a valid prefix
-            if (!str.equals("m") && !str.equals("mol") && !str.equals("cd") && !str.equals("h") && !str.equals("Pa") && !str.equals("T") &&
-                    !str.equals("Gy") && !str.equals("min") && !str.equals("au") && !str.equals("ha") && !str.equals("pc") && !str.equals("atm") && !str.equals("cal"))
-                a = Units.getPrefix(str.substring(0, 1));
-
-            if (a != null)
-                str = str.substring(1);
-            else
-                a = new Quantity(new BigDecimal(1, MC));
-
             b = Units.getUnit(str);
-            if (b == null) {
-                dimension = new Dimension(str);
-                value = a.value;
 
-                if (str.equals("g"))
-                    value = value.movePointLeft(3);
+            //Check for prefix
+            if (b == null) {
+                //For the only 2 character prefix: da
+                if (str.length() == 1)
+                    throw new RuntimeException("Unrecognized unit " + str);
+                a = Units.getPrefix(str.substring(0, 2));
+
+                if (a == null) {
+                    a = Units.getPrefix(str.substring(0, 1));
+
+                    if (a == null)
+                        throw new RuntimeException("Unrecognized unit " + str);
+
+                    str = str.substring(1);
+                }
+                else
+                    str = str.substring(2);
+
+                b = Units.getUnit(str);
             }
-            else {
-                value = a.multiply(b).value;
-                dimension = a.multiply(b).dimension;
-            }
+            else
+                a = new Quantity("1", new Dimension());
+
+            value = a.multiply(b).value;
+            dimension = b.dimension;
+
+            if (str.equals("g"))
+                value = value.movePointLeft(3);
         }
         //just number
         else if (separator == str.length()) {

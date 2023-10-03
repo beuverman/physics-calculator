@@ -60,6 +60,11 @@ public class Units extends Quantity {
                 return unit;
         }
 
+        try {
+            return new Quantity("1", new Dimension(str));
+        }
+        catch (Exception ignored) {}
+
         return null;
     }
 
