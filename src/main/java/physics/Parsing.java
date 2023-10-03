@@ -9,8 +9,8 @@ import static physics.TokenType.*;
 
 public class Parsing {
     public static List<Token> tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("([0-9.]+)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|con\\([a-zA-Z0-9]+\\))|" +
-                "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|con\\(.+\\))|" +
+            "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
         String current;
