@@ -10,6 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Implicit multiplication with brackets">
+      <change afterPath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/nuclides/ground_states.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
     </list>
@@ -58,6 +60,9 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
     <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/src/main/java/physics/Quantity.java" />
   </component>
+  <component name="ReaderModeSettings">
+    <option name="showRenderedDocs" value="false" />
+  </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\thena\IdeaProjects\physics-calculator\src\main\resources\com\example\physicscalculator" />
@@ -91,6 +96,19 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Nuclides" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="physics.Nuclides" />
+      <module name="Physics Calculator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="physics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Physics_Calculator_jar/Physics Calculator.jar" />
       <option name="WORKING_DIRECTORY" value="C:\Users\thena\IdeaProjects\physics-calculator" />
@@ -105,10 +123,12 @@
       <item itemvalue="Application.CalculatorApplication" />
       <item itemvalue="Application.Main" />
       <item itemvalue="JAR Application.Test" />
+      <item itemvalue="Application.Nuclides" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.CalculatorApplication" />
+        <item itemvalue="Application.Nuclides" />
         <item itemvalue="Application.CalculatorApplication" />
         <item itemvalue="Application.Main" />
       </list>

@@ -9,7 +9,7 @@ import static physics.TokenType.*;
 
 public class Parsing {
     public static List<Token> tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|con\\(.+\\))|" +
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|(?:con|M|BE)\\([^)]+\\))|" +
             "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
@@ -27,6 +27,16 @@ public class Parsing {
                     throw new RuntimeException("Unrecognized constant " + current.substring(4, current.length() - 1));
 
                 token = new Token(constant);
+            }
+            else if (current.contains("M(")) {
+                Quantity mass = Nuclides.getMass(current.substring(2, current.length() - 1));
+
+                token = new Token(mass);
+            }
+            else if (current.contains("BE(")) {
+                Quantity BE = Nuclides.getBindingEnergy(current.substring(3, current.length() - 1));
+
+                token = new Token(BE);
             }
             else
                 token = new Token(current);
