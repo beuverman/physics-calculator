@@ -10,10 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Implicit multiplication with brackets">
-      <change afterPath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/nuclides/ground_states.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Token.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/TokenType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/TokenType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Units.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/exceptions/IncompatibleUnitsException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/exceptions/IncompatibleUnitsException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/exceptions/InvalidDimensionException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/exceptions/InvalidDimensionException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,8 +130,8 @@
     <list>
       <item itemvalue="Application.CalculatorApplication" />
       <item itemvalue="Application.Main" />
-      <item itemvalue="JAR Application.Test" />
       <item itemvalue="Application.Nuclides" />
+      <item itemvalue="JAR Application.Test" />
     </list>
     <recent_temporary>
       <list>
@@ -294,7 +302,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/physics/Quantity.java</url>
-          <line>53</line>
+          <line>66</line>
           <option name="timeStamp" value="71" />
         </line-breakpoint>
       </breakpoints>

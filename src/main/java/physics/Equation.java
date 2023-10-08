@@ -6,32 +6,49 @@ import java.util.List;
 import java.util.Stack;
 import static physics.TokenType.*;
 
+/**
+ * Computes a series of quantities, operators, and functions
+ * Uses an expression tree representation
+ */
 public class Equation extends collections.LinkedBinaryTree<Token> {
-    //low to high precedence
 
-    public Equation() {
-        super();
-    }
-
-    public Equation(Token element, Equation leftSubtree, Equation rightSubtree) {
-        root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
-    }
-
+    /**
+     * Creates an equation from a list of tokens in prefix notation
+     * @param equation The list of tokens to form the equation from
+     */
     public Equation(List<Token> equation) {
         parseEquation(equation);
     }
 
+    /**
+     * Creates an equation with the given element and subtrees
+     * @param element The operator that forms the root of the equation
+     * @param leftSubtree The left argument of the operator
+     * @param rightSubtree The right argument of the operator
+     */
+    private Equation(Token element, Equation leftSubtree, Equation rightSubtree) {
+        root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
+    }
+
+    /**
+     * Evaluates the equation
+     * @return Returns a Quantity that represents the final evaluation of the equation
+     */
     public Quantity evaluate() {
         return evaluateNode(root);
     }
 
-    //Implementation of shunting yard algorithm
+    /**
+     * Builds the equation from a list of tokens in prefix equation
+     * @param tokens List of tokens to be parsed
+     */
     private void parseEquation(List<Token> tokens) {
         TokenType type;
         Equation right;
         Stack<Equation> output = new Stack<>();
         Stack<Token> operators = new Stack<>();
 
+        //Implementation of shunting yard algorithm
         for (Token token : tokens) {
             type = token.type;
 
@@ -73,6 +90,12 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         root = output.pop().root;
     }
 
+    /**
+     * Determines which operator has greater precedence
+     * @param op1 The first operator to be considered
+     * @param op2 The second operator to be considered
+     * @return Returns a positive number if op1 has greater precedence, negative if op2 has greater precedence, and 0 if equal
+     */
     private static int precedence(char op1, char op2) {
         int a = 0, b = 0;
 
@@ -86,6 +109,11 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         return a - b;
     }
 
+    /**
+     * Recursively evalutes the subtree with the given root
+     * @param root Root of the subtree to be evaluated
+     * @return Returns a quantity that is the evaluation of the subtree
+     */
     public Quantity evaluateNode(BinaryTreeNode<Token> root) {
         Quantity ret, left, right;
         Token temp;
@@ -106,6 +134,12 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         return ret;
     }
 
+    /**
+     * Computes the result of a given function
+     * @param function String representation of the function
+     * @param x argument of the function
+     * @return Returns f(x)
+     */
     private static Quantity computeTerm(String function, Quantity x) {
         return switch (function) {
             case "sin" -> Quantity.sin(x);
@@ -115,6 +149,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         };
     }
 
+    /**
+     * Computes the result of a given operation
+     * @param operator The operation to perform
+     * @param left The left operand
+     * @param right The right operand
+     * @return Returns the result of the operation
+     */
     private static Quantity computeTerm(char operator, Quantity left, Quantity right) {
         return switch (operator) {
             case '+' -> left.add(right);
@@ -126,6 +167,10 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         };
     }
 
+    /**
+     * Returns a string representation of the equation
+     * @return Returns a string representation of the equation
+     */
     public String toString() {
         if (root.getLeft() == null && root.getRight() == null)
             return root.getElement().toString();

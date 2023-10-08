@@ -6,10 +6,18 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Handles interactions with the saved Nuclide data
+ */
 public class Nuclides {
     private static String[][] data;
     private static final int DATA_SIZE = 3367;
 
+    /**
+     * Returns a pair of integers that are the Z and A values of the given nuclide
+     * @param str Nuclide to be parsed. Recognized variations include (14C, 14-C, C14, 14 C, and similar)
+     * @return Returns an integer array where the first element is the Z value and the second is the A value
+     */
     public static int[] parseNuclide(String str) {
         int Z, A;
         Pattern pattern = Pattern.compile("[0-9]+|[a-zA-Z]+");
@@ -33,11 +41,22 @@ public class Nuclides {
         return new int[]{Z, A};
     }
 
+    /**
+     * Returns the ground state binding energy of a given nuclide
+     * @param str String representation of nuclide
+     * @return Returns a Quantity that is the ground state binding energy of the given nuclide
+     */
     public static Quantity getBindingEnergy(String str) {
         int[] temp = parseNuclide(str);
         return getBindingEnergy(temp[0], temp[1]);
     }
 
+    /**
+     * Returns the ground state binding energy of a given nuclide
+     * @param Z Number of protons in nuclide
+     * @param A Atomic number of nuclide
+     * @return Returns a Quantity that is the ground state binding energy of the given nuclide
+     */
     public static Quantity getBindingEnergy(int Z, int A) {
         int i = searchData(Z, A);
 
@@ -47,11 +66,22 @@ public class Nuclides {
         return (new Quantity(data[i][44] + "keV")).multiply(new Quantity(String.valueOf(A)));
     }
 
+    /**
+     * Returns the mass of a given nuclide
+     * @param str String representation of nuclide
+     * @return Returns a Quantity that is the mass of the given nuclide
+     */
     public static Quantity getMass(String str) {
         int[] temp = parseNuclide(str);
         return getMass(temp[0], temp[1]);
     }
 
+    /**
+     * Returns the mass of a given nuclide
+     * @param Z Number of protons in nuclide
+     * @param A Atomic number of nuclide
+     * @return Returns a Quantity that is the mass of the given nuclide
+     */
     public static Quantity getMass(int Z, int A) {
         int i = searchData(Z, A);
 
@@ -62,6 +92,12 @@ public class Nuclides {
         return new Quantity(data[i][46] + "uDa");
     }
 
+    /**
+     * Searches the saved for an entry matching the arguments
+     * @param Z Proton number of target
+     * @param A Atomic number of target
+     * @return Returns the index of the target in the data, -1 if not found
+     */
     private static int searchData(int Z, int A) {
         if (data == null) {
             try {
@@ -80,6 +116,10 @@ public class Nuclides {
         return -1;
     }
 
+    /**
+     * Loads data from .csv file
+     * @throws FileNotFoundException If data is not found
+     */
     private static void loadData() throws FileNotFoundException {
         data = new String[DATA_SIZE][];
         Scanner scanner = new Scanner(new File("src/main/resources/nuclides/ground_states.csv"));
@@ -91,7 +131,11 @@ public class Nuclides {
         }
     }
 
-
+    /**
+     * Determines atomic number from element symbol. Not case-sensitive
+     * @param str Element symbol
+     * @return Returns the atomic number of the given element
+     */
     public static int getAtomicNumber(String str) {
         return switch (str.toUpperCase()) {
             case "H" -> 1;

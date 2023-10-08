@@ -7,7 +7,15 @@ import java.util.regex.Pattern;
 
 import static physics.TokenType.*;
 
+/**
+ * Handles the parsing of an equation string into a list of tokens
+ */
 public class Parsing {
+    /**
+     * Turns a string representing an equation into a series of tokens
+     * @param equation The equation to be converted
+     * @return Returns a list of tokens that represent the equation
+     */
     public static List<Token> tokenizer(String equation) {
         Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|(?:con|M|BE)\\([^)]+\\))|" +
             "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");

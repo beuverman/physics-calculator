@@ -1,7 +1,9 @@
 package physics;
 
-import java.math.BigDecimal;
-
+/**
+ * Handles definitions of constants and non-SI units
+ * Handles SI prefixes
+ */
 public class Units extends Quantity {
     private static final String[] smallPrefixes = {"d", "c", "m", "u", "n", "p", "f", "a", "z", "y", "r", "q"};
     private static final String[] bigPrefixes = {"da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q"};
@@ -41,16 +43,32 @@ public class Units extends Quantity {
 
     private String alias;
 
+    /**
+     * Creates a Unit with a given Quantity, and alias to identify it by
+     * @param quantity Quantity of the unit
+     * @param alias Alias of the unit
+     */
     public Units(String quantity, String alias) {
         super(quantity);
         this.alias = alias;
     }
 
+    /**
+     * Creates a Unit with a given value, dimension, and alias to identify it by
+     * @param value Value of the unit
+     * @param dimensions Dimensions of the unit
+     * @param alias Alias of the unit
+     */
     private Units(String value, Dimension dimensions, String alias) {
         super(value, dimensions);
         this.alias = alias;
     }
 
+    /**
+     * Returns the unit with the given alias
+     * @param str Alias of the unit to be returned
+     * @return Returns the unit with the given alias, null if not found
+     */
     public static Quantity getUnit(String str) {
         if (UNITS == null)
             return null;
@@ -68,6 +86,11 @@ public class Units extends Quantity {
         return null;
     }
 
+    /**
+     * Returns the constants that has the given alias
+     * @param str Alias of the constant to be returned
+     * @return Returns the quantity that represents the constant
+     */
     public static Quantity getConstant(String str) {
         for (Units unit : CONSTANTS) {
             if (unit.alias.equals(str))
@@ -77,6 +100,11 @@ public class Units extends Quantity {
         return null;
     }
 
+    /**
+     * Determines the modifier associated with the given SI prefix
+     * @param str The prefix to be used
+     * @return Returns a dimensionless quantity with the value associated with the prefix, null if prefix not recognized
+     */
     public static Quantity getPrefix(String str) {
         int pow;
 
