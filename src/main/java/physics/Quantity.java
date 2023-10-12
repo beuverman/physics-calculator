@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+/**
+ * Associates dimensions with a scalar value
+ */
 public class Quantity {
     private static final RoundingMode RM = RoundingMode.HALF_EVEN;
     private static final MathContext MC = new MathContext(100, RM);
@@ -44,12 +47,21 @@ public class Quantity {
         this.dimension = dimension;
     }
 
+    /**
+     * Creates a quantity with given value and dimensions
+     * @param value Value of the quantity
+     * @param dimensions Dimensions of the quantity
+     */
     protected Quantity(String value, Dimension dimensions) {
         this.value = new BigDecimal(value);
         this.value = this.value.setScale(SCALE, RM);
         dimension = dimensions;
     }
 
+    /**
+     * Creates a quantity from a string representation
+     * @param str String representation of the quantity
+     */
     public Quantity(String str) {
         int separator = -1;
         Quantity a, b;
