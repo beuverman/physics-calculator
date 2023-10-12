@@ -9,7 +9,7 @@ import static physics.TokenType.*;
 
 public class Parsing {
     public static List<Token> tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|(?:con|M|BE)\\([^)]+\\))|" +
+        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|(?:con|M|BE|HL)\\([^)]+\\))|" +
             "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
@@ -37,6 +37,11 @@ public class Parsing {
                 Quantity BE = Nuclides.getBindingEnergy(current.substring(3, current.length() - 1));
 
                 token = new Token(BE);
+            }
+            else if (current.contains("HL(")) {
+                Quantity HL = Nuclides.getHalfLife(current.substring(3, current.length() - 1));
+
+                token = new Token(HL);
             }
             else
                 token = new Token(current);

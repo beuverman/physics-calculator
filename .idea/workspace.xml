@@ -9,10 +9,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Implicit multiplication with brackets">
-      <change afterPath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/nuclides/ground_states.csv" afterDir="false" />
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="M() and BE() functions that respectively return the mass and binding energy of various nuclides">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Nuclides.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -122,8 +121,8 @@
     <list>
       <item itemvalue="Application.CalculatorApplication" />
       <item itemvalue="Application.Main" />
-      <item itemvalue="JAR Application.Test" />
       <item itemvalue="Application.Nuclides" />
+      <item itemvalue="JAR Application.Test" />
     </list>
     <recent_temporary>
       <list>
@@ -255,7 +254,14 @@
       <option name="project" value="LOCAL" />
       <updated>1696312657615</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="M() and BE() functions that respectively return the mass and binding energy of various nuclides">
+      <created>1696748564852</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1696748564852</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -287,7 +293,8 @@
     <MESSAGE value="Rudimentary implementation of SI prefixes" />
     <MESSAGE value="Improvements to SI prefixes" />
     <MESSAGE value="Implicit multiplication with brackets" />
-    <option name="LAST_COMMIT_MESSAGE" value="Implicit multiplication with brackets" />
+    <MESSAGE value="M() and BE() functions that respectively return the mass and binding energy of various nuclides" />
+    <option name="LAST_COMMIT_MESSAGE" value="M() and BE() functions that respectively return the mass and binding energy of various nuclides" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
