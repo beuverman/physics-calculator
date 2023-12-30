@@ -26,5 +26,10 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.jupiter:junit-jupiter-engine:5.9.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.9.2" level="project" />
+    <orderEntry type="library" name="Maven: org.scilab.forge:jlatexmath:1.0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.scilab.forge:jlatexmath-font-greek:1.0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.scilab.forge:jlatexmath-font-cyrillic:1.0.7" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:11.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:11.0.2" level="project" />
   </component>
 </module>

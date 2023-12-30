@@ -126,6 +126,10 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         };
     }
 
+    public String toLatexString() {
+        return toString();
+    }
+
     public String toString() {
         if (root.getLeft() == null && root.getRight() == null)
             return root.getElement().toString();
