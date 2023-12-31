@@ -31,6 +31,32 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     }
 
     /**
+     * Creates an equation with a given existing root node
+     * @param root The node to form the root of the equation
+     */
+    private Equation(BinaryTreeNode<Token> root) {
+        this.root = root;
+    }
+
+    /**
+     * Returns the left subtree of the equation
+     * @return Returns an equation whose root is the left child of this equation's root
+     */
+    @Override
+    public Equation getLeft() {
+        return new Equation(root.getLeft());
+    }
+
+    /**
+     * Returns the right subtree of the equation
+     * @return Returns an equation whose root is the left child of this equation's root
+     */
+    @Override
+    public Equation getRight() {
+        return new Equation(root.getRight());
+    }
+
+    /**
      * Evaluates the equation
      * @return Returns a Quantity that represents the final evaluation of the equation
      */
@@ -168,11 +194,30 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     }
 
     /**
+     * Checks whether this equation has any subequations
+     * @return Returns true if the root has no children, false otherwise
+     */
+    private boolean isAtom() {
+        return getHeight() == 0;
+    }
+
+    /**
      * Returns a latex string representation of the equation
      * @return Returns a latex string representation of the equation
      */
     public String toLatexString() {
-        return toString();
+        if (isAtom()) return root.getElement().toString();
+
+        String left = getLeft().toLatexString();
+        String right = getRight().toLatexString();
+
+        return switch (root.getElement().getOperator()) {
+            case Token.IMPLICIT_M -> left + right;
+            case Token.IMPLICIT_D -> left + "/" + right;
+            case '/' -> "\\frac{" + left + "}{" + right + "}";
+            case '^' -> (getLeft().isAtom() ? left : ("(" + left + ")")) + "^{" + right + "}";
+            default -> left + root.getElement().toString() + right;
+        };
     }
 
     /**

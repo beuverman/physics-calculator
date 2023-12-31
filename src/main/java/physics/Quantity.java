@@ -247,6 +247,9 @@ public class Quantity {
      * @return Returns a string representation of this quantity
      */
     public String toString() {
-        return value.round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)) + dimension.toString();
+        if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
+            return dimension.toString();
+
+        return value.stripTrailingZeros().round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)) + dimension.toString();
     }
 }
