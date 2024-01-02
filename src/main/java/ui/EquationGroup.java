@@ -33,10 +33,9 @@ public class EquationGroup extends HBox {
         equationField.setOnKeyTyped(keyEvent -> {
             try {
                 Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
-                String result = eq.evaluate().toString();
-
-                resultField.setText(result);
                 setImage(eq.toLatexString(), imageField);
+
+                resultField.setText(eq.evaluate().toString());
             }
             catch (Exception e) {
                 resultField.setText(e.getMessage());

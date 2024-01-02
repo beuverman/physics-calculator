@@ -182,11 +182,11 @@ public class Quantity {
         //Check if exponent is dimensionless
         if (!n.isDimensionless())
             throw new InvalidDimensionException();
-        if (!BigDecimalMath.isIntValue(n.value) && !this.isDimensionless())
-            throw new InvalidDimensionException();
+
+        int i = isRational(n.value);
 
         return new Quantity(BigDecimalMath.pow(value, n.value, MC),
-                this.isDimensionless() ? dimension : dimension.multiply(n.value.intValue()));
+                dimension.multiply(n.value.multiply(new BigDecimal(i)).intValue()).divide(new BigDecimal(i).intValue()));
     }
 
     /**
@@ -240,6 +240,30 @@ public class Quantity {
      */
     public boolean isDimensionless() {
         return dimension.isDimensionless();
+    }
+
+    /**
+     * Determines whether a BidDecimal can be given as a ratio of 2 integers
+     * Only checks divisors up to 10
+     * @param bd The BigDecimal to be checked
+     * @return Returns the divisor if rational, -1 otherwise
+     */
+    private int isRational(BigDecimal bd) {
+        for (int i = 1; i < 10; i++) {
+            if (isInteger(bd.multiply(new BigDecimal(i))))
+                return i;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Determines whether a BigDecimal can be given as an integer
+     * @param bd The BigDecimal to be checked
+     * @return Returns true if integer, false otherwise
+     */
+    private boolean isInteger(BigDecimal bd) {
+        return bd.stripTrailingZeros().scale() <= 0;
     }
 
     /**

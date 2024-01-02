@@ -1,43 +1,45 @@
 package physics;
 
+import org.jscience.mathematics.number.Rational;
+
 /**
  * Represents the dimensions of a quantity in terms of the SI fundamental units
  */
 public class Dimension {
-    private static final Dimension DIMENSIONLESS = new Dimension(new int[]{ 0, 0, 0, 0, 0, 0,0});
-    private static final Dimension SECOND = new Dimension(new int[]{1, 0, 0, 0, 0, 0, 0});
-    private static final Dimension METRE = new Dimension(new int[]{0, 1, 0, 0, 0, 0, 0});
-    private static final Dimension KILOGRAM = new Dimension(new int[]{0, 0, 1, 0, 0, 0, 0});
-    private static final Dimension AMPERE = new Dimension(new int[]{0, 0, 0, 1, 0, 0, 0});
-    private static final Dimension KELVIN = new Dimension(new int[]{0, 0, 0, 0, 1, 0, 0});
-    private static final Dimension MOLE = new Dimension(new int[]{0, 0, 0, 0, 0, 1, 0});
-    private static final Dimension CANDELA = new Dimension(new int[]{0, 0, 0, 0, 0, 0, 1});
-    private static final Dimension HERTZ = new Dimension(new int[]{-1, 0, 0, 0, 0, 0, 0});
-    private static final Dimension NEWTON = new Dimension(new int[]{-2, 1, 1, 0, 0, 0, 0});
-    private static final Dimension PASCAL = new Dimension(new int[]{-2, -1, 1, 0, 0, 0, 0});
-    private static final Dimension JOULE = new Dimension(new int[]{-2, 2, 1, 0, 0, 0, 0});
-    private static final Dimension WATT = new Dimension(new int[]{-3, 2, 1, 0, 0, 0, 0});
-    private static final Dimension COULOMB = new Dimension(new int[]{1, 0, 0, 1, 0, 0, 0});
-    private static final Dimension VOLT = new Dimension(new int[]{-3, 2, 1, -1, 0, 0, 0});
-    private static final Dimension FARAD = new Dimension(new int[]{4, -2, -1, 2, 0, 0, 0});
-    private static final Dimension OHM = new Dimension(new int[]{-3, 2, 1, -2, 0, 0, 0});
-    private static final Dimension SIEMENS = new Dimension(new int[]{3, -2, -1, 2, 0, 0, 0});
-    private static final Dimension WEBER = new Dimension(new int[]{-2, 2, 1, -1, 0, 0, 0});
-    private static final Dimension TESLA = new Dimension(new int[]{-2, 0, 1, -1, 0, 0, 0});
-    private static final Dimension HENRY = new Dimension(new int[]{-2, 2, 1, -2, 0, 0, 0});
-    //private static final Unit LUMEN = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0});
-    //private static final Unit LUX = new Unit(new int[]{0, 0, 0, 0, 0, 0, 0})0;
-    private static final Dimension BECQUEREL = new Dimension(new int[]{-1, 0, 0, 0, 0, 0, 0});
-    private static final Dimension SIEVERT = new Dimension(new int[]{-2, 2, 0, 0, 0, 0, 0});
+    private static final Dimension DIMENSIONLESS = new Dimension(0, 0, 0, 0, 0, 0,0);
+    private static final Dimension SECOND = new Dimension(1, 0, 0, 0, 0, 0, 0);
+    private static final Dimension METRE = new Dimension(0, 1, 0, 0, 0, 0, 0);
+    private static final Dimension KILOGRAM = new Dimension(0, 0, 1, 0, 0, 0, 0);
+    private static final Dimension AMPERE = new Dimension(0, 0, 0, 1, 0, 0, 0);
+    private static final Dimension KELVIN = new Dimension(0, 0, 0, 0, 1, 0, 0);
+    private static final Dimension MOLE = new Dimension(0, 0, 0, 0, 0, 1, 0);
+    private static final Dimension CANDELA = new Dimension(0, 0, 0, 0, 0, 0, 1);
+    private static final Dimension HERTZ = new Dimension(-1, 0, 0, 0, 0, 0, 0);
+    private static final Dimension NEWTON = new Dimension(-2, 1, 1, 0, 0, 0, 0);
+    private static final Dimension PASCAL = new Dimension(-2, -1, 1, 0, 0, 0, 0);
+    private static final Dimension JOULE = new Dimension(-2, 2, 1, 0, 0, 0, 0);
+    private static final Dimension WATT = new Dimension(-3, 2, 1, 0, 0, 0, 0);
+    private static final Dimension COULOMB = new Dimension(1, 0, 0, 1, 0, 0, 0);
+    private static final Dimension VOLT = new Dimension(-3, 2, 1, -1, 0, 0, 0);
+    private static final Dimension FARAD = new Dimension(4, -2, -1, 2, 0, 0, 0);
+    private static final Dimension OHM = new Dimension(-3, 2, 1, -2, 0, 0, 0);
+    private static final Dimension SIEMENS = new Dimension(3, -2, -1, 2, 0, 0, 0);
+    private static final Dimension WEBER = new Dimension(-2, 2, 1, -1, 0, 0, 0);
+    private static final Dimension TESLA = new Dimension(-2, 0, 1, -1, 0, 0, 0);
+    private static final Dimension HENRY = new Dimension(-2, 2, 1, -2, 0, 0, 0);
+    //private static final Unit LUMEN = new Unit(0, 0, 0, 0, 0, 0, 0);
+    //private static final Unit LUX = new Unit(0, 0, 0, 0, 0, 0, 0);
+    private static final Dimension BECQUEREL = new Dimension(-1, 0, 0, 0, 0, 0, 0);
+    private static final Dimension SIEVERT = new Dimension(-2, 2, 0, 0, 0, 0, 0);
 
-    private int[] dimensions = new int[7];
+    private Rational[] dimensions = new Rational[7];
 
     /**
      * Creates a dimensionless Dimension
      */
     public Dimension() {
         for (int i = 0; i < 7; i++) {
-            dimensions[i] = 0;
+            dimensions[i] = Rational.ZERO;
         }
     }
 
@@ -53,13 +55,13 @@ public class Dimension {
      * @param J Luminous intensity
      */
     public Dimension(int T, int L, int M, int I, int theta, int N, int J) {
-        dimensions[0] = T;
-        dimensions[1] = L;
-        dimensions[2] = M;
-        dimensions[3] = I;
-        dimensions[4] = theta;
-        dimensions[5] = N;
-        dimensions[6] = J;
+        dimensions[0] = Rational.valueOf(T,1);
+        dimensions[1] = Rational.valueOf(L,1);
+        dimensions[2] = Rational.valueOf(M,1);
+        dimensions[3] = Rational.valueOf(I,1);
+        dimensions[4] = Rational.valueOf(theta,1);
+        dimensions[5] = Rational.valueOf(N,1);
+        dimensions[6] = Rational.valueOf(J,1);
     }
 
     /**
@@ -67,7 +69,7 @@ public class Dimension {
      * @param dimensions Array representing the dimensions in the following order:
      *                   time, length, mass, current, temperature, amount, intensity
      */
-    private Dimension(int[] dimensions) {
+    private Dimension(Rational[] dimensions) {
         this.dimensions = dimensions;
     }
 
@@ -108,7 +110,7 @@ public class Dimension {
      * @param dimensions Array representing the dimensions in the following order:
      *                   time, length, mass, current, temperature, amount, intensity
      */
-    private void setDimensions(int[] dimensions) {
+    private void setDimensions(Rational[] dimensions) {
         this.dimensions = dimensions;
     }
 
@@ -117,7 +119,7 @@ public class Dimension {
      * @return Returns an array with the dimensions in the following order:
      *         time, length, mass, current, temperature, amount, intensity
      */
-    private int[] getDimensions() {
+    private Rational[] getDimensions() {
         return dimensions.clone();
     }
 
@@ -128,7 +130,7 @@ public class Dimension {
      */
     public boolean equals(Dimension units) {
         for (int i = 0; i < dimensions.length; i++) {
-            if (dimensions[i] != units.dimensions[i])
+            if (!dimensions[i].equals(units.dimensions[i]))
                 return false;
         }
 
@@ -140,10 +142,10 @@ public class Dimension {
      * @return Returns a new Dimension where each dimension is the negative of the respective dimension in this object
      */
     public Dimension invert() {
-        int[] ret = dimensions.clone();
+        Rational[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
-            ret[i] *= -1;
+            ret[i] = ret[i].opposite();
         }
 
         return new Dimension(ret);
@@ -155,10 +157,10 @@ public class Dimension {
      * @return Returns a new Dimension whose dimensions are the sum of this Dimension and the argument
      */
     public Dimension add(Dimension units) {
-        int[] ret = dimensions.clone();
+        Rational[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
-            ret[i] += units.dimensions[i];
+            ret[i] = ret[i].plus(units.dimensions[i]);
         }
 
         return new Dimension(ret);
@@ -179,10 +181,25 @@ public class Dimension {
      * @return Returns a new Dimension whose dimensions are the product of this Dimension and the argument
      */
     public Dimension multiply(int n) {
-        int[] ret = dimensions.clone();
+        Rational[] ret = dimensions.clone();
 
         for (int i = 0; i < dimensions.length; i++) {
-            ret[i] *= n;
+            ret[i] = ret[i].times(n);
+        }
+
+        return new Dimension(ret);
+    }
+
+    /**
+     * Returns a new Dimension where each dimension has been divided by a constant
+     * @param n The constant to divide all dimensions by
+     * @return Returns a new Dimension whose dimensions are the quotient of this Dimension and the argument
+     */
+    public Dimension divide(int n) {
+        Rational[] ret = dimensions.clone();
+
+        for (int i = 0; i < dimensions.length; i++) {
+            ret[i] = ret[i].divide(Rational.valueOf(n,1));
         }
 
         return new Dimension(ret);
@@ -227,7 +244,7 @@ public class Dimension {
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < dimensions.length; i++) {
-            if (dimensions[i] != 0) {
+            if (!dimensions[i].equals(Rational.ZERO)) {
                 sb.append(switch (i) {
                     case 0 -> "s";
                     case 1 -> "m";
@@ -239,7 +256,7 @@ public class Dimension {
                     default -> "";
                 });
 
-                sb.append("^").append(dimensions[i]);
+                sb.append("^").append(dimensions[i].getDivisor().equals(1) ? dimensions[i].getDividend() : dimensions[i]);
             }
         }
 

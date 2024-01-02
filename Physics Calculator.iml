@@ -31,5 +31,7 @@
     <orderEntry type="library" name="Maven: org.scilab.forge:jlatexmath-font-cyrillic:1.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:11.0.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:11.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jscience:jscience:4.3.1" level="project" />
+    <orderEntry type="library" name="Maven: org.javolution:javolution:5.2.3" level="project" />
   </component>
 </module>

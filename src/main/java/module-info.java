@@ -6,7 +6,7 @@ module physicscalculator {
     requires jlatexmath;
     requires java.desktop;
     requires javafx.swing;
-
+    requires jscience;
 
     opens ui to javafx.fxml;
     exports ui;
