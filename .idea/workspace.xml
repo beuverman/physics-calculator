@@ -10,14 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added javadoc where previously missing">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_javolution_javolution_5_2_3.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jscience_jscience_4_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Physics Calculator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Physics Calculator.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +58,9 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File" value="JAVA" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit5" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/physics/Quantity.java" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
@@ -70,8 +74,15 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\thena\IdeaProjects\physics-calculator\src" />
       <recent name="C:\Users\thena\IdeaProjects\physics-calculator\src\main\resources\com\example\physicscalculator" />
       <recent name="C:\Users\thena\IdeaProjects\physics-calculator\src\main\java\com\example\physicscalculator" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="physics" />
     </key>
   </component>
   <component name="RunManager" selected="Application.CalculatorApplication">
@@ -114,6 +125,37 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="QuantityTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Physics Calculator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="physics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="physics" />
+      <option name="MAIN_CLASS_NAME" value="physics.QuantityTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="QuantityTest.testToString" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Physics Calculator" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="physics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="physics" />
+      <option name="MAIN_CLASS_NAME" value="physics.QuantityTest" />
+      <option name="METHOD_NAME" value="testToString" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Physics_Calculator_jar/Physics Calculator.jar" />
       <option name="WORKING_DIRECTORY" value="C:\Users\thena\IdeaProjects\physics-calculator" />
@@ -129,13 +171,16 @@
       <item itemvalue="Application.Main" />
       <item itemvalue="Application.Nuclides" />
       <item itemvalue="JAR Application.Test" />
+      <item itemvalue="JUnit.QuantityTest" />
+      <item itemvalue="JUnit.QuantityTest.testToString" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.CalculatorApplication" />
+        <item itemvalue="JUnit.QuantityTest" />
+        <item itemvalue="JUnit.QuantityTest.testToString" />
         <item itemvalue="Application.Nuclides" />
         <item itemvalue="Application.CalculatorApplication" />
-        <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
   </component>
@@ -314,20 +359,22 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>jar://$USER_HOME$/.jdks/openjdk-20.0.2/lib/src.zip!/java.base/java/math/BigDecimal.java</url>
-          <line>3213</line>
-          <option name="timeStamp" value="76" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/physics/Quantity.java</url>
           <line>182</line>
           <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/physics/Equation.java</url>
+          <line>211</line>
+          <option name="timeStamp" value="104" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="str.charAt(separator)" language="JAVA" />
+        <watch expression="value.scale" language="JAVA" />
+        <watch expression="value.precision" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

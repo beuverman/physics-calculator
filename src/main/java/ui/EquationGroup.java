@@ -1,6 +1,5 @@
 package ui;
 
-import java.awt.image.BufferedImage;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -11,6 +10,8 @@ import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
 import physics.Equation;
 import physics.Parsing;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Manages the collection of components associated with a single equation
@@ -30,6 +31,9 @@ public class EquationGroup extends HBox {
 
         resultField.setEditable(false);
 
+        setPrefHeight(200);
+        setPrefWidth(600);
+
         equationField.setOnKeyTyped(keyEvent -> {
             try {
                 Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
@@ -39,6 +43,7 @@ public class EquationGroup extends HBox {
             }
             catch (Exception e) {
                 resultField.setText(e.getMessage());
+                imageField.imageProperty().set(null);
             }
 
             EquationController.manageEquationCount(getParent());

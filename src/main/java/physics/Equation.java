@@ -49,7 +49,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
 
     /**
      * Returns the right subtree of the equation
-     * @return Returns an equation whose root is the left child of this equation's root
+     * @return Returns an equation whose root is the right child of this equation's root
      */
     @Override
     public Equation getRight() {
@@ -206,9 +206,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @return Returns a latex string representation of the equation
      */
     public String toLatexString() {
-        if (isAtom()) return root.getElement().toString();
+        if (isAtom()) return root.getElement().getValue().toLatexString();
 
         String left = getLeft().toLatexString();
+        if (getRight().isEmpty()) {
+            return root.getElement() + "(" + left + ")";
+        }
+
         String right = getRight().toLatexString();
 
         return switch (root.getElement().getOperator()) {
@@ -225,10 +229,14 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @return Returns a string representation of the equation
      */
     public String toString() {
-        if (root.getLeft() == null && root.getRight() == null)
-            return root.getElement().toString();
-        if (root.getRight() == null)
-            return root.getElement().toString() + "(" + root.getLeft().getElement().toString() + ")";
-        return "(" + root.getLeft().toString() + root + root.getRight().toString() + ")";
+        if (isAtom()) return root.getElement().toString();
+
+        String left = getLeft().toString();
+        if (getRight().isEmpty()) return root.getElement() + "(" + left + ")";
+        if (!getLeft().isAtom()) left = "(" + left + ")";
+        String right = getRight().toString();
+        if (!getRight().isAtom()) right = "(" + right + ")";
+
+        return left + root.getElement() + right;
     }
 }

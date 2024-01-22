@@ -14,7 +14,7 @@ public class Quantity {
     private static final RoundingMode RM = RoundingMode.HALF_EVEN;
     private static final MathContext MC = new MathContext(100, RM);
     private static final int SCALE = 100;
-    private static final int OUTPUT_PRECISION = 6;
+    private static final int SIG_FIGS = 6;
 
     private BigDecimal value;
     private Dimension dimension;
@@ -184,6 +184,8 @@ public class Quantity {
             throw new InvalidDimensionException();
 
         int i = isRational(n.value);
+        if (i == -1)
+            throw new InvalidDimensionException();
 
         return new Quantity(BigDecimalMath.pow(value, n.value, MC),
                 dimension.multiply(n.value.multiply(new BigDecimal(i)).intValue()).divide(new BigDecimal(i).intValue()));
@@ -227,11 +229,16 @@ public class Quantity {
 
     /**
      * Returns whether these quantities have the same value and dimensions
-     * @param quantity The quantity to be compared against
+     * @param o The quantity to be compared against
      * @return Returns true for the same value and dimensions and false otherwise
      */
-    public boolean equals(Quantity quantity) {
-        return (value.equals(quantity.value) && dimension.equals(quantity.dimension));
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quantity quantity = (Quantity) o;
+        //Allow for scale to be different between BigDecimals
+        return value.compareTo(quantity.value) == 0 && dimension.equals(quantity.dimension);
     }
 
     /**
@@ -249,6 +256,8 @@ public class Quantity {
      * @return Returns the divisor if rational, -1 otherwise
      */
     private int isRational(BigDecimal bd) {
+        //TODO: Make this actually work
+        //Appears to only recognize divisors of 2, 4, 5, and 8
         for (int i = 1; i < 10; i++) {
             if (isInteger(bd.multiply(new BigDecimal(i))))
                 return i;
@@ -266,6 +275,17 @@ public class Quantity {
         return bd.stripTrailingZeros().scale() <= 0;
     }
 
+    public String toLatexString() {
+        String ret = toString();
+
+        if (ret.contains("E+"))
+            ret = ret.replace("E+", "*10^{") + "}";
+        else if (ret.contains("E-"))
+            ret = ret.replace("E", "*10^{") + "}";
+
+        return ret;
+    }
+
     /**
      * Creates a string representation of this quantity
      * @return Returns a string representation of this quantity
@@ -274,6 +294,28 @@ public class Quantity {
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimension.toString();
 
-        return value.stripTrailingZeros().round(new MathContext(OUTPUT_PRECISION, RoundingMode.HALF_UP)) + dimension.toString();
+        String temp = value.setScale(SIG_FIGS - value.precision() + value.scale(), RoundingMode.HALF_UP).toString();
+
+        return stripTrailingZeros(temp) + dimension.toString();
+    }
+
+    private String stripTrailingZeros(String str) {
+        int start = -1;
+        int end = str.indexOf('E');
+
+        if (end == -1) end = str.length();
+
+        for (int i = end - 1; i >= 0; i--) {
+            if (str.charAt(i) != '0') {
+                start = i;
+                break;
+            }
+        }
+
+        if (start == end - 1) return str;
+        if (start == -1) return "0";
+        if (start == str.indexOf('.')) start--;
+
+        return str.substring(0, start + 1) + str.substring(end);
     }
 }
