@@ -210,7 +210,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
 
         String left = getLeft().toLatexString();
         if (getRight().isEmpty()) {
-            return root.getElement() + "(" + left + ")";
+            return root.getElement() + "\\left(" + left + "\\right)";
         }
 
         String right = getRight().toLatexString();
@@ -219,7 +219,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             case Token.IMPLICIT_M -> left + right;
             case Token.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
-            case '^' -> (getLeft().isAtom() ? left : ("(" + left + ")")) + "^{" + right + "}";
+            case '^' -> (getLeft().isAtom() ? left : ("\\left(" + left + "\\right)")) + "^{" + right + "}";
             default -> left + root.getElement().toString() + right;
         };
     }

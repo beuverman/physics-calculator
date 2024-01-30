@@ -214,11 +214,30 @@ public class Dimension {
     }
 
     /**
+     * Returns a LaTeX string representation of this Dimension
+     * @return Returns the SI symbol of the unit if there is a direct match.
+     *         If there is no match, gives each base unit and its respective power in a notation suitable for LaTeX
+     */
+    public String toLatexString() {
+        return toString(true);
+    }
+
+    /**
      * Returns a string representation of this Dimension
      * @return Returns the SI symbol of the unit if there is a direct match.
      *         If there is no match, gives each base unit and its respective power
      */
     public String toString() {
+        return toString(false);
+    }
+
+    /**
+     * Identifies SI unit associated with this Dimension.
+     * If there is no direct unit, gives each base unit and its respective power
+     * @param isLatex If true, powers of base units are given in curly braces to aid LaTeX
+     * @return Returns a string representation of this Dimension
+     */
+    private String toString(boolean isLatex) {
         if (this.equals(SECOND)) return "s";
         else if (this.equals(METRE)) return "m";
         else if (this.equals(KILOGRAM)) return "kg";
@@ -256,7 +275,10 @@ public class Dimension {
                     default -> "";
                 });
 
-                sb.append("^").append(dimensions[i].getDivisor().equals(1) ? dimensions[i].getDividend() : dimensions[i]);
+                sb.append("^");
+                if (isLatex) sb.append("{");
+                sb.append(dimensions[i].getDivisor().equals(1) ? dimensions[i].getDividend() : dimensions[i]);
+                if (isLatex) sb.append("}");
             }
         }
 

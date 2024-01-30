@@ -9,16 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added javadoc where previously missing">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_javolution_javolution_5_2_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jscience_jscience_4_3_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" afterDir="false" />
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Rewrote Dimension to handle rational dimensions&#10;Partial implementation of rational dimensions in computations: only functions for rationals that can be given exactly in binary">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Physics Calculator.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Physics Calculator.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +39,16 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/module-info.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/Equation.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/Nuclides.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/Quantity.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/Token.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/Dimension.java" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/physics/TokenType.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="2VUeWolztei3sCQO3aV167xjF3I" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -365,8 +371,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/physics/Equation.java</url>
-          <line>211</line>
-          <option name="timeStamp" value="104" />
+          <line>208</line>
+          <option name="timeStamp" value="105" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

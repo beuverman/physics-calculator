@@ -1,9 +1,12 @@
 package ui;
 
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
@@ -34,6 +37,16 @@ public class EquationGroup extends HBox {
         setPrefHeight(200);
         setPrefWidth(600);
 
+        //Handle moving between EquationGroups
+        equationField.setOnKeyPressed(keyEvent -> {
+            KeyCode keyCode = keyEvent.getCode();
+            if (keyCode == KeyCode.UP || (keyCode == KeyCode.ENTER && keyEvent.isShiftDown()))
+                goToPrevious();
+            else if (keyCode == KeyCode.DOWN || keyCode == KeyCode.ENTER)
+                goToNext();
+        });
+
+        //Handle parsing equation and updating fields
         equationField.setOnKeyTyped(keyEvent -> {
             try {
                 Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
@@ -72,5 +85,38 @@ public class EquationGroup extends HBox {
      */
     public boolean isEmpty() {
         return equationField.getText().isEmpty();
+    }
+
+    /**
+     * Since the equationField is the only field that accepts user interation,
+     * should the equationGroup receive focus it is given to the equationField.
+     */
+    @Override
+    public void requestFocus() {
+        equationField.requestFocus();
+    }
+
+    /**
+     * Gives focus to the next child in the parent of the equationGroup.
+     * If no next child exists, does nothing.
+     */
+    private void goToNext() {
+        ObservableList<Node> children = getParent().getChildrenUnmodifiable();
+        int index = children.indexOf(this);
+
+        if (index + 1 != children.size())
+            children.get(index + 1).requestFocus();
+    }
+
+    /**
+     * Gives focus to the previous child in the parent of the equationGroup.
+     * If no previous child exists, does nothing.
+     */
+    private void goToPrevious() {
+        ObservableList<Node> children = getParent().getChildrenUnmodifiable();
+        int index = children.indexOf(this);
+
+        if (index != 0)
+            children.get(index - 1).requestFocus();
     }
 }

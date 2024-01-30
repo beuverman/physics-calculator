@@ -275,15 +275,31 @@ public class Quantity {
         return bd.stripTrailingZeros().scale() <= 0;
     }
 
+    /**
+     * Creates a latex representation of this quantity
+     * @return Converts toString to a latex representation, replacing engineering notation with scientific notation
+     */
     public String toLatexString() {
-        String ret = toString();
+        if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
+            return dimension.toLatexString();
+
+        String ret = valueToString();
 
         if (ret.contains("E+"))
             ret = ret.replace("E+", "*10^{") + "}";
         else if (ret.contains("E-"))
             ret = ret.replace("E", "*10^{") + "}";
 
-        return ret;
+        return ret + dimension.toLatexString();
+    }
+
+    /**
+     * Converts the value portion of the Quantity to a String
+     * @return Returns a string representing the value of this Quantity, with
+     * SIG_FIGS significant figures
+     */
+    private String valueToString() {
+        return stripTrailingZeros(value.setScale(SIG_FIGS - value.precision() + value.scale(), RoundingMode.HALF_UP).toString());
     }
 
     /**
@@ -294,11 +310,14 @@ public class Quantity {
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimension.toString();
 
-        String temp = value.setScale(SIG_FIGS - value.precision() + value.scale(), RoundingMode.HALF_UP).toString();
-
-        return stripTrailingZeros(temp) + dimension.toString();
+        return valueToString() + dimension.toString();
     }
 
+    /**
+     * Removes excess zeroes at the end of a number
+     * @param str The number to be stripped
+     * @return Returns the number with any trailing zeroes after a decimal removed
+     */
     private String stripTrailingZeros(String str) {
         int start = -1;
         int end = str.indexOf('E');
