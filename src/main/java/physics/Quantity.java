@@ -18,6 +18,7 @@ public class Quantity {
 
     private BigDecimal value;
     private Dimension dimension;
+    private String inputString = null;
 
     /**
      * Creates a dimensionless quantity of value 0
@@ -60,12 +61,15 @@ public class Quantity {
 
     /**
      * Creates a quantity from a string representation
+     * String will be used in toString method
      * @param str String representation of the quantity
      */
     public Quantity(String str) {
+        inputString = str;
         int separator = -1;
         Quantity a, b;
 
+        // Find where number ends and unit starts
         for (int i = str.length() - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
                 separator = i + 1;
@@ -277,9 +281,12 @@ public class Quantity {
 
     /**
      * Creates a latex representation of this quantity
+     * If the string constructor was used to create this object, returns that string
      * @return Converts toString to a latex representation, replacing engineering notation with scientific notation
      */
     public String toLatexString() {
+        if (inputString != null)
+            return inputString;
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimension.toLatexString();
 
@@ -304,9 +311,13 @@ public class Quantity {
 
     /**
      * Creates a string representation of this quantity
+     * If the string constructor was used to create this object, returns that string
      * @return Returns a string representation of this quantity
      */
     public String toString() {
+        if (inputString != null)
+            return inputString;
+
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimension.toString();
 
