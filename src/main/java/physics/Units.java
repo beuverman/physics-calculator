@@ -21,6 +21,9 @@ public class Units extends Quantity {
     };
 
     private static final Units[] CONSTANTS = new Units[]{
+        new Units("3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679",
+                  new Dimension(0,0,0,0,0,0,0), "pi"),                                       // pi
+        new Units("2.7182818284590",   new Dimension(0,0,0,0,0,0,0), "e"),             // euler's number
         new Units("299792458",         new Dimension(-1, 1, 0, 0, 0, 0, 0), "c"),      // speed of light
         new Units("6.62607015e-34",    new Dimension(-1, 2, 1, 0, 0, 0, 0), "h"),      // planck's constant
         new Units("1.054571817e-34",   new Dimension(-1, 2, 1, 0, 0, 0, 0), "h-"),     // reduced planck's constant
@@ -65,25 +68,43 @@ public class Units extends Quantity {
     }
 
     /**
-     * Returns the unit with the given alias
+     * Returns the unit with the given alias.
+     * Handles SI prefixes.
      * @param str Alias of the unit to be returned
-     * @return Returns the unit with the given alias, null if not found
+     * @return Returns the unit with the given alias
      */
     public static Quantity getUnit(String str) {
-        if (UNITS == null)
-            return null;
-
+        // No prefix
+        if (str.equals("g")) {
+            return new Quantity("0.001", new Dimension("kg"));
+        }
         for (Units unit : UNITS) {
             if (unit.alias.equals(str))
                 return unit;
         }
-
         try {
-            return new Quantity("1", new Dimension(str));
+            Dimension dim = new Dimension(str);
+            return new Quantity("1", dim);
         }
         catch (Exception ignored) {}
 
-        return null;
+        // Prefix
+        // For the only 2 character prefix: da
+        if (str.length() == 1)
+            throw new RuntimeException("Unrecognized unit " + str);
+        Quantity prefix = Units.getPrefix(str.substring(0, 2));
+        // 1 character prefix
+        if (prefix == null) {
+            prefix = Units.getPrefix(str.substring(0, 1));
+
+            if (prefix == null)
+                throw new RuntimeException("Unrecognized unit " + str);
+
+            return getUnit(str.substring(1)).multiply(prefix);
+        }
+        else {
+            return getUnit(str.substring(2)).multiply(prefix);
+        }
     }
 
     /**

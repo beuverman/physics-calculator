@@ -18,7 +18,8 @@ public class Quantity {
 
     private BigDecimal value;
     private Dimension dimension;
-    private String inputString = null;
+    private BigDecimal unitScale = BigDecimal.ONE;
+    private String unitString;
 
     /**
      * Creates a dimensionless quantity of value 0
@@ -65,7 +66,6 @@ public class Quantity {
      * @param str String representation of the quantity
      */
     public Quantity(String str) {
-        inputString = str;
         int separator = -1;
         Quantity a, b;
 
@@ -81,34 +81,10 @@ public class Quantity {
         if (separator == -1) {
             b = Units.getUnit(str);
 
-            //Check for prefix
-            if (b == null) {
-                //For the only 2 character prefix: da
-                if (str.length() == 1)
-                    throw new RuntimeException("Unrecognized unit " + str);
-                a = Units.getPrefix(str.substring(0, 2));
-
-                if (a == null) {
-                    a = Units.getPrefix(str.substring(0, 1));
-
-                    if (a == null)
-                        throw new RuntimeException("Unrecognized unit " + str);
-
-                    str = str.substring(1);
-                }
-                else
-                    str = str.substring(2);
-
-                b = Units.getUnit(str);
-            }
-            else
-                a = new Quantity("1", new Dimension());
-
-            value = a.multiply(b).value;
+            value = BigDecimal.ONE;
+            unitScale = b.value;
+            unitString = str;
             dimension = b.dimension;
-
-            if (str.equals("g"))
-                value = value.movePointLeft(3);
         }
         //just number
         else if (separator == str.length()) {
@@ -120,7 +96,9 @@ public class Quantity {
             a = new Quantity(str.substring(0, separator));
             b = new Quantity(str.substring(separator));
 
-            value = a.multiply(b).value;
+            value = a.value;
+            unitScale = b.value.multiply(b.unitScale);
+            unitString = b.unitString;
             dimension = b.dimension;
         }
 
@@ -128,11 +106,19 @@ public class Quantity {
     }
 
     /**
+     * Gives the value of this quantity in base SI units
+     * @return Returns the product of value and unitScale
+     */
+    private BigDecimal scaledValue() {
+        return value.multiply(unitScale);
+    }
+
+    /**
      * Returns the negative of this quantity
      * @return Returns a quantity that has the negative value of this quantity
      */
     public Quantity negate() {
-        return new Quantity(value.negate(), dimension);
+        return new Quantity(scaledValue().negate(), dimension);
     }
 
     /**
@@ -144,7 +130,7 @@ public class Quantity {
         if (!dimension.equals(augend.dimension))
             throw new IncompatibleUnitsException(dimension.toString(), augend.dimension.toString());
 
-        return new Quantity(value.add(augend.value), dimension);
+        return new Quantity(scaledValue().add(augend.scaledValue()), dimension);
     }
 
     /**
@@ -156,7 +142,7 @@ public class Quantity {
         if (!dimension.equals(subtrahend.dimension))
             throw new IncompatibleUnitsException(dimension.toString(), subtrahend.dimension.toString());
 
-        return new Quantity(value.subtract(subtrahend.value), dimension);
+        return new Quantity(scaledValue().subtract(subtrahend.scaledValue()), dimension);
     }
 
     /**
@@ -165,7 +151,7 @@ public class Quantity {
      * @return Returns the product
      */
     public Quantity multiply(Quantity multiplicand) {
-        return new Quantity(value.multiply(multiplicand.value), dimension.add(multiplicand.dimension));
+        return new Quantity(scaledValue().multiply(multiplicand.scaledValue()), dimension.add(multiplicand.dimension));
     }
 
     /**
@@ -174,7 +160,7 @@ public class Quantity {
      * @return Returns the quotient
      */
     public Quantity divide(Quantity divisor) {
-        return new Quantity(value.divide(divisor.value, RM), dimension.subtract(divisor.dimension));
+        return new Quantity(scaledValue().divide(divisor.scaledValue(), RM), dimension.subtract(divisor.dimension));
     }
 
     /**
@@ -242,7 +228,7 @@ public class Quantity {
         if (o == null || getClass() != o.getClass()) return false;
         Quantity quantity = (Quantity) o;
         //Allow for scale to be different between BigDecimals
-        return value.compareTo(quantity.value) == 0 && dimension.equals(quantity.dimension);
+        return scaledValue().compareTo(quantity.scaledValue()) == 0 && dimension.equals(quantity.dimension);
     }
 
     /**
@@ -280,48 +266,12 @@ public class Quantity {
     }
 
     /**
-     * Creates a latex representation of this quantity
-     * If the string constructor was used to create this object, returns that string
-     * @return Converts toString to a latex representation, replacing engineering notation with scientific notation
-     */
-    public String toLatexString() {
-        if (inputString != null)
-            return inputString;
-        if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
-            return dimension.toLatexString();
-
-        String ret = valueToString();
-
-        if (ret.contains("E+"))
-            ret = ret.replace("E+", "*10^{") + "}";
-        else if (ret.contains("E-"))
-            ret = ret.replace("E", "*10^{") + "}";
-
-        return ret + dimension.toLatexString();
-    }
-
-    /**
      * Converts the value portion of the Quantity to a String
      * @return Returns a string representing the value of this Quantity, with
      * SIG_FIGS significant figures
      */
-    private String valueToString() {
-        return stripTrailingZeros(value.setScale(SIG_FIGS - value.precision() + value.scale(), RoundingMode.HALF_UP).toString());
-    }
-
-    /**
-     * Creates a string representation of this quantity
-     * If the string constructor was used to create this object, returns that string
-     * @return Returns a string representation of this quantity
-     */
-    public String toString() {
-        if (inputString != null)
-            return inputString;
-
-        if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
-            return dimension.toString();
-
-        return valueToString() + dimension.toString();
+    private String valueToString(BigDecimal bd) {
+        return stripTrailingZeros(bd.setScale(SIG_FIGS - bd.precision() + bd.scale(), RoundingMode.HALF_UP).toString());
     }
 
     /**
@@ -333,6 +283,7 @@ public class Quantity {
         int start = -1;
         int end = str.indexOf('E');
 
+        if (str.indexOf('.') == -1 && end == -1) return str;
         if (end == -1) end = str.length();
 
         for (int i = end - 1; i >= 0; i--) {
@@ -347,5 +298,35 @@ public class Quantity {
         if (start == str.indexOf('.')) start--;
 
         return str.substring(0, start + 1) + str.substring(end);
+    }
+
+    /**
+     * Creates a latex representation of this quantity.
+     * Uses units given in creation of quantity, if possible.
+     * @return Converts toString to a latex representation, replacing engineering notation with scientific notation
+     */
+    public String toLatexString() {
+        String dimString = (unitString == null ? dimension.toLatexString() : unitString);
+
+        if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
+            return dimString;
+
+        String valString = valueToString(value);
+
+        if (valString.contains("E+"))
+            valString = valString.replace("E+", "*10^{") + "}";
+        else if (valString.contains("E-"))
+            valString = valString.replace("E", "*10^{") + "}";
+
+        return valString + dimString;
+    }
+
+    /**
+     * Creates a string representation of this quantity.
+     * Quantity is given in base SI units.
+     * @return Returns a string representation of this quantity
+     */
+    public String toString() {
+        return valueToString(scaledValue()) + dimension.toString();
     }
 }

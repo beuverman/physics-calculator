@@ -9,34 +9,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Fixes to Equation and Quantity toString and toLatexString&#10;Image fields now empty on invalid equation instead of holding onto previous image&#10;Dimensial Quantities can now be raised to (some) fractional powers&#10;Basic partial unit tests for Quantity">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__ch_obermuhlner_big_math_2_3_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_apiguardian_apiguardian_api_1_1_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_javolution_javolution_5_2_3.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_jscience_jscience_4_3_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_api_5_9_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_jupiter_junit_jupiter_engine_5_9_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_commons_1_9_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_junit_platform_junit_platform_engine_1_9_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_base_win_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_controls_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_controls_win_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_fxml_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_fxml_win_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_graphics_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_graphics_win_19_0_2_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_swing_11_0_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_openjfx_javafx_swing_win_11_0_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_opentest4j_opentest4j_1_2_0.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scilab_forge_jlatexmath_1_0_7.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scilab_forge_jlatexmath_font_cyrillic_1_0_7.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Maven__org_scilab_forge_jlatexmath_font_greek_1_0_7.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Quantity toString and toLatexString will use the string they were created with if the string constructor was used">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Units.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,10 +40,10 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2VUeWolztei3sCQO3aV167xjF3I" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -75,6 +53,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.CalculatorApplication.executor": "Run",
+    "JUnit.QuantityTest (1).executor": "Run",
+    "JUnit.QuantityTest.executor": "Run",
+    "JUnit.java in physics-calculator.executor": "Run",
+    "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
@@ -110,19 +92,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="physics.Main" />
-      <module name="Physics Calculator" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="physics.exceptions.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Nuclides" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="physics.Nuclides" />
       <module name="Physics Calculator" />
@@ -136,8 +105,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="QuantityTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="Physics Calculator" />
+    <configuration name="QuantityTest" type="JUnit" factoryName="JUnit" temporary="true">
+      <module name="physics-calculator" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="physics.*" />
@@ -146,6 +115,7 @@
       </extension>
       <option name="PACKAGE_NAME" value="physics" />
       <option name="MAIN_CLASS_NAME" value="physics.QuantityTest" />
+      <option name="METHOD_NAME" value="" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -167,6 +137,14 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="java in physics-calculator" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="physics-calculator" />
+      <option name="TEST_OBJECT" value="directory" />
+      <dir value="$PROJECT_DIR$/src/test/java" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Test" type="JarApplication">
       <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/Physics_Calculator_jar/Physics Calculator.jar" />
       <option name="WORKING_DIRECTORY" value="C:\Users\thena\IdeaProjects\physics-calculator" />
@@ -179,9 +157,9 @@
     </configuration>
     <list>
       <item itemvalue="Application.CalculatorApplication" />
-      <item itemvalue="Application.Main" />
       <item itemvalue="Application.Nuclides" />
       <item itemvalue="JAR Application.Test" />
+      <item itemvalue="JUnit.java in physics-calculator" />
       <item itemvalue="JUnit.QuantityTest" />
       <item itemvalue="JUnit.QuantityTest.testToString" />
     </list>
@@ -189,9 +167,9 @@
       <list>
         <item itemvalue="Application.CalculatorApplication" />
         <item itemvalue="JUnit.QuantityTest" />
+        <item itemvalue="JUnit.java in physics-calculator" />
         <item itemvalue="JUnit.QuantityTest.testToString" />
         <item itemvalue="Application.Nuclides" />
-        <item itemvalue="Application.CalculatorApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -337,7 +315,15 @@
       <option name="project" value="LOCAL" />
       <updated>1705914634423</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Quantity toString and toLatexString will use the string they were created with if the string constructor was used">
+      <option name="closed" value="true" />
+      <created>1713561070826</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1713561070826</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -371,19 +357,20 @@
     <MESSAGE value="M() and BE() functions that respectively return the mass and binding energy of various nuclides" />
     <MESSAGE value="Rudimentary latex images" />
     <MESSAGE value="Fixes to Equation and Quantity toString and toLatexString&#10;Image fields now empty on invalid equation instead of holding onto previous image&#10;Dimensial Quantities can now be raised to (some) fractional powers&#10;Basic partial unit tests for Quantity" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixes to Equation and Quantity toString and toLatexString&#10;Image fields now empty on invalid equation instead of holding onto previous image&#10;Dimensial Quantities can now be raised to (some) fractional powers&#10;Basic partial unit tests for Quantity" />
+    <MESSAGE value="Quantity toString and toLatexString will use the string they were created with if the string constructor was used" />
+    <option name="LAST_COMMIT_MESSAGE" value="Quantity toString and toLatexString will use the string they were created with if the string constructor was used" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/physics/Quantity.java</url>
-          <line>186</line>
+          <line>172</line>
           <option name="timeStamp" value="86" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/physics/Parsing.java</url>
-          <line>26</line>
+          <url>file://$PROJECT_DIR$/src/main/java/ui/EquationGroup.java</url>
+          <line>51</line>
           <option name="timeStamp" value="106" />
         </line-breakpoint>
       </breakpoints>

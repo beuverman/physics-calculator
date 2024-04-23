@@ -7,12 +7,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class QuantityTest {
-    private static Quantity a = new Quantity("300.465");
-    private static Quantity b = new Quantity("10.913");
-    private static Quantity c = new Quantity("2134.945m");
-    private static Quantity d = new Quantity("-92N");
-    private static Quantity e = new Quantity("0");
-    private static Quantity f = new Quantity("225");
+    private static final Quantity a = new Quantity("300.465");
+    private static final Quantity b = new Quantity("10.913");
+    private static final Quantity c = new Quantity("2134.945m");
+    private static final Quantity d = new Quantity("-92N");
+    private static final Quantity e = new Quantity("0");
+    private static final Quantity f = new Quantity("225");
 
     @Test
     void negate() {
@@ -81,6 +81,10 @@ public class QuantityTest {
         assertEquals("1*10^{-9}", (new Quantity("0.000000001")).toLatexString());
         assertEquals("632.023", (new Quantity("632.023")).toLatexString());
         assertEquals("10000", (new Quantity("10000")).toLatexString());
+        assertEquals("10mm", (new Quantity("10mm").toLatexString()));
+        assertEquals("1000kg", (new Quantity("1000kg").toLatexString()));
+        assertEquals("1000g", (new Quantity("1000g").toLatexString()));
+        assertEquals("1238au", (new Quantity("1238au").toLatexString()));
     }
 
     @Test
@@ -92,5 +96,9 @@ public class QuantityTest {
         assertEquals("1E-9", (new Quantity("0.000000001")).toString());
         assertEquals("632.023", (new Quantity("632.023")).toString());
         assertEquals("10000", (new Quantity("10000")).toString());
+        assertEquals("0.01m", (new Quantity("10mm").toString()));
+        assertEquals("1000kg", (new Quantity("1000kg").toString()));
+        assertEquals("1kg", (new Quantity("1000g").toString()));
+        assertEquals("1.85202E+14m", (new Quantity("1238au").toString()));
     }
 }

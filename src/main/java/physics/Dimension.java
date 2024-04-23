@@ -81,7 +81,7 @@ public class Dimension {
         switch (dimension) {
             case "s" -> setDimensions(SECOND.getDimensions());
             case "m" -> setDimensions(METRE.getDimensions());
-            case "g" -> setDimensions(KILOGRAM.getDimensions());
+            case "kg" -> setDimensions(KILOGRAM.getDimensions());
             case "A" -> setDimensions(AMPERE.getDimensions());
             case "K" -> setDimensions(KELVIN.getDimensions());
             case "mol" -> setDimensions(MOLE.getDimensions());
