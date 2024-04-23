@@ -2,23 +2,20 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import ui.EquationGroup?>
-<Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.EquationController">
-   <VBox maxWidth="1.7976931348623157E308">
-      <children>
-         <ToolBar prefHeight="40.0" prefWidth="200.0">
-           <items>
-               <Button mnemonicParsing="false" onMouseClicked="#save" text="Save" />
-             <Button mnemonicParsing="false" onMouseClicked="#load" text="Load" />
-           </items>
-         </ToolBar>
-         <VBox fx:id="equationVBox" prefHeight="0.0" prefWidth="600.0"> <!-- prefHeight = 0 to stop children from being equally spaced-->
-            <children>
-               <EquationGroup prefHeight="200.0" prefWidth="600.0" />
-            </children>
-         </VBox>
-      </children>
-   </VBox>
-</Pane>
+<VBox maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.EquationController">
+   <children>
+      <ToolBar prefHeight="30.0">
+        <items>
+            <Button mnemonicParsing="false" onMouseClicked="#save" text="Save" />
+          <Button mnemonicParsing="false" onMouseClicked="#load" text="Load" />
+        </items>
+      </ToolBar>
+      <VBox fx:id="equationVBox" maxWidth="1.7976931348623157E308" prefHeight="0.0"> <!-- prefHeight = 0 to stop children from being equally spaced-->
+         <children>
+            <EquationGroup prefHeight="200.0" prefWidth="600.0" />
+         </children>
+      </VBox>
+   </children>
+</VBox>

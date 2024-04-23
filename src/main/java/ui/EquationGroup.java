@@ -33,6 +33,10 @@ public class EquationGroup extends HBox {
         imageField = new ImageView();
 
         resultField.setEditable(false);
+        equationField.setMinWidth(200);
+        equationField.setPrefWidth(200);
+        resultField.setMinWidth(200);
+        resultField.setPrefWidth(200);
 
         setPrefHeight(200);
         setPrefWidth(600);
