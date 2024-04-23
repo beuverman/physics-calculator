@@ -1,7 +1,8 @@
 package physics;
 
 import ch.obermuhlner.math.big.BigDecimalMath;
-import physics.exceptions.*;
+import physics.exceptions.IncompatibleUnitsException;
+import physics.exceptions.InvalidDimensionException;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -173,11 +174,16 @@ public class Quantity {
         if (!n.isDimensionless())
             throw new InvalidDimensionException();
 
+        // We're dimensionless
+        if (isDimensionless())
+            return new Quantity(BigDecimalMath.pow(value, n.value, MC), dimension);
+
+        // We're not dimensionless
         int i = isRational(n.value);
         if (i == -1)
             throw new InvalidDimensionException();
 
-        return new Quantity(BigDecimalMath.pow(value, n.value, MC),
+        return new Quantity(BigDecimalMath.pow(scaledValue(), n.value, MC),
                 dimension.multiply(n.value.multiply(new BigDecimal(i)).intValue()).divide(new BigDecimal(i).intValue()));
     }
 
