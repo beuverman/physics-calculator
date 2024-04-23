@@ -20,9 +20,9 @@ import java.awt.image.BufferedImage;
  * Manages the collection of components associated with a single equation
  */
 public class EquationGroup extends HBox {
-    private TextField equationField;
-    private TextField resultField;
-    private ImageView imageField;
+    private final TextField equationField;
+    private final TextField resultField;
+    private final ImageView imageField;
 
     /**
      * Creates an empty EquationGroup
@@ -47,20 +47,7 @@ public class EquationGroup extends HBox {
         });
 
         //Handle parsing equation and updating fields
-        equationField.setOnKeyTyped(keyEvent -> {
-            try {
-                Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
-                setImage(eq.toLatexString(), imageField);
-
-                resultField.setText(eq.evaluate().toString());
-            }
-            catch (Exception e) {
-                resultField.setText(e.getMessage());
-                imageField.imageProperty().set(null);
-            }
-
-            EquationController.manageEquationCount(getParent());
-        });
+        equationField.setOnKeyTyped(keyEvent -> updateEquation());
 
         this.getChildren().addAll(equationField, resultField, imageField);
     }
@@ -77,6 +64,41 @@ public class EquationGroup extends HBox {
         icon.paintIcon(null, bufferedImage.getGraphics(), 0, 0);
         Image image = SwingFXUtils.toFXImage(bufferedImage, null);
         imageView.setImage(image);
+    }
+
+    /**
+     * Gets the equation from this group as it appears in the input field
+     * @return Gets the equation from this group
+     */
+    public String getEquation() {
+        return equationField.getText();
+    }
+
+    /**
+     * Sets the equation of this group
+     * @param equation The equation to be set to
+     */
+    public void setEquation(String equation) {
+        equationField.setText(equation);
+        updateEquation();
+    }
+
+    /**
+     * Updates the output and image of this group to whatever equation is currently in the input field
+     */
+    private void updateEquation() {
+        try {
+            Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
+            setImage(eq.toLatexString(), imageField);
+
+            resultField.setText(eq.evaluate().toString());
+        }
+        catch (Exception e) {
+            resultField.setText(e.getMessage());
+            imageField.imageProperty().set(null);
+        }
+
+        EquationController.manageEquationCount(getParent());
     }
 
     /**

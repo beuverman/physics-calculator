@@ -9,12 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Quantity toString and toLatexString will use the string they were created with if the string constructor was used">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added save/load buttons and their dialogs">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Dimension.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Units.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Units.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/physics/QuantityTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,7 +56,10 @@
     "JUnit.QuantityTest.executor": "Run",
     "JUnit.java in physics-calculator.executor": "Run",
     "ignore.virus.scanning.warn.message": "true",
-    "kotlin-language-version-configured": "true"
+    "kotlin-language-version-configured": "true",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="ReaderModeSettings">
@@ -165,9 +167,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.java in physics-calculator" />
         <item itemvalue="Application.CalculatorApplication" />
         <item itemvalue="JUnit.QuantityTest" />
-        <item itemvalue="JUnit.java in physics-calculator" />
         <item itemvalue="JUnit.QuantityTest.testToString" />
         <item itemvalue="Application.Nuclides" />
       </list>
@@ -323,7 +325,23 @@
       <option name="project" value="LOCAL" />
       <updated>1713561070826</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="Quantity toString uses quantity in base SI units again&#10;Significant improvements to using given units in toLatexString">
+      <option name="closed" value="true" />
+      <created>1713859895540</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1713859895541</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Can now raise a dimensionless quantity to any power">
+      <option name="closed" value="true" />
+      <created>1713910923938</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1713910923938</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -358,20 +376,19 @@
     <MESSAGE value="Rudimentary latex images" />
     <MESSAGE value="Fixes to Equation and Quantity toString and toLatexString&#10;Image fields now empty on invalid equation instead of holding onto previous image&#10;Dimensial Quantities can now be raised to (some) fractional powers&#10;Basic partial unit tests for Quantity" />
     <MESSAGE value="Quantity toString and toLatexString will use the string they were created with if the string constructor was used" />
-    <option name="LAST_COMMIT_MESSAGE" value="Quantity toString and toLatexString will use the string they were created with if the string constructor was used" />
+    <MESSAGE value="Quantity toString uses quantity in base SI units again&#10;Significant improvements to using given units in toLatexString" />
+    <MESSAGE value="Can now raise a dimensionless quantity to any power" />
+    <MESSAGE value="Added save/load buttons and their dialogs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added save/load buttons and their dialogs" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/physics/Quantity.java</url>
-          <line>172</line>
+          <line>173</line>
           <option name="timeStamp" value="86" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/ui/EquationGroup.java</url>
-          <line>51</line>
-          <option name="timeStamp" value="106" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
