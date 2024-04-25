@@ -4,6 +4,7 @@ import collections.BinaryTreeNode;
 
 import java.util.List;
 import java.util.Stack;
+
 import static physics.TokenType.*;
 
 /**
@@ -210,13 +211,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
 
         String left = getLeft().toLatexString();
         if (getRight().isEmpty()) {
-            return root.getElement() + "\\left(" + left + "\\right)";
+            return "\\textrm{" + root.getElement() + "}\\left(" + left + "\\right)";
         }
 
         String right = getRight().toLatexString();
 
         return switch (root.getElement().getOperator()) {
-            case Token.IMPLICIT_M -> left + right;
+            case Token.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");
             case Token.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
             case '^' -> (getLeft().isAtom() ? left : ("\\left(" + left + "\\right)")) + "^{" + right + "}";

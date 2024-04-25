@@ -313,6 +313,7 @@ public class Quantity {
      */
     public String toLatexString() {
         String dimString = (unitString == null ? dimension.toLatexString() : unitString);
+        if (!dimString.isEmpty()) dimString = "\\textrm{" + dimString + "}";
 
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimString;
