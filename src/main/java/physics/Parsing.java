@@ -54,9 +54,11 @@ public class Parsing {
             else
                 token = new Token(current);
 
+            TokenType type = token.type;
+            TokenType prevType = (prev == null) ? null : prev.type;
             //Implicit multiplication
-            if (tokens.size() > 0 && (((token.type == UNIT || token.type == LBRACKET) && (prev.type == NUMBER || prev.type == UNIT)) ||
-                    (prev.type == RBRACKET && (token.type == NUMBER || token.type == UNIT)))) {
+            if (tokens.size() > 0 && (prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
+                && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
                 tokens.add(new Token(Token.IMPLICIT_M));
             }
             //Implicit division

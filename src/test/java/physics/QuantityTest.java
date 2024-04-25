@@ -81,10 +81,10 @@ public class QuantityTest {
         assertEquals("1*10^{-9}", (new Quantity("0.000000001")).toLatexString());
         assertEquals("632.023", (new Quantity("632.023")).toLatexString());
         assertEquals("10000", (new Quantity("10000")).toLatexString());
-        assertEquals("10mm", (new Quantity("10mm").toLatexString()));
-        assertEquals("1000kg", (new Quantity("1000kg").toLatexString()));
-        assertEquals("1000g", (new Quantity("1000g").toLatexString()));
-        assertEquals("1238au", (new Quantity("1238au").toLatexString()));
+        assertEquals("10\\textrm{mm}", (new Quantity("10mm").toLatexString()));
+        assertEquals("1000\\textrm{kg}", (new Quantity("1000kg").toLatexString()));
+        assertEquals("1000\\textrm{g}", (new Quantity("1000g").toLatexString()));
+        assertEquals("1238\\textrm{au}", (new Quantity("1238au").toLatexString()));
     }
 
     @Test
