@@ -2,17 +2,20 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="Physics Calculator:jar" />
+      <artifact name="physics-calculator" />
     </artifacts-to-build>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added save/load buttons and their dialogs">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Improvements to identifying implicit multiplication">
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Physics_Calculator_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationGroup.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,11 +57,17 @@
     "JUnit.QuantityTest (1).executor": "Run",
     "JUnit.QuantityTest.executor": "Run",
     "JUnit.java in physics-calculator.executor": "Run",
+    "Maven.physics-calculator [deploy:deploy].executor": "Run",
+    "Maven.physics-calculator [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
+    "Maven.physics-calculator [org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile].executor": "Run",
+    "Maven.physics-calculator [org.apache.maven.plugins:maven-deploy-plugin:3.1.1:deploy].executor": "Run",
+    "Maven.physics-calculator [org.openjfx:javafx-maven-plugin:0.0.6:jlink].executor": "Run",
+    "Maven.physics-calculator [org.openjfx:javafx-maven-plugin:0.0.6:run].executor": "Run",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0"
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2"
   }
 }]]></component>
   <component name="ReaderModeSettings">
@@ -77,7 +86,7 @@
       <recent name="physics" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.CalculatorApplication">
+  <component name="RunManager" selected="JUnit.java in physics-calculator">
     <configuration name="CalculatorApplication" type="Application" factoryName="Application" temporary="true">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -151,10 +160,40 @@
       <option name="WORKING_DIRECTORY" value="C:\Users\thena\IdeaProjects\physics-calculator" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <method v="2">
-        <option name="BuildArtifacts" enabled="true">
-          <artifact name="Physics Calculator:jar" />
-        </option>
+        <option name="BuildArtifacts" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="physics-calculator [deploy:deploy]" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="deploy:deploy" />
+                <option value="pom.xml" />
+                <option value="-X" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="-X" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
     </configuration>
     <list>
       <item itemvalue="Application.CalculatorApplication" />
@@ -163,6 +202,7 @@
       <item itemvalue="JUnit.java in physics-calculator" />
       <item itemvalue="JUnit.QuantityTest" />
       <item itemvalue="JUnit.QuantityTest.testToString" />
+      <item itemvalue="Maven.physics-calculator [deploy:deploy]" />
     </list>
     <recent_temporary>
       <list>
@@ -348,7 +388,15 @@
       <option name="project" value="LOCAL" />
       <updated>1713911304083</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Changes to UI containers for better resizing">
+      <option name="closed" value="true" />
+      <created>1713912797648</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1713912797648</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -386,16 +434,21 @@
     <MESSAGE value="Quantity toString uses quantity in base SI units again&#10;Significant improvements to using given units in toLatexString" />
     <MESSAGE value="Can now raise a dimensionless quantity to any power" />
     <MESSAGE value="Added save/load buttons and their dialogs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added save/load buttons and their dialogs" />
+    <MESSAGE value="Changes to UI containers for better resizing" />
+    <MESSAGE value="Improvements to identifying implicit multiplication" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improvements to identifying implicit multiplication" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/physics/Quantity.java</url>
-          <line>173</line>
-          <option name="timeStamp" value="86" />
+          <url>file://$PROJECT_DIR$/src/main/java/physics/Equation.java</url>
+          <line>208</line>
+          <properties>
+            <option name="lambda-ordinal" value="-1" />
+          </properties>
+          <option name="timeStamp" value="89" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -42,6 +42,7 @@ public class EquationController {
     public void save() throws IOException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Save Equations");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File", "*.txt"));
         File file = chooser.showSaveDialog(new Popup());
         if (file == null) return;
         FileWriter fw = new FileWriter(file);
@@ -61,6 +62,7 @@ public class EquationController {
     public void load() throws FileNotFoundException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Load Equations");
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File", "*.txt"));
         List<File> files = chooser.showOpenMultipleDialog(new Popup());
         if (files == null) return;
         ArrayList<String> equations = new ArrayList<>();
