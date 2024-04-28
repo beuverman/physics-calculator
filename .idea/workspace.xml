@@ -9,13 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Improvements to identifying implicit multiplication">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Changes to pom.xml to be able to create a runtime image">
       <change beforePath="$PROJECT_DIR$/.idea/artifacts/Physics_Calculator_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,15 +55,21 @@
     "JUnit.QuantityTest (1).executor": "Run",
     "JUnit.QuantityTest.executor": "Run",
     "JUnit.java in physics-calculator.executor": "Run",
+    "Maven.list-application-image-modules.executor": "Run",
+    "Maven.physics-calculator [clean].executor": "Run",
     "Maven.physics-calculator [deploy:deploy].executor": "Run",
     "Maven.physics-calculator [org.apache.maven.plugins:maven-clean-plugin:3.2.0:clean].executor": "Run",
     "Maven.physics-calculator [org.apache.maven.plugins:maven-compiler-plugin:3.8.1:compile].executor": "Run",
     "Maven.physics-calculator [org.apache.maven.plugins:maven-deploy-plugin:3.1.1:deploy].executor": "Run",
+    "Maven.physics-calculator [org.moditect:moditect-maven-plugin:1.0.0.Final:add-module-info].executor": "Run",
+    "Maven.physics-calculator [org.moditect:moditect-maven-plugin:1.0.0.Final:create-runtime-image].executor": "Run",
+    "Maven.physics-calculator [org.moditect:moditect-maven-plugin:1.0.0.Final:generate-module-info].executor": "Run",
     "Maven.physics-calculator [org.openjfx:javafx-maven-plugin:0.0.6:jlink].executor": "Run",
     "Maven.physics-calculator [org.openjfx:javafx-maven-plugin:0.0.6:run].executor": "Run",
+    "Maven.physics-calculator [package].executor": "Run",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "project.structure.last.edited": "Artifacts",
+    "project.structure.last.edited": "Libraries",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2"
   }
@@ -86,7 +90,7 @@
       <recent name="physics" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.java in physics-calculator">
+  <component name="RunManager" selected="Maven.physics-calculator [clean]">
     <configuration name="CalculatorApplication" type="Application" factoryName="Application" temporary="true">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -163,7 +167,7 @@
         <option name="BuildArtifacts" enabled="true" />
       </method>
     </configuration>
-    <configuration name="physics-calculator [deploy:deploy]" type="MavenRunConfiguration" factoryName="Maven">
+    <configuration name="physics-calculator [clean]" type="MavenRunConfiguration" factoryName="Maven">
       <MavenSettings>
         <option name="myGeneralSettings" />
         <option name="myRunnerSettings" />
@@ -175,13 +179,12 @@
             </option>
             <option name="goals">
               <list>
-                <option value="deploy:deploy" />
-                <option value="pom.xml" />
-                <option value="-X" />
+                <option value="clean" />
+                <option value="package" />
               </list>
             </option>
             <option name="multimoduleDir" />
-            <option name="pomFileName" value="-X" />
+            <option name="pomFileName" value="pom.xml" />
             <option name="profilesMap">
               <map />
             </option>
@@ -202,7 +205,7 @@
       <item itemvalue="JUnit.java in physics-calculator" />
       <item itemvalue="JUnit.QuantityTest" />
       <item itemvalue="JUnit.QuantityTest.testToString" />
-      <item itemvalue="Maven.physics-calculator [deploy:deploy]" />
+      <item itemvalue="Maven.physics-calculator [clean]" />
     </list>
     <recent_temporary>
       <list>
@@ -396,7 +399,31 @@
       <option name="project" value="LOCAL" />
       <updated>1713912797648</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Improvements to identifying implicit multiplication">
+      <option name="closed" value="true" />
+      <created>1714070249778</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1714070249779</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Improvements to when implicit multiplication adds brackets in latex string&#10;Functions and units no longer italicized">
+      <option name="closed" value="true" />
+      <created>1714070393877</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1714070393877</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Save/load dialogs now only allow .txt files">
+      <option name="closed" value="true" />
+      <created>1714070421050</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1714070421050</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -411,9 +438,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Additional files" />
-    <MESSAGE value="Converted Equation.java to function as an expression tree" />
-    <MESSAGE value="Removed deprecated Main.java" />
     <MESSAGE value="Tweaked error handling" />
     <MESSAGE value="Added big math dependency" />
     <MESSAGE value="Removed integer constraint from pow and defined basic trig functions" />
@@ -436,22 +460,13 @@
     <MESSAGE value="Added save/load buttons and their dialogs" />
     <MESSAGE value="Changes to UI containers for better resizing" />
     <MESSAGE value="Improvements to identifying implicit multiplication" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improvements to identifying implicit multiplication" />
+    <MESSAGE value="Improvements to when implicit multiplication adds brackets in latex string&#10;Functions and units no longer italicized" />
+    <MESSAGE value="Save/load dialogs now only allow .txt files" />
+    <MESSAGE value="Changes to pom.xml to be able to create a runtime image" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes to pom.xml to be able to create a runtime image" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/physics/Equation.java</url>
-          <line>208</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="89" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="str.charAt(separator)" language="JAVA" />
