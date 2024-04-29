@@ -11,63 +11,54 @@ import static physics.TokenType.*;
  * Handles the parsing of an equation string into a list of tokens
  */
 public class Parsing {
+    public static final char IMPLICIT_M = 9994;
+    public static final char IMPLICIT_D = 9995;
+    public static final String[] OPERATORS = {"+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
+
     /**
      * Turns a string representing an equation into a series of tokens
      * @param equation The equation to be converted
      * @return Returns a list of tokens that represent the equation
      */
     public static List<Token> tokenizer(String equation) {
-        Pattern pattern = Pattern.compile("(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|([()^+/*-])|([a]?(?:sin|cos|tan|sec|csc|cot)[h]?|(?:con|M|BE|HL)\\([^)]+\\))|" +
-            "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))");
+        String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
+        String group2 = "([()^+/*-])|"; // Operators
+        String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
+        String group4 = "((?:con|M|BE|HL)\\([^)]+\\))|"; //Replacement functions
+        String group5 = "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))"; //Units
+        Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5);
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
-        String current;
-        Token token = null, prev = null, prevPrev;
+        Token token = null, prevToken;
+        TokenType type = null, prevType = null, prevPrevType;
+        String tokenString;
+        int matchGroup;
 
         while (matcher.find()) {
-            current = matcher.group();
-            prevPrev = prev;
-            prev = token;
+            tokenString = matcher.group();
+            prevToken = token;
 
-            if (current.contains("con(")) {
-                Quantity constant = Units.getConstant(current.substring(4, current.length() - 1));
-                if (constant == null)
-                    throw new RuntimeException("Unrecognized constant " + current.substring(4, current.length() - 1));
-
-                token = new Token(constant);
-            }
-            else if (current.contains("M(")) {
-                Quantity mass = Nuclides.getMass(current.substring(2, current.length() - 1));
-
-                token = new Token(mass);
-            }
-            else if (current.contains("BE(")) {
-                Quantity BE = Nuclides.getBindingEnergy(current.substring(3, current.length() - 1));
-
-                token = new Token(BE);
-            }
-            else if (current.contains("HL(")) {
-                Quantity HL = Nuclides.getHalfLife(current.substring(3, current.length() - 1));
-
-                token = new Token(HL);
-            }
+            matchGroup = matchedGroup(matcher);
+            prevPrevType = prevType;
+            prevType = type;
+            type = identifyType(matchGroup, tokenString);
+            if (matchGroup == 4)
+                token = new Token(replaceFunction(tokenString));
             else
-                token = new Token(current);
+                token = new Token(tokenString, type);
 
-            TokenType type = token.type;
-            TokenType prevType = (prev == null) ? null : prev.type;
             //Implicit multiplication
-            if (tokens.size() > 0 && (prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
+            if (!tokens.isEmpty() && (prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
                 && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
-                tokens.add(new Token(Token.IMPLICIT_M));
+                tokens.add(new Token(IMPLICIT_M));
             }
             //Implicit division
-            else if (tokens.size() > 1 && token.type == UNIT && prev.isOperator() && prev.getOperator() == '/' && prevPrev.type == UNIT) {
-                tokens.set(tokens.size() - 1, new Token(Token.IMPLICIT_D));
+            else if (tokens.size() > 1 && token.type == UNIT && prevToken.isOperator() && prevToken.getOperator() == '/' && prevPrevType == UNIT) {
+                tokens.set(tokens.size() - 1, new Token(IMPLICIT_D));
             }
             //negation instead of subtraction
-            else if ((tokens.size() > 0 && token.type.equals(NUMBER) && prev.isOperator() && prev.getOperator() == '-') &&
-                    (tokens.size() == 1 || prevPrev.isOperator() || prevPrev.type == LBRACKET)) {
+            else if ((!tokens.isEmpty() && type == NUMBER && prevToken.isOperator() && prevToken.getOperator() == '-') &&
+                    (tokens.size() == 1 || prevPrevType == OPERATOR || prevPrevType == LBRACKET)) {
                 token = new Token(token.getValue().negate());
                 tokens.remove(tokens.size() - 1);
             }
@@ -76,5 +67,68 @@ public class Parsing {
         }
 
         return tokens;
+    }
+
+    /**
+     * Identifies the group that matched the most recently matched token.
+     * Assumes that only one group matched.
+     * @param matcher The Matcher to check
+     * @return The first group id that matched on the previous token
+     */
+    private static int matchedGroup(Matcher matcher) {
+        int groupCount = matcher.groupCount();
+
+        for (int i = 1; i <= groupCount; i++) {
+            if (matcher.start(i) != -1)
+                return i;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Computes the quantity corresponding to a given lookup function
+     * @param str The function and argument, given as func(arg)
+     * @return Returns the corresponding quantity
+     */
+    private static Quantity replaceFunction(String str) {
+        if (str.contains("con(")) {
+            Quantity constant = Units.getConstant(str.substring(4, str.length() - 1));
+            if (constant == null)
+                throw new RuntimeException("Unrecognized constant " + str.substring(4, str.length() - 1));
+
+            return constant;
+        }
+        else if (str.contains("M(")) {
+            return Nuclides.getMass(str.substring(2, str.length() - 1));
+        }
+        else if (str.contains("BE(")) {
+            return Nuclides.getBindingEnergy(str.substring(3, str.length() - 1));
+        }
+        else if (str.contains("HL(")) {
+            return Nuclides.getHalfLife(str.substring(3, str.length() - 1));
+        }
+
+        return null;
+    }
+
+    /**
+     * Identifies what type of token the given string is
+     * @param group The regex group that matched it
+     * @param str String to be identified
+     * @return Returns the TokenType of the argument
+     */
+    private static TokenType identifyType(int group, String str) {
+        return switch (group) {
+            case 1,4 -> NUMBER;
+            case 2 -> switch (str.charAt(0)) {
+                case '(' -> LBRACKET;
+                case ')' -> RBRACKET;
+                default -> OPERATOR;
+            };
+            case 3 -> FUNCTION;
+            case 5 -> UNIT;
+            default -> null;
+        };
     }
 }

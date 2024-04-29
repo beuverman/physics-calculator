@@ -126,10 +126,10 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     private static int precedence(char op1, char op2) {
         int a = 0, b = 0;
 
-        for (int i = 0; i < Token.OPERATORS.length; i++) {
-            if (Token.OPERATORS[i].indexOf(op1) != -1)
+        for (int i = 0; i < Parsing.OPERATORS.length; i++) {
+            if (Parsing.OPERATORS[i].indexOf(op1) != -1)
                 a = i;
-            if (Token.OPERATORS[i].indexOf(op2) != -1)
+            if (Parsing.OPERATORS[i].indexOf(op2) != -1)
                 b = i;
         }
 
@@ -167,11 +167,24 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @param x argument of the function
      * @return Returns f(x)
      */
-    private static Quantity computeTerm(String function, Quantity x) {
+    private Quantity computeTerm(String function, Quantity x) {
         return switch (function) {
+            case "sqrt" -> Quantity.sqrt(x);
+            case "ln" -> Quantity.ln(x);
+            case "log" -> Quantity.log(x);
+            case "exp" -> Quantity.exp(x);
             case "sin" -> Quantity.sin(x);
             case "cos" -> Quantity.cos(x);
             case "tan" -> Quantity.tan(x);
+            case "asin" -> Quantity.asin(x);
+            case "acos" -> Quantity.acos(x);
+            case "atan" -> Quantity.atan(x);
+            case "sinh" -> Quantity.sinh(x);
+            case "cosh" -> Quantity.cosh(x);
+            case "tanh" -> Quantity.tanh(x);
+            case "asinh" -> Quantity.asinh(x);
+            case "acosh" -> Quantity.acosh(x);
+            case "atanh" -> Quantity.atanh(x);
             default -> throw new IllegalStateException("Unexpected value: " + function);
         };
     }
@@ -187,8 +200,8 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         return switch (operator) {
             case '+' -> left.add(right);
             case '-' -> left.subtract(right);
-            case '*', Token.IMPLICIT_M -> left.multiply(right);
-            case '/', Token.IMPLICIT_D -> left.divide(right);
+            case '*', Parsing.IMPLICIT_M -> left.multiply(right);
+            case '/', Parsing.IMPLICIT_D -> left.divide(right);
             case '^' -> left.pow(right);
             default -> throw new IllegalStateException("Unexpected value: " + operator);
         };
@@ -217,8 +230,8 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         String right = getRight().toLatexString();
 
         return switch (root.getElement().getOperator()) {
-            case Token.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");
-            case Token.IMPLICIT_D -> left + "/" + right;
+            case Parsing.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");
+            case Parsing.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
             case '^' -> (getLeft().isAtom() ? left : ("\\left(" + left + "\\right)")) + "^{" + right + "}";
             default -> left + root.getElement().toString() + right;

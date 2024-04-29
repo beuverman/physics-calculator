@@ -10,10 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Changes to pom.xml to be able to create a runtime image">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Physics_Calculator_jar.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Equation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Parsing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Quantity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/physics/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/physics/Token.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +91,7 @@
       <recent name="physics" />
     </key>
   </component>
-  <component name="RunManager" selected="Maven.physics-calculator [clean]">
+  <component name="RunManager" selected="Application.CalculatorApplication">
     <configuration name="CalculatorApplication" type="Application" factoryName="Application" temporary="true">
       <option name="ALTERNATIVE_JRE_PATH" value="openjdk-20" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -423,7 +424,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714070421050</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Changes to pom.xml to be able to create a runtime image">
+      <option name="closed" value="true" />
+      <created>1714282633076</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1714282633076</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -467,11 +476,24 @@
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/physics/Parsing.java</url>
+          <line>23</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="str.charAt(separator)" language="JAVA" />
         <watch expression="value.scale" language="JAVA" />
         <watch expression="value.precision" language="JAVA" />
+        <watch expression="matcher.start(1)" language="JAVA" />
+        <watch expression="matcher.start(2)" language="JAVA" />
+        <watch expression="matcher.start(3)" language="JAVA" />
+        <watch expression="matcher.start(4)" language="JAVA" />
       </configuration>
     </watches-manager>
   </component>

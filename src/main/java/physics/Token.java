@@ -6,10 +6,6 @@ import static physics.TokenType.*;
  * Represents a token in an equation
  */
 public class Token {
-    public static final char IMPLICIT_M = 9994;
-    public static final char IMPLICIT_D = 9995;
-    public static final String[] OPERATORS = {"+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
-
     /**
      * Type associated with the token
      */
@@ -20,9 +16,10 @@ public class Token {
     /**
      * Creates a token from the given string representation
      * @param token The string to be made into a token
+     * @param type The type of the token
      */
-    public Token(String token) {
-        type = identifyToken(token);
+    public Token(String token, TokenType type) {
+        this.type = type;
 
         if (type == NUMBER || type == UNIT)
             value = new Quantity(token);
@@ -44,7 +41,7 @@ public class Token {
      * @param token Operation to be made into a token
      */
     public Token(char token) {
-        this(String.valueOf(token));
+        this(String.valueOf(token), OPERATOR);
     }
 
     /**
@@ -96,27 +93,6 @@ public class Token {
         return value;
     }
 
-    /**
-     * Identifies what type of token the given string is
-     * @param token String to be identified
-     * @return Returns the TokenType of the argument
-     */
-    public static TokenType identifyToken(String token) {
-        if (token.equals("("))
-            return LBRACKET;
-        if (token.equals(")"))
-            return RBRACKET;
-        if (token.equals("sin") || token.equals("cos") || token.equals("tan"))
-            return FUNCTION;
-        if (token.length() == 1)
-            for (String operatorGroup : OPERATORS)
-                if (operatorGroup.contains(token))
-                    return OPERATOR;
-        if (Character.isAlphabetic(token.charAt(0)))
-            return UNIT;
-
-        return NUMBER;
-    }
 
     /**
      * Returns a string representation of the Token

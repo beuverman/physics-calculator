@@ -7,6 +7,7 @@ import physics.exceptions.InvalidDimensionException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.function.BiFunction;
 
 /**
  * Associates dimensions with a scalar value
@@ -188,15 +189,62 @@ public class Quantity {
     }
 
     /**
+     * Applies the given function to the value portion of a Quantity.
+     * Requires that the Quantity is dimensionless
+     * @param func The function to be used
+     * @param x The Quantity to apply it to
+     * @return Returns a new dimensionless Quantity whose value is the result of the function
+     */
+    private static Quantity apply(BiFunction<BigDecimal, MathContext, BigDecimal> func, Quantity x) {
+        if (!x.isDimensionless())
+            throw new InvalidDimensionException();
+
+        return new Quantity(func.apply(x.value, MC), x.dimension);
+    }
+
+    /**
+     * Computes the square root of the given quantity
+     * @param x Quantity to compute square root of
+     * @return Returns the square root of the given quantity
+     */
+    public static Quantity sqrt(Quantity x) {
+        return new Quantity(BigDecimalMath.sqrt(x.scaledValue(), MC), x.dimension.divide(2));
+    }
+
+    /**
+     * Computes the natural log of the given quantity
+     * @param x Quantity to compute natural log of
+     * @return Returns the natural log of the given quantity
+     */
+    public static Quantity ln(Quantity x) {
+        return apply(BigDecimalMath::log, x);
+    }
+
+    /**
+     * Computes the log (base 10) of the given quantity
+     * @param x Quantity to compute log (base 10) of
+     * @return Returns the log (base 10) of the given quantity
+     */
+    public static Quantity log(Quantity x) {
+        return apply(BigDecimalMath::log10, x);
+    }
+
+    /**
+     * Computes the exponential of the given quantity
+     * @param x Quantity to compute exponential of
+     * @return Returns the exponential of the given quantity
+     */
+    public static Quantity exp(Quantity x) {
+        return apply(BigDecimalMath::exp, x);
+    }
+
+    /**
      * Computes the sin of the given quantity
      * @param x Quantity to compute sin of
      * @return Returns the sin of the given quantity
      */
     public static Quantity sin(Quantity x) {
-        if (!x.isDimensionless())
-            throw new InvalidDimensionException();
-
-        return new Quantity(BigDecimalMath.sin(x.value, MC));
+        return apply(BigDecimalMath::sin, x);
     }
 
     /**
@@ -205,10 +253,7 @@ public class Quantity {
      * @return Returns the cos of the given quantity
      */
     public static Quantity cos(Quantity x) {
-        if (!x.isDimensionless())
-            throw new InvalidDimensionException();
-
-        return new Quantity(BigDecimalMath.cos(x.value, MC));
+        return apply(BigDecimalMath::cos, x);
     }
 
     /**
@@ -217,10 +262,88 @@ public class Quantity {
      * @return Returns the tan of the given quantity
      */
     public static Quantity tan(Quantity x) {
-        if (!x.isDimensionless())
-            throw new InvalidDimensionException();
+        return apply(BigDecimalMath::tan, x);
+    }
 
-        return new Quantity(BigDecimalMath.tan(x.value, MC));
+    /**
+     * Computes the arcsin of the given quantity
+     * @param x Quantity to compute arcsin of
+     * @return Returns the arcsin of the given quantity
+     */
+    public static Quantity asin(Quantity x) {
+        return apply(BigDecimalMath::asin, x);
+    }
+
+    /**
+     * Computes the arccos of the given quantity
+     * @param x Quantity to compute arccos of
+     * @return Returns the arccos of the given quantity
+     */
+    public static Quantity acos(Quantity x) {
+        return apply(BigDecimalMath::acos, x);
+    }
+
+    /**
+     * Computes the arctan of the given quantity
+     * @param x Quantity to compute arctan of
+     * @return Returns the arctan of the given quantity
+     */
+    public static Quantity atan(Quantity x) {
+        return apply(BigDecimalMath::atan, x);
+    }
+
+    /**
+     * Computes the hyperbolic sin of the given quantity
+     * @param x Quantity to compute hyperbolic sin of
+     * @return Returns the hyperbolic sin of the given quantity
+     */
+    public static Quantity sinh(Quantity x) {
+        return apply(BigDecimalMath::sinh, x);
+    }
+
+    /**
+     * Computes the hyperbolic cos of the given quantity
+     * @param x Quantity to compute hyperbolic cos of
+     * @return Returns the hyperbolic cos of the given quantity
+     */
+    public static Quantity cosh(Quantity x) {
+        return apply(BigDecimalMath::cosh, x);
+    }
+
+    /**
+     * Computes the hyperbolic tan of the given quantity
+     * @param x Quantity to compute hyperbolic tan of
+     * @return Returns the hyperbolic tan of the given quantity
+     */
+    public static Quantity tanh(Quantity x) {
+        return apply(BigDecimalMath::tanh, x);
+    }
+
+    /**
+     * Computes the hyperbolic arcsin of the given quantity
+     * @param x Quantity to compute hyperbolic arcsin of
+     * @return Returns the hyperbolic arcsin of the given quantity
+     */
+    public static Quantity asinh(Quantity x) {
+        return apply(BigDecimalMath::asinh, x);
+    }
+
+    /**
+     * Computes the hyperbolic arccos of the given quantity
+     * @param x Quantity to compute hyperbolic arccos of
+     * @return Returns the hyperbolic arccos of the given quantity
+     */
+    public static Quantity acosh(Quantity x) {
+        return apply(BigDecimalMath::acosh, x);
+    }
+
+    /**
+     * Computes the hyperbolic arctan of the given quantity
+     * @param x Quantity to compute hyperbolic arctan of
+     * @return Returns the hyperbolic arctan of the given quantity
+     */
+    public static Quantity atanh(Quantity x) {
+        return apply(BigDecimalMath::atanh, x);
     }
 
     /**
