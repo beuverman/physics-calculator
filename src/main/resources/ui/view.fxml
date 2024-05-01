@@ -8,8 +8,9 @@
    <children>
       <ToolBar prefHeight="30.0">
         <items>
-            <Button mnemonicParsing="false" onMouseClicked="#save" text="Save" />
-          <Button mnemonicParsing="false" onMouseClicked="#load" text="Load" />
+            <Button mnemonicParsing="false" onMouseClicked="#saveDialog" text="Save" />
+            <Button mnemonicParsing="false" onMouseClicked="#loadDialog" text="Load" />
+            <Button mnemonicParsing="false" onMouseClicked="#clear" text="Clear" />
         </items>
       </ToolBar>
       <VBox fx:id="equationVBox" maxWidth="1.7976931348623157E308" prefHeight="0.0"> <!-- prefHeight = 0 to stop children from being equally spaced-->

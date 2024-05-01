@@ -9,9 +9,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Improvements to runtime image reduce file size from ~110MB to 61MB">
+    <list default="true" id="13a34f5f-7977-4639-b77f-57ef229ae94f" name="Changes" comment="Added a clear button.&#10;Default program size set to 800x400.&#10;Current equations are saved to a temp file and loaded again on launch.&#10;Front loaded creating latex images to avoid a freeze on first image.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/CalculatorApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/CalculatorApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ui/EquationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ui/view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -437,7 +439,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714369972512</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Improvements to runtime image reduce file size from ~110MB to 61MB">
+      <option name="closed" value="true" />
+      <created>1714457175811</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1714457175811</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -452,7 +462,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed integer constraint from pow and defined basic trig functions" />
     <MESSAGE value="Implemented basic trig functions&#10;Fixed bug where ^ had same precedence as + and -" />
     <MESSAGE value="Added dynamic number of text fields" />
     <MESSAGE value="Reworked tokens to recognize numbers and units separately." />
@@ -477,7 +486,8 @@
     <MESSAGE value="Changes to pom.xml to be able to create a runtime image" />
     <MESSAGE value="Refactored token parsing&#10;Added a number of new functions" />
     <MESSAGE value="Improvements to runtime image reduce file size from ~110MB to 61MB" />
-    <option name="LAST_COMMIT_MESSAGE" value="Improvements to runtime image reduce file size from ~110MB to 61MB" />
+    <MESSAGE value="Added a clear button.&#10;Default program size set to 800x400.&#10;Current equations are saved to a temp file and loaded again on launch.&#10;Front loaded creating latex images to avoid a freeze on first image." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a clear button.&#10;Default program size set to 800x400.&#10;Current equations are saved to a temp file and loaded again on launch.&#10;Front loaded creating latex images to avoid a freeze on first image." />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">

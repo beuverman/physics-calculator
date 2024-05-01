@@ -39,11 +39,14 @@ public class EquationController {
      * @throws IOException
      */
     @FXML
-    public void save() throws IOException {
+    public void saveDialog() throws IOException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Save Equations");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File", "*.txt"));
-        File file = chooser.showSaveDialog(new Popup());
+        save(chooser.showSaveDialog(new Popup()));
+    }
+
+    public void save(File file) throws IOException {
         if (file == null) return;
         FileWriter fw = new FileWriter(file);
         List<String> equations = getEquations();
@@ -59,11 +62,18 @@ public class EquationController {
      * @throws FileNotFoundException
      */
     @FXML
-    public void load() throws FileNotFoundException {
+    public void loadDialog() throws FileNotFoundException {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Load Equations");
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text File", "*.txt"));
-        List<File> files = chooser.showOpenMultipleDialog(new Popup());
+        load(chooser.showOpenMultipleDialog(new Popup()));
+    }
+
+    /**
+     * Loads each line from the given Files into an Equation Group
+     * @param files Files to be loaded
+     */
+    public void load(List<File> files) throws FileNotFoundException {
         if (files == null) return;
         ArrayList<String> equations = new ArrayList<>();
 
@@ -77,6 +87,31 @@ public class EquationController {
         }
 
         setEquations(equations);
+    }
+
+    /**
+     * Loads each line from the given File into an Equation Group
+     * @param file File to be loaded
+     */
+    public void load(File file) throws FileNotFoundException {
+        if (file == null) return;
+        ArrayList<String> equations = new ArrayList<>();
+        Scanner sc = new Scanner(file);
+
+        while (sc.hasNext())
+            equations.add(sc.nextLine());
+        sc.close();
+
+        setEquations(equations);
+    }
+
+    /**
+     * Clears all Equation Groups and removes all but one
+     */
+    public void clear() {
+        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
+        children.clear();
+        children.add(new EquationGroup());
     }
 
     /**
