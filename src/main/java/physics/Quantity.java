@@ -399,8 +399,8 @@ public class Quantity {
      * @return Returns a string representing the value of this Quantity, with
      * SIG_FIGS significant figures
      */
-    private String valueToString(BigDecimal bd) {
-        return stripTrailingZeros(bd.setScale(SIG_FIGS - bd.precision() + bd.scale(), RoundingMode.HALF_UP).toString());
+    private String valueToString(BigDecimal bd, int sigFigs) {
+        return stripTrailingZeros(bd.setScale(sigFigs - bd.precision() + bd.scale(), RoundingMode.HALF_UP).toString());
     }
 
     /**
@@ -434,14 +434,14 @@ public class Quantity {
      * Uses units given in creation of quantity, if possible.
      * @return Converts toString to a latex representation, replacing engineering notation with scientific notation
      */
-    public String toLatexString() {
+    public String toLatexString(int sigFigs) {
         String dimString = (unitString == null ? dimension.toLatexString() : unitString);
         if (!dimString.isEmpty()) dimString = "\\textrm{" + dimString + "}";
 
         if (value.compareTo(BigDecimal.ONE) == 0 && !isDimensionless())
             return dimString;
 
-        String valString = valueToString(value);
+        String valString = valueToString(value, sigFigs);
 
         if (valString.contains("E+"))
             valString = valString.replace("E+", "*10^{") + "}";
@@ -456,7 +456,11 @@ public class Quantity {
      * Quantity is given in base SI units.
      * @return Returns a string representation of this quantity
      */
+    public String toString(int sigFigs) {
+        return valueToString(scaledValue(), sigFigs) + dimension.toString();
+    }
+
     public String toString() {
-        return valueToString(scaledValue()) + dimension.toString();
+        return toString(SIG_FIGS);
     }
 }

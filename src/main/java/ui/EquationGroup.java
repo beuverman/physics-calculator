@@ -23,11 +23,13 @@ public class EquationGroup extends HBox {
     private final TextField equationField;
     private final TextField resultField;
     private final ImageView imageField;
+    private final EquationController controller;
 
     /**
      * Creates an empty EquationGroup
      */
-    public EquationGroup() {
+    public EquationGroup(EquationController controller) {
+        this.controller = controller;
         equationField = new TextField();
         resultField = new TextField();
         imageField = new ImageView();
@@ -93,16 +95,20 @@ public class EquationGroup extends HBox {
     private void updateEquation() {
         try {
             Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
-            setImage(eq.toLatexString(), imageField);
+            setImage(eq.toLatexString(controller.getSigFigs()), imageField);
 
-            resultField.setText(eq.evaluate().toString());
+            resultField.setText(eq.evaluate().toString(controller.getSigFigs()));
         }
         catch (Exception e) {
             resultField.setText(e.getMessage());
             imageField.imageProperty().set(null);
         }
 
-        EquationController.manageEquationCount(getParent());
+        controller.manageEquationCount();
+    }
+
+    public void refresh() {
+        updateEquation();
     }
 
     /**

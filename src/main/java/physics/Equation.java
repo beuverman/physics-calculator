@@ -219,15 +219,15 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * Returns a latex string representation of the equation
      * @return Returns a latex string representation of the equation
      */
-    public String toLatexString() {
-        if (isAtom()) return root.getElement().getValue().toLatexString();
+    public String toLatexString(int sigFigs) {
+        if (isAtom()) return root.getElement().getValue().toLatexString(sigFigs);
 
-        String left = getLeft().toLatexString();
+        String left = getLeft().toLatexString(sigFigs);
         if (getRight().isEmpty()) {
             return "\\textrm{" + root.getElement() + "}\\left(" + left + "\\right)";
         }
 
-        String right = getRight().toLatexString();
+        String right = getRight().toLatexString(sigFigs);
 
         return switch (root.getElement().getOperator()) {
             case Parsing.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");

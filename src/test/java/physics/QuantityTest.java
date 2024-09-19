@@ -74,17 +74,17 @@ public class QuantityTest {
 
     @Test
     void toLatexString() {
-        assertEquals("0", (new Quantity("0.00")).toLatexString());
-        assertEquals("0", (new Quantity("0.0E-105")).toLatexString());
-        assertEquals("123456", (new Quantity("123456")).toLatexString());
-        assertEquals("1.23457*10^{6}", (new Quantity("1234567")).toLatexString());
-        assertEquals("1*10^{-9}", (new Quantity("0.000000001")).toLatexString());
-        assertEquals("632.023", (new Quantity("632.023")).toLatexString());
-        assertEquals("10000", (new Quantity("10000")).toLatexString());
-        assertEquals("10\\textrm{mm}", (new Quantity("10mm").toLatexString()));
-        assertEquals("1000\\textrm{kg}", (new Quantity("1000kg").toLatexString()));
-        assertEquals("1000\\textrm{g}", (new Quantity("1000g").toLatexString()));
-        assertEquals("1238\\textrm{au}", (new Quantity("1238au").toLatexString()));
+        assertEquals("0", (new Quantity("0.00")).toLatexString(6));
+        assertEquals("0", (new Quantity("0.0E-105")).toLatexString(6));
+        assertEquals("123456", (new Quantity("123456")).toLatexString(6));
+        assertEquals("1.23457*10^{6}", (new Quantity("1234567")).toLatexString(6));
+        assertEquals("1*10^{-9}", (new Quantity("0.000000001")).toLatexString(6));
+        assertEquals("632.023", (new Quantity("632.023")).toLatexString(6));
+        assertEquals("10000", (new Quantity("10000")).toLatexString(6));
+        assertEquals("10\\textrm{mm}", (new Quantity("10mm").toLatexString(6)));
+        assertEquals("1000\\textrm{kg}", (new Quantity("1000kg").toLatexString(6)));
+        assertEquals("1000\\textrm{g}", (new Quantity("1000g").toLatexString(6)));
+        assertEquals("1238\\textrm{au}", (new Quantity("1238au").toLatexString(6)));
     }
 
     @Test

@@ -1,7 +1,8 @@
 package ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Spinner;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
@@ -10,27 +11,63 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 /**
  * Handles interactions with the equation boxes
  */
-public class EquationController {
+public class EquationController implements Initializable{
+    private final File tempSave = new File("tempSave.txt");
+
     @FXML
     private VBox equationVBox;
 
+    @FXML
+    private Spinner<Integer> sigFigSpinner;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        equationVBox.getChildren().add(new EquationGroup(this));
+        if (tempSave.exists()) {
+            try {
+                load(tempSave);
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        sigFigSpinner.valueProperty().addListener((observable -> updatePrecision()));
+    }
+
+    public int getSigFigs() {
+        return sigFigSpinner.getValue();
+    }
+
+    @FXML
+    public void updatePrecision() {
+        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
+        EquationGroup eg;
+
+        for (int i = 0; i < children.size(); i++) {
+            eg = (EquationGroup) children.get(i);
+            eg.refresh();
+        }
+
+    }
+
     /**
      * Checks whether there are too many or too few equation groups
-     * @param parent Component that is holding the EquationGroups. Assumed to be a VBox
      */
-    public static void manageEquationCount(Parent parent) {
-        javafx.collections.ObservableList<javafx.scene.Node> children = ((VBox) parent).getChildren();
+    public void manageEquationCount() {
+        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
         EquationGroup eqGroup = (EquationGroup) children.get(children.size() - 1);
 
         if (!eqGroup.isEmpty()) {
-            children.add(new EquationGroup());
+            children.add(new EquationGroup(this));
         }
     }
 
@@ -111,7 +148,7 @@ public class EquationController {
     public void clear() {
         javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
         children.clear();
-        children.add(new EquationGroup());
+        children.add(new EquationGroup(this));
     }
 
     /**

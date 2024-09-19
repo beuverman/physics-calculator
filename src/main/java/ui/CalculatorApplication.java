@@ -26,7 +26,6 @@ public class CalculatorApplication extends Application {
 
         // Handle saving/loading unsaved work
         EquationController controller = fxmlLoader.getController();
-        if (tempSave.exists()) controller.load(tempSave);
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 controller.save(tempSave);
