@@ -33,11 +33,19 @@ public class Parsing {
         TokenType type = null, prevType = null, prevPrevType;
         String tokenString;
         int matchGroup;
+        int expectedStart = 0;
 
         while (matcher.find()) {
             tokenString = matcher.group();
-            prevToken = token;
 
+            // Missed characters that compose unidentified token
+            if (expectedStart != matcher.start()) {
+                tokenString = equation.substring(expectedStart, matcher.start());
+                throw new RuntimeException("Unidentified token: \"" + tokenString + "\"");
+            }
+
+            expectedStart += tokenString.length();
+            prevToken = token;
             matchGroup = matchedGroup(matcher);
             prevPrevType = prevType;
             prevType = type;
@@ -64,6 +72,12 @@ public class Parsing {
             }
 
             tokens.add(token);
+        }
+
+        // Ended with unidentified token
+        if (expectedStart != equation.length()) {
+            tokenString = equation.substring(expectedStart);
+            throw new RuntimeException("Unidentified token: \"" + tokenString + "\"");
         }
 
         return tokens;
