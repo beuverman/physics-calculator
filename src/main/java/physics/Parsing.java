@@ -25,59 +25,91 @@ public class Parsing {
         String group2 = "([()^+/*-])|"; // Operators
         String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
         String group4 = "((?:con|M|BE|HL)\\([^)]+\\))|"; //Replacement functions
-        String group5 = "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))"; //Units
+        String group5 = "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))"; // Units
         Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5);
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
-        Token token = null, prevToken;
-        TokenType type = null, prevType = null, prevPrevType;
+        Token token, prevToken;
+        TokenType type, prevType, prevPrevType;
         String tokenString;
         int matchGroup;
         int expectedStart = 0;
 
+        // Read out tokens from equation
         while (matcher.find()) {
             tokenString = matcher.group();
+            matchGroup = matchedGroup(matcher);
+            type = identifyType(matchGroup, tokenString);
 
-            // Missed characters that compose unidentified token
+            // Check for invalid token
             if (expectedStart != matcher.start()) {
-                tokenString = equation.substring(expectedStart, matcher.start());
-                throw new RuntimeException("Unidentified token: \"" + tokenString + "\"");
+                String unidentified = equation.substring(expectedStart, matcher.start());
+                throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
             }
+
+            // Replace with value as necessary
+            if (matchGroup == 4)
+                tokens.add(new Token(replaceFunction(tokenString)));
+            else
+                tokens.add(new Token(tokenString, type));
 
             expectedStart += tokenString.length();
-            prevToken = token;
-            matchGroup = matchedGroup(matcher);
-            prevPrevType = prevType;
-            prevType = type;
-            type = identifyType(matchGroup, tokenString);
-            if (matchGroup == 4)
-                token = new Token(replaceFunction(tokenString));
-            else
-                token = new Token(tokenString, type);
-
-            //Implicit multiplication
-            if (!tokens.isEmpty() && (prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
-                && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
-                tokens.add(new Token(IMPLICIT_M));
-            }
-            //Implicit division
-            else if (tokens.size() > 1 && token.type == UNIT && prevToken.isOperator() && prevToken.getOperator() == '/' && prevPrevType == UNIT) {
-                tokens.set(tokens.size() - 1, new Token(IMPLICIT_D));
-            }
-            //negation instead of subtraction
-            else if ((!tokens.isEmpty() && type == NUMBER && prevToken.isOperator() && prevToken.getOperator() == '-') &&
-                    (tokens.size() == 1 || prevPrevType == OPERATOR || prevPrevType == LBRACKET)) {
-                token = new Token(token.getValue().negate());
-                tokens.remove(tokens.size() - 1);
-            }
-
-            tokens.add(token);
         }
 
         // Ended with unidentified token
         if (expectedStart != equation.length()) {
             tokenString = equation.substring(expectedStart);
             throw new RuntimeException("Unidentified token: \"" + tokenString + "\"");
+        }
+
+        // Special rules at start of equation
+        // Leading negation
+        if (tokens.size() >= 2) {
+            token = tokens.get(1);
+            prevToken = tokens.get(0);
+
+            if (prevToken.isOperator() && prevToken.getOperator() == '-' && token.type == NUMBER) {
+                tokens.set(1, new Token(token.getValue().negate()));
+                tokens.remove(0);
+            }
+        }
+        // Leading implicit multiplication
+        if (tokens.size() >= 2) {
+            token = tokens.get(1);
+            type = token.type;
+            prevType = tokens.get(0).type;
+
+            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
+                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
+                tokens.add(1, new Token(IMPLICIT_M));
+            }
+        }
+
+        // Apply additional rules
+        for (int i = 2; i < tokens.size(); i++) {
+            token = tokens.get(i);
+            type = token.type;
+            prevToken = tokens.get(i - 1);
+            prevType = prevToken.type;
+            prevPrevType = tokens.get(i - 2).type;
+
+            //Implicit multiplication
+            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
+                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
+                tokens.add(i, new Token(IMPLICIT_M));
+                i++;
+            }
+            //Implicit division
+            else if (token.type == UNIT && prevToken.isOperator() && prevToken.getOperator() == '/' && prevPrevType == UNIT) {
+                tokens.set(i - 1, new Token(IMPLICIT_D));
+            }
+            // Negation instead of subtraction
+            else if (type == NUMBER && prevToken.isOperator() && prevToken.getOperator() == '-' &&
+                    (prevPrevType == OPERATOR || prevPrevType == LBRACKET)) {
+                tokens.set(i, new Token(token.getValue().negate()));
+                tokens.remove(i - 1);
+                i--;
+            }
         }
 
         return tokens;
