@@ -2,20 +2,19 @@ package ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
+import physics.Equation;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Handles interactions with the equation boxes
@@ -86,7 +85,7 @@ public class EquationController implements Initializable{
     public void save(File file) throws IOException {
         if (file == null) return;
         FileWriter fw = new FileWriter(file);
-        List<String> equations = getEquations();
+        List<String> equations = getEquationStrings();
 
         for (String eq : equations) {
             fw.write(eq + "\n");
@@ -149,6 +148,8 @@ public class EquationController implements Initializable{
         javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
         children.clear();
         children.add(new EquationGroup(this));
+
+        Equation.variables.clear();
     }
 
     /**
@@ -169,16 +170,88 @@ public class EquationController implements Initializable{
      * Gets the list of equations currently in the Equation Groups
      * @return Returns the current list of equations as they appear in the input fields
      */
-    private List<String> getEquations() {
+    private List<String> getEquationStrings() {
         javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
         EquationGroup eg;
         ArrayList<String> equations = new ArrayList<>();
 
         for (int i = 0; i < children.size(); i++) {
             eg = (EquationGroup) children.get(i);
-            equations.add(eg.getEquation());
+            equations.add(eg.getEquationString());
         }
 
         return equations;
+    }
+
+    /**
+     * Reevaluates all Equations in the event of a variable update.
+     */
+    public void manageEquations() {
+        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
+        List<EquationGroup> equationGroups = new ArrayList<>();
+
+        for (int i = 0; i < children.size(); i++) {
+            EquationGroup eg = (EquationGroup) children.get(i);
+            if (eg.getEquation() != null)
+                equationGroups.add(eg);
+        }
+        equationGroups = topologicalOrdering(equationGroups);
+
+        for (EquationGroup eg : equationGroups)
+            eg.reevaluate();
+
+    }
+
+    /**
+     * Finds a topological ordering on a given list of Equations.
+     * That is, an ordering of evaluation of Equations such that each variable assignment has been evaluated before use.
+     * Implements a depth-first search.
+     * @param equationGroups List of EquationGroups that hold the Equations to be ordered
+     * @return Returns a reordering of equationGroups that dictates how their Equations should be ordered
+     */
+    private List<EquationGroup> topologicalOrdering(List<EquationGroup> equationGroups) {
+        int num = equationGroups.size();
+        List<EquationGroup> output = new ArrayList<>();
+        boolean[] permanentMark = new boolean[num];
+        boolean[] temporaryMark = new boolean[num];
+
+        HashMap<String, ArrayList<EquationGroup>> edges = new HashMap<>();
+
+        for (EquationGroup eg : equationGroups) {
+            for (String dependency : eg.getEquation().variableUsage) {
+                edges.putIfAbsent(dependency, new ArrayList<>());
+                edges.get(dependency).add(eg);
+            }
+        }
+
+        for (int i = 0; i < num; i++) {
+            if (!permanentMark[i])
+                visit(i, output, equationGroups, edges, permanentMark, temporaryMark);
+        }
+
+        Collections.reverse(output);
+        return output;
+    }
+
+    // Recursive function for finding a topological ordering
+    private void visit(int i, List<EquationGroup> output, List<EquationGroup> equationGroups, HashMap<String, ArrayList<EquationGroup>> edges,
+                       boolean[] permanentMark, boolean[] temporaryMark) {
+        if (permanentMark[i])
+            return;
+        else if (temporaryMark[i])
+            throw new RuntimeException("Circular dependency exists in variable assignment.");
+
+        temporaryMark[i] = true;
+
+        EquationGroup eg = equationGroups.get(i);
+        Equation eq = eg.getEquation();
+        if (eq.isAssignment() && edges.containsKey(eq.getVariable())) {
+            for (EquationGroup e : edges.get(eq.getVariable())) {
+                visit(equationGroups.indexOf(e), output, equationGroups, edges, permanentMark, temporaryMark);
+            }
+        }
+
+        permanentMark[i] = true;
+        output.add(eg);
     }
 }

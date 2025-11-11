@@ -22,11 +22,12 @@ public class Parsing {
      */
     public static List<Token> tokenizer(String equation) {
         String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
-        String group2 = "([()^+/*-])|"; // Operators
+        String group2 = "([=()^+/*-])|"; // Operators
         String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
         String group4 = "((?:con|M|BE|HL)\\([^)]+\\))|"; //Replacement functions
         String group5 = "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))"; // Units
-        Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5);
+        String group6 = Equation.variables.keySet().isEmpty() ? "" : "|(" + String.join("|", Equation.variables.keySet()) + ")";
+        Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
         Token token, prevToken;
@@ -44,7 +45,15 @@ public class Parsing {
             // Check for invalid token
             if (expectedStart != matcher.start()) {
                 String unidentified = equation.substring(expectedStart, matcher.start());
-                throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
+
+                // Invalid token may be a newly assigned variable
+                if (tokenString.equals("=") && tokens.isEmpty()) {
+                    tokens.add(new Token(unidentified, VARIABLE));
+                    expectedStart = matcher.start();
+                }
+                else {
+                    throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
+                }
             }
 
             // Replace with value as necessary
@@ -79,8 +88,8 @@ public class Parsing {
             type = token.type;
             prevType = tokens.get(0).type;
 
-            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
-                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
+            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET || prevType == VARIABLE)
+                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION || type == VARIABLE)) {
                 tokens.add(1, new Token(IMPLICIT_M));
             }
         }
@@ -94,8 +103,8 @@ public class Parsing {
             prevPrevType = tokens.get(i - 2).type;
 
             //Implicit multiplication
-            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET)
-                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION)) {
+            if ((prevType == NUMBER || prevType == UNIT || prevType == RBRACKET || prevType == VARIABLE)
+                    && (type == NUMBER || type == UNIT || type == LBRACKET || type == FUNCTION || type == VARIABLE)) {
                 tokens.add(i, new Token(IMPLICIT_M));
                 i++;
             }
@@ -174,6 +183,7 @@ public class Parsing {
             };
             case 3 -> FUNCTION;
             case 5 -> UNIT;
+            case 6 -> VARIABLE;
             default -> null;
         };
     }

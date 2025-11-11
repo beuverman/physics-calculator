@@ -46,7 +46,7 @@ public class Token {
 
     /**
      * Checks whether this token represents an operator
-     * @return Returns true of token is an operator, false otherwise
+     * @return Returns true if token is an operator, false otherwise
      */
     public boolean isOperator() {
         return type == OPERATOR;
@@ -54,10 +54,18 @@ public class Token {
 
     /**
      * Checks whether this token represents a function
-     * @return Returns true of token is a function, false otherwise
+     * @return Returns true if token is a function, false otherwise
      */
     public boolean isFunction() {
         return type == FUNCTION;
+    }
+
+    /**
+     * Checks whether this token represents a variable
+     * @return Returns true if token is a variable, false otherwise
+     */
+    public boolean isVariable() {
+        return type == VARIABLE;
     }
 
     /**
@@ -78,6 +86,17 @@ public class Token {
     public String getFunction() {
         if (!isFunction())
             throw new RuntimeException("Token not of type function");
+
+        return token;
+    }
+
+    /**
+     * Gets the variable associated with this token
+     * @return Returns string representation of the variable
+     */
+    public String getVariable() {
+        if (!isVariable())
+            throw new RuntimeException("Token not of type variable");
 
         return token;
     }

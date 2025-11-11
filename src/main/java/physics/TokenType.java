@@ -5,6 +5,7 @@ public enum TokenType {
     UNIT,
     OPERATOR,
     FUNCTION,
+    VARIABLE,
     LBRACKET,
     RBRACKET
 }

@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
  * Manages the collection of components associated with a single equation
  */
 public class EquationGroup extends HBox {
+    private Equation equation;
     private final TextField equationField;
     private final TextField resultField;
     private final ImageView imageField;
@@ -73,10 +74,18 @@ public class EquationGroup extends HBox {
     }
 
     /**
+     * Gets the equation stored in this group.
+     * @return Returns the stored Equation.
+     */
+    public Equation getEquation() {
+        return equation;
+    }
+
+    /**
      * Gets the equation from this group as it appears in the input field
      * @return Gets the equation from this group
      */
-    public String getEquation() {
+    public String getEquationString() {
         return equationField.getText();
     }
 
@@ -93,11 +102,18 @@ public class EquationGroup extends HBox {
      * Updates the output and image of this group to whatever equation is currently in the input field
      */
     private void updateEquation() {
-        try {
-            Equation eq = new Equation(Parsing.tokenizer(equationField.getText()));
-            setImage(eq.toLatexString(controller.getSigFigs()), imageField);
+        // Remove previous variable if was defined here
+        if (equation != null && equation.isAssignment()) {
+            Equation.variables.remove(equation.getVariable());
+        }
 
-            resultField.setText(eq.evaluate().toString(controller.getSigFigs()));
+        try {
+            equation = new Equation(Parsing.tokenizer(equationField.getText()));
+            // Manage equations and resolve dependency graph
+            controller.manageEquations();
+            setImage(equation.toLatexString(controller.getSigFigs()), imageField);
+
+            resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
         }
         catch (Exception e) {
             resultField.setText(e.getMessage());
@@ -105,6 +121,13 @@ public class EquationGroup extends HBox {
         }
 
         controller.manageEquationCount();
+    }
+
+    /**
+     * Reevalutes the Equation and updates the output field, without reconstructing the Equation from the input field.
+     */
+    public void reevaluate() {
+        resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
     }
 
     public void refresh() {
@@ -150,5 +173,9 @@ public class EquationGroup extends HBox {
 
         if (index != 0)
             children.get(index - 1).requestFocus();
+    }
+
+    public String toString() {
+        return getEquationString();
     }
 }

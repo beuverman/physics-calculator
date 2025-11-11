@@ -2,8 +2,7 @@ package physics;
 
 import collections.BinaryTreeNode;
 
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 import static physics.TokenType.*;
 
@@ -12,12 +11,18 @@ import static physics.TokenType.*;
  * Uses an expression tree representation
  */
 public class Equation extends collections.LinkedBinaryTree<Token> {
+    public static final HashMap<String, Quantity> variables = new HashMap<>();
+
+    public HashSet<String> variableUsage;
+    public String variable;
 
     /**
      * Creates an equation from a list of tokens in prefix notation
      * @param equation The list of tokens to form the equation from
      */
     public Equation(List<Token> equation) {
+        variableUsage = new HashSet<>();
+        variable = null;
         parseEquation(equation);
     }
 
@@ -29,6 +34,17 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      */
     private Equation(Token element, Equation leftSubtree, Equation rightSubtree) {
         root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
+
+        if (element.isOperator() && element.getOperator() == '=')
+            variable = leftSubtree.getRootElement().getVariable();
+        else
+            variable = null;
+
+        variableUsage = new HashSet<>();
+        if (leftSubtree != null)
+            variableUsage.addAll(leftSubtree.variableUsage);
+        if (rightSubtree != null)
+            variableUsage.addAll(rightSubtree.variableUsage);
     }
 
     /**
@@ -82,7 +98,16 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             if (type == NUMBER || type == UNIT) {
                 output.push(new Equation(token, null, null));
             }
+            else if (type == VARIABLE) {
+                output.push(new Equation(token, null, null));
+                variableUsage.add(token.getVariable());
+            }
             else if (type == OPERATOR) {
+                if (token.getOperator() == '=') {
+                    variableUsage.remove(tokens.get(0).getVariable());
+                    variable = tokens.get(0).getVariable();
+                }
+
                 while (!operators.isEmpty() && operators.peek().type != LBRACKET
                         && precedence(operators.peek().getOperator(), token.getOperator()) >= 0) {
                     right = output.pop();
@@ -148,13 +173,22 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         temp = root.getElement();
 
         if (temp.isOperator()) {
-            left = evaluateNode(root.getLeft());
-            right = evaluateNode(root.getRight());
-            ret = computeTerm(temp.getOperator(), left, right);
+            if (temp.getOperator() == '=') {
+                String variable = root.getLeft().getElement().getVariable();
+                ret = evaluateNode(root.getRight());
+                variables.put(variable, ret);
+            }
+            else {
+                left = evaluateNode(root.getLeft());
+                right = evaluateNode(root.getRight());
+                ret = computeTerm(temp.getOperator(), left, right);
+            }
         }
         else if (temp.isFunction()) {
             ret = computeTerm(temp.getFunction(), evaluateNode(root.getLeft()));
         }
+        else if (temp.isVariable())
+            ret = variables.get(temp.getVariable());
         else
             ret = temp.getValue();
 
@@ -216,11 +250,38 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
     }
 
     /**
+     * Checks whether this equation defines a variable
+     * @return Returns true if it defines a variable, false otherwise
+     */
+    public boolean isAssignment() {
+        Token T = getRootElement();
+        return T.isOperator() && T.getOperator() == '=';
+    }
+
+    /**
+     * Gets the variable defined by this Equation, if it exists
+     * @return Returns the string representation of the variable
+     * @throws RuntimeException If this Equation does not define a variable
+     */
+    public String getVariable() {
+        if (!isAssignment()) throw new RuntimeException();
+
+        return root.getLeft().getElement().getVariable();
+    }
+
+    /**
      * Returns a latex string representation of the equation
      * @return Returns a latex string representation of the equation
      */
     public String toLatexString(int sigFigs) {
-        if (isAtom()) return root.getElement().getValue().toLatexString(sigFigs);
+        if (isAtom()) {
+            Token token = root.getElement();
+
+            if (token.isVariable())
+                return token.getVariable();
+            else
+                return root.getElement().getValue().toLatexString(sigFigs);
+        }
 
         String left = getLeft().toLatexString(sigFigs);
         if (getRight().isEmpty()) {
