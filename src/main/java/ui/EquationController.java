@@ -53,7 +53,7 @@ public class EquationController implements Initializable{
 
         for (int i = 0; i < children.size(); i++) {
             eg = (EquationGroup) children.get(i);
-            eg.refresh();
+            eg.reevaluate();
         }
 
     }

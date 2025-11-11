@@ -127,11 +127,8 @@ public class EquationGroup extends HBox {
      * Reevalutes the Equation and updates the output field, without reconstructing the Equation from the input field.
      */
     public void reevaluate() {
-        resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
-    }
-
-    public void refresh() {
-        updateEquation();
+        if (equation != null)
+            resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
     }
 
     /**
