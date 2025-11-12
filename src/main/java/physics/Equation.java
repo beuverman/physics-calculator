@@ -291,9 +291,12 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         }
 
         String right = getRight().toLatexString(sigFigs);
-        // Binary function
+        TokenType rightType = getRight().getRootElement().type;
+        // Binary operator
         return prepend + switch (root.getElement().getOperator()) {
-            case Parsing.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");
+            case Parsing.IMPLICIT_M -> left
+                    + (rightType == UNIT ? "\\: " : "")
+                    + (rightType == NUMBER ? "\\left(" + right + "\\right)" : right);
             case Parsing.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
             case '^' -> (getLeft().isAtom() ? left : ("\\left(" + left + "\\right)")) + "^{" + right + "}";
