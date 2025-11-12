@@ -21,6 +21,7 @@ import java.util.*;
  */
 public class EquationController implements Initializable{
     private final File tempSave = new File("tempSave.txt");
+    private final HashSet<EquationGroup> badEquations = new HashSet<>();
 
     @FXML
     private VBox equationVBox;
@@ -253,5 +254,26 @@ public class EquationController implements Initializable{
 
         permanentMark[i] = true;
         output.add(eg);
+    }
+
+    public void addBadEquation(EquationGroup eg) {
+        badEquations.add(eg);
+    }
+
+    public void removeBadEquation(EquationGroup eg) {
+        badEquations.remove(eg);
+    }
+
+    public void manageBadEquations() {
+        Iterator<EquationGroup> iter = badEquations.iterator();
+
+        while (iter.hasNext()) {
+            try {
+                iter.next().updateEquation();
+            }
+            catch (Exception e) {
+                System.out.println("FAIL");
+            }
+        }
     }
 }

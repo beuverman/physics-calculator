@@ -101,7 +101,7 @@ public class EquationGroup extends HBox {
     /**
      * Updates the output and image of this group to whatever equation is currently in the input field
      */
-    private void updateEquation() {
+    public void updateEquation() {
         // Remove previous variable if was defined here
         if (equation != null && equation.isAssignment()) {
             Equation.variables.remove(equation.getVariable());
@@ -109,15 +109,20 @@ public class EquationGroup extends HBox {
 
         try {
             equation = new Equation(Parsing.tokenizer(equationField.getText()));
-            // Manage equations and resolve dependency graph
-            controller.manageEquations();
-            setImage(equation.toLatexString(controller.getSigFigs()), imageField);
+            controller.removeBadEquation(this);
+            if (equation.isAssignment()) {
+                // Manage equations and resolve dependency graph
+                controller.manageEquations();
+                controller.manageBadEquations();
+            }
 
+            setImage(equation.toLatexString(controller.getSigFigs()), imageField);
             resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
         }
         catch (Exception e) {
             resultField.setText(e.getMessage());
             imageField.imageProperty().set(null);
+            controller.addBadEquation(this);
         }
 
         controller.manageEquationCount();

@@ -106,6 +106,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
                 if (token.getOperator() == '=') {
                     variableUsage.remove(tokens.get(0).getVariable());
                     variable = tokens.get(0).getVariable();
+                    variables.put(variable, null);
                 }
 
                 while (!operators.isEmpty() && operators.peek().type != LBRACKET
