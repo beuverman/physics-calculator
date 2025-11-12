@@ -13,7 +13,7 @@ import static physics.TokenType.*;
 public class Parsing {
     public static final char IMPLICIT_M = 9994;
     public static final char IMPLICIT_D = 9995;
-    public static final String[] OPERATORS = {"+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
+    public static final String[] OPERATORS = {"=", "+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
 
     /**
      * Turns a string representing an equation into a series of tokens
