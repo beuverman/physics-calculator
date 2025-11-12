@@ -2,6 +2,7 @@ package physics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,13 +21,13 @@ public class Parsing {
      * @param equation The equation to be converted
      * @return Returns a list of tokens that represent the equation
      */
-    public static List<Token> tokenizer(String equation) {
+    public static List<Token> tokenizer(String equation, Set<String> variables) {
         String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
         String group2 = "([=()^+/*-])|"; // Operators
         String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
         String group4 = "((?:con|M|BE|HL)\\([^)]+\\))|"; //Replacement functions
         String group5 = "((?:[QRYZEPTGMkhadcmµnpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|t|Da|amu|eV|pc|atm|cal))"; // Units
-        String group6 = Equation.variables.keySet().isEmpty() ? "" : "|(" + String.join("|", Equation.variables.keySet()) + ")";
+        String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables) + ")";
         Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
         Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();

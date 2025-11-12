@@ -13,6 +13,7 @@ import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
 import physics.Equation;
 import physics.Parsing;
+import physics.Quantity;
 
 import java.awt.image.BufferedImage;
 
@@ -104,14 +105,15 @@ public class EquationGroup extends HBox {
     public void updateEquation() {
         // Remove previous variable if was defined here
         if (equation != null && equation.isAssignment()) {
-            Equation.variables.remove(equation.getVariable());
+            controller.removeVariable(equation.getVariable());
         }
 
         try {
-            equation = new Equation(Parsing.tokenizer(equationField.getText()));
+            equation = new Equation(Parsing.tokenizer(equationField.getText(), controller.getVariableStrings()), controller.getVariables());
             controller.removeBadEquation(this);
             if (equation.isAssignment()) {
                 // Manage equations and resolve dependency graph
+                controller.addVariable(equation.getVariable());
                 controller.manageEquations();
                 controller.manageBadEquations();
             }
@@ -131,9 +133,15 @@ public class EquationGroup extends HBox {
     /**
      * Reevalutes the Equation and updates the output field, without reconstructing the Equation from the input field.
      */
-    public void reevaluate() {
-        if (equation != null)
+    public Quantity reevaluate() {
+        if (equation != null) {
+            Quantity result = equation.evaluate();
             resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
+
+            return result;
+        }
+
+        return null;
     }
 
     /**

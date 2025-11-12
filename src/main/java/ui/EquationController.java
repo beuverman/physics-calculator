@@ -2,12 +2,12 @@ package ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Spinner;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
 import physics.Equation;
+import physics.Quantity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * Handles interactions with the equation boxes
@@ -22,6 +23,7 @@ import java.util.*;
 public class EquationController implements Initializable{
     private final File tempSave = new File("tempSave.txt");
     private final HashSet<EquationGroup> badEquations = new HashSet<>();
+    private final HashMap<String, Quantity> variables = new HashMap<>();
 
     @FXML
     private VBox equationVBox;
@@ -150,7 +152,26 @@ public class EquationController implements Initializable{
         children.clear();
         children.add(new EquationGroup(this));
 
-        Equation.variables.clear();
+        variables.clear();
+    }
+
+    public Function<String, Quantity> getVariables() {
+        return variables::get;
+    }
+
+    public Set<String> getVariableStrings() {
+        return variables.keySet();
+    }
+
+    public void addVariable(String var) {
+        if (variables.containsKey(var))
+            throw new RuntimeException("Conflicting definitions for variable \"" + var + "\"");
+        else
+            variables.put(var, null);
+    }
+
+    public void removeVariable(String var) {
+        variables.remove(var);
     }
 
     /**
@@ -198,9 +219,14 @@ public class EquationController implements Initializable{
         }
         equationGroups = topologicalOrdering(equationGroups);
 
-        for (EquationGroup eg : equationGroups)
-            eg.reevaluate();
+        for (EquationGroup eg : equationGroups) {
+            Quantity result = eg.reevaluate();
+            Equation eq = eg.getEquation();
 
+            if (eq.isAssignment()) {
+                variables.put(eq.getVariable(), result);
+            }
+        }
     }
 
     /**

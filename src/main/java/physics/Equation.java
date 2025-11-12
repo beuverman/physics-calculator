@@ -3,6 +3,7 @@ package physics;
 import collections.BinaryTreeNode;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static physics.TokenType.*;
 
@@ -11,7 +12,7 @@ import static physics.TokenType.*;
  * Uses an expression tree representation
  */
 public class Equation extends collections.LinkedBinaryTree<Token> {
-    public static final HashMap<String, Quantity> variables = new HashMap<>();
+    private final Function<String, Quantity> variables;
 
     public HashSet<String> variableUsage;
     public String variable;
@@ -20,7 +21,8 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * Creates an equation from a list of tokens in prefix notation
      * @param equation The list of tokens to form the equation from
      */
-    public Equation(List<Token> equation) {
+    public Equation(List<Token> equation, Function<String, Quantity> variables) {
+        this.variables = variables;
         variableUsage = new HashSet<>();
         variable = null;
         parseEquation(equation);
@@ -32,7 +34,8 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @param leftSubtree The left argument of the operator
      * @param rightSubtree The right argument of the operator
      */
-    private Equation(Token element, Equation leftSubtree, Equation rightSubtree) {
+    private Equation(Token element, Equation leftSubtree, Equation rightSubtree, Function<String, Quantity> variables) {
+        this.variables = variables;
         root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
 
         if (element.isOperator() && element.getOperator() == '=')
@@ -51,7 +54,8 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * Creates an equation with a given existing root node
      * @param root The node to form the root of the equation
      */
-    private Equation(BinaryTreeNode<Token> root) {
+    private Equation(BinaryTreeNode<Token> root, Function<String, Quantity> variables) {
+        this.variables = variables;
         this.root = root;
     }
 
@@ -61,7 +65,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      */
     @Override
     public Equation getLeft() {
-        return new Equation(root.getLeft());
+        return new Equation(root.getLeft(), this.variables);
     }
 
     /**
@@ -70,7 +74,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      */
     @Override
     public Equation getRight() {
-        return new Equation(root.getRight());
+        return new Equation(root.getRight(), this.variables);
     }
 
     /**
@@ -96,23 +100,22 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             type = token.type;
 
             if (type == NUMBER || type == UNIT) {
-                output.push(new Equation(token, null, null));
+                output.push(new Equation(token, null, null, this.variables));
             }
             else if (type == VARIABLE) {
-                output.push(new Equation(token, null, null));
+                output.push(new Equation(token, null, null, this.variables));
                 variableUsage.add(token.getVariable());
             }
             else if (type == OPERATOR) {
                 if (token.getOperator() == '=') {
                     variableUsage.remove(tokens.get(0).getVariable());
                     variable = tokens.get(0).getVariable();
-                    variables.put(variable, null);
                 }
 
                 while (!operators.isEmpty() && operators.peek().type != LBRACKET
                         && precedence(operators.peek().getOperator(), token.getOperator()) >= 0) {
                     right = output.pop();
-                    output.push(new Equation(operators.pop(), output.pop(), right));
+                    output.push(new Equation(operators.pop(), output.pop(), right, this.variables));
                 }
                 operators.push(token);
             }
@@ -125,19 +128,19 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             else if (type == RBRACKET) {
                 while (!operators.isEmpty() && operators.peek().type != LBRACKET) {
                     right = output.pop();
-                    output.push(new Equation(operators.pop(), output.pop(), right));
+                    output.push(new Equation(operators.pop(), output.pop(), right, this.variables));
                 }
                 operators.pop();
 
                 if (!operators.isEmpty() && operators.peek().type == FUNCTION) {
-                    output.push(new Equation(operators.pop(), output.pop(), null));
+                    output.push(new Equation(operators.pop(), output.pop(), null, this.variables));
                 }
             }
         }
 
         while (!operators.isEmpty()) {
             right = output.pop();
-            output.push(new Equation(operators.pop(), output.pop(), right));
+            output.push(new Equation(operators.pop(), output.pop(), right, this.variables));
         }
 
         root = output.pop().root;
@@ -174,10 +177,9 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         temp = root.getElement();
 
         if (temp.isOperator()) {
+            // TODO: Is this split necessary?
             if (temp.getOperator() == '=') {
-                String variable = root.getLeft().getElement().getVariable();
                 ret = evaluateNode(root.getRight());
-                variables.put(variable, ret);
             }
             else {
                 left = evaluateNode(root.getLeft());
@@ -189,7 +191,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             ret = computeTerm(temp.getFunction(), evaluateNode(root.getLeft()));
         }
         else if (temp.isVariable())
-            ret = variables.get(temp.getVariable());
+            ret = variables.apply(temp.getVariable());
         else
             ret = temp.getValue();
 
