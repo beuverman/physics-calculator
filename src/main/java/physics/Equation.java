@@ -35,13 +35,9 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @param rightSubtree The right argument of the operator
      */
     private Equation(Token element, Equation leftSubtree, Equation rightSubtree, Function<String, Quantity> variables) {
-        this.variables = variables;
         root = new BinaryTreeNode<>(element, leftSubtree, rightSubtree);
-
-        if (element.isOperator() && element.getOperator() == '=')
-            variable = leftSubtree.getRootElement().getVariable();
-        else
-            variable = null;
+        this.variables = variables;
+        variable = null;
 
         variableUsage = new HashSet<>();
         if (leftSubtree != null)
@@ -55,8 +51,9 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @param root The node to form the root of the equation
      */
     private Equation(BinaryTreeNode<Token> root, Function<String, Quantity> variables) {
-        this.variables = variables;
         this.root = root;
+        this.variables = variables;
+        variable = null;
     }
 
     /**
@@ -95,6 +92,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         Stack<Equation> output = new Stack<>();
         Stack<Token> operators = new Stack<>();
 
+        if (tokens.size() > 1 && tokens.get(0).type == VARIABLE
+                && tokens.get(1).isOperator() && tokens.get(1).getOperator() == '=') {
+            variable = tokens.get(0).getVariable();
+            tokens.remove(0);
+            tokens.remove(0);
+        }
+
         //Implementation of shunting yard algorithm
         for (Token token : tokens) {
             type = token.type;
@@ -108,8 +112,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
             }
             else if (type == OPERATOR) {
                 if (token.getOperator() == '=') {
-                    variableUsage.remove(tokens.get(0).getVariable());
-                    variable = tokens.get(0).getVariable();
+                    throw new RuntimeException("Found \"=\" operating in unexpected place.");
                 }
 
                 while (!operators.isEmpty() && operators.peek().type != LBRACKET
@@ -177,15 +180,9 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         temp = root.getElement();
 
         if (temp.isOperator()) {
-            // TODO: Is this split necessary?
-            if (temp.getOperator() == '=') {
-                ret = evaluateNode(root.getRight());
-            }
-            else {
-                left = evaluateNode(root.getLeft());
-                right = evaluateNode(root.getRight());
-                ret = computeTerm(temp.getOperator(), left, right);
-            }
+            left = evaluateNode(root.getLeft());
+            right = evaluateNode(root.getRight());
+            ret = computeTerm(temp.getOperator(), left, right);
         }
         else if (temp.isFunction()) {
             ret = computeTerm(temp.getFunction(), evaluateNode(root.getLeft()));
@@ -257,8 +254,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @return Returns true if it defines a variable, false otherwise
      */
     public boolean isAssignment() {
-        Token T = getRootElement();
-        return T.isOperator() && T.getOperator() == '=';
+        return variable != null;
     }
 
     /**
@@ -267,9 +263,9 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @throws RuntimeException If this Equation does not define a variable
      */
     public String getVariable() {
-        if (!isAssignment()) throw new RuntimeException();
+        if (!isAssignment()) throw new RuntimeException("This Equation does not declare a variable");
 
-        return root.getLeft().getElement().getVariable();
+        return variable;
     }
 
     /**
@@ -277,23 +273,26 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @return Returns a latex string representation of the equation
      */
     public String toLatexString(int sigFigs) {
+        String prepend = isAssignment() ? variable + "=" : "";
+
         if (isAtom()) {
             Token token = root.getElement();
 
             if (token.isVariable())
-                return token.getVariable();
+                return prepend + token.getVariable();
             else
-                return root.getElement().getValue().toLatexString(sigFigs);
+                return prepend + root.getElement().getValue().toLatexString(sigFigs);
         }
 
         String left = getLeft().toLatexString(sigFigs);
+        // Unary function
         if (getRight().isEmpty()) {
-            return "\\textrm{" + root.getElement() + "}\\left(" + left + "\\right)";
+            return prepend + "\\textrm{" + root.getElement() + "}\\left(" + left + "\\right)";
         }
 
         String right = getRight().toLatexString(sigFigs);
-
-        return switch (root.getElement().getOperator()) {
+        // Binary function
+        return prepend + switch (root.getElement().getOperator()) {
             case Parsing.IMPLICIT_M -> left + "\\: " + (getRight().getRootElement().type != NUMBER ? right : "\\left(" + right + "\\right)");
             case Parsing.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
@@ -307,14 +306,15 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
      * @return Returns a string representation of the equation
      */
     public String toString() {
-        if (isAtom()) return root.getElement().toString();
+        String prepend = isAssignment() ? variable + "=" : "";
+        if (isAtom()) return prepend + root.getElement().toString();
 
         String left = getLeft().toString();
-        if (getRight().isEmpty()) return root.getElement() + "(" + left + ")";
+        if (getRight().isEmpty()) return prepend + root.getElement() + "(" + left + ")";
         if (!getLeft().isAtom()) left = "(" + left + ")";
         String right = getRight().toString();
         if (!getRight().isAtom()) right = "(" + right + ")";
 
-        return left + root.getElement() + right;
+        return prepend + left + root.getElement() + right;
     }
 }
