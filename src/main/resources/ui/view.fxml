@@ -6,7 +6,8 @@
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxWidth="1.7976931348623157E308" onMouseClicked="#updatePrecision" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.EquationController">
+
+<VBox fx:id="scene" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.CalculatorController">
    <children>
       <ToolBar prefHeight="30.0">
         <items>
@@ -20,7 +21,5 @@
             </Spinner>
         </items>
       </ToolBar>
-      <VBox fx:id="equationVBox" maxWidth="1.7976931348623157E308" prefHeight="0.0"> <!-- prefHeight = 0 to stop children from being equally spaced-->
-      </VBox>
    </children>
 </VBox>

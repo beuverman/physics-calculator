@@ -25,7 +25,7 @@ public class CalculatorApplication extends Application {
         new TeXFormula("1").createTeXIcon(TeXConstants.STYLE_DISPLAY, 20);
 
         // Handle saving/loading unsaved work
-        EquationController controller = fxmlLoader.getController();
+        CalculatorController controller = fxmlLoader.getController();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 controller.save(tempSave);

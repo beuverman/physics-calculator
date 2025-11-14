@@ -25,13 +25,13 @@ public class EquationGroup extends HBox {
     private final TextField equationField;
     private final TextField resultField;
     private final ImageView imageField;
-    private final EquationController controller;
+    private final EquationSet equationSet;
 
     /**
      * Creates an empty EquationGroup
      */
-    public EquationGroup(EquationController controller) {
-        this.controller = controller;
+    public EquationGroup(EquationSet equationSet) {
+        this.equationSet = equationSet;
         equationField = new TextField();
         resultField = new TextField();
         imageField = new ImageView();
@@ -55,7 +55,7 @@ public class EquationGroup extends HBox {
         });
 
         //Handle parsing equation and updating fields
-        equationField.setOnKeyTyped(keyEvent -> controller.EquationGroupModified(this));
+        equationField.setOnKeyTyped(keyEvent -> equationSet.EquationGroupModified(this));
 
         this.getChildren().addAll(equationField, resultField, imageField);
     }
@@ -105,8 +105,8 @@ public class EquationGroup extends HBox {
      */
     public boolean parseEquation() {
         try {
-            equation = new Equation(Parsing.tokenizer(equationField.getText(), controller.getVariableStrings()), controller.getVariables());
-            setImage(equation.toLatexString(controller.getSigFigs()), imageField);
+            equation = new Equation(Parsing.tokenizer(equationField.getText(), equationSet.getVariableStrings()), equationSet.getVariables());
+            setImage(equation.toLatexString(equationSet.getSigFigs()), imageField);
         }
         catch (Exception e) {
             resultField.setText(e.getMessage());
@@ -126,7 +126,7 @@ public class EquationGroup extends HBox {
         if (equation != null) {
             try {
                 Quantity result = equation.evaluate();
-                resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
+                resultField.setText(equation.evaluate().toString(equationSet.getSigFigs()));
                 return result;
             }
             catch (Exception e) {
