@@ -55,7 +55,7 @@ public class EquationGroup extends HBox {
         });
 
         //Handle parsing equation and updating fields
-        equationField.setOnKeyTyped(keyEvent -> updateEquation());
+        equationField.setOnKeyTyped(keyEvent -> controller.EquationGroupModified(this));
 
         this.getChildren().addAll(equationField, resultField, imageField);
     }
@@ -96,49 +96,42 @@ public class EquationGroup extends HBox {
      */
     public void setEquation(String equation) {
         equationField.setText(equation);
-        updateEquation();
     }
 
     /**
-     * Updates the output and image of this group to whatever equation is currently in the input field
+     * Reads what is currently in the input field and attempts to construct an Equation from it.
+     * Updates the image field if successful.
+     * @return Returns true if an Equation was successfully constructed, false otherwise.
      */
-    public void updateEquation() {
-        // Remove previous variable if was defined here
-        if (equation != null && equation.isAssignment()) {
-            controller.removeVariable(equation.getVariable());
-        }
-
+    public boolean parseEquation() {
         try {
             equation = new Equation(Parsing.tokenizer(equationField.getText(), controller.getVariableStrings()), controller.getVariables());
-            controller.removeBadEquation(this);
-            if (equation.isAssignment()) {
-                // Manage equations and resolve dependency graph
-                controller.addVariable(equation.getVariable());
-                controller.manageEquations();
-                controller.manageBadEquations();
-            }
-
             setImage(equation.toLatexString(controller.getSigFigs()), imageField);
-            resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
         }
         catch (Exception e) {
             resultField.setText(e.getMessage());
             imageField.imageProperty().set(null);
-            controller.addBadEquation(this);
+            return false;
         }
 
-        controller.manageEquationCount();
+        return true;
     }
 
     /**
      * Reevalutes the Equation and updates the output field, without reconstructing the Equation from the input field.
+     * If evaluation fails, the output field is updated with the corresponding error message.
+     * @return Returns the result if the Equation is successfully evaluated. Returns null if not.
      */
-    public Quantity reevaluate() {
+    public Quantity evaluate() {
         if (equation != null) {
-            Quantity result = equation.evaluate();
-            resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
-
-            return result;
+            try {
+                Quantity result = equation.evaluate();
+                resultField.setText(equation.evaluate().toString(controller.getSigFigs()));
+                return result;
+            }
+            catch (Exception e) {
+                resultField.setText(e.getMessage());
+            }
         }
 
         return null;
@@ -150,6 +143,10 @@ public class EquationGroup extends HBox {
      */
     public boolean isEmpty() {
         return equationField.getText().isEmpty();
+    }
+
+    public boolean isAssignment() {
+        return equation != null && equation.isAssignment();
     }
 
     /**

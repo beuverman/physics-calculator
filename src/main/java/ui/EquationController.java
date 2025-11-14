@@ -22,7 +22,7 @@ import java.util.function.Function;
  */
 public class EquationController implements Initializable{
     private final File tempSave = new File("tempSave.txt");
-    private final HashSet<EquationGroup> badEquations = new HashSet<>();
+    private final HashSet<EquationGroup> validEquations = new HashSet<>();
     private final HashMap<String, Quantity> variables = new HashMap<>();
 
     @FXML
@@ -56,9 +56,8 @@ public class EquationController implements Initializable{
 
         for (int i = 0; i < children.size(); i++) {
             eg = (EquationGroup) children.get(i);
-            eg.reevaluate();
+            eg.evaluate();
         }
-
     }
 
     /**
@@ -185,6 +184,7 @@ public class EquationController implements Initializable{
         for (int i = 0; i < equations.size(); i++) {
             eg = (EquationGroup) children.get(i);
             eg.setEquation(equations.get(i));
+            EquationGroupModified(eg);
         }
     }
 
@@ -206,21 +206,43 @@ public class EquationController implements Initializable{
     }
 
     /**
+     * Handler for when any managed EquationGroup is modified
+     * @param eg The EquationGroup that was modified
+     */
+    public void EquationGroupModified(EquationGroup eg) {
+        manageEquationCount();
+
+        // Remove previous variable if was defined here
+        Equation equation = eg.getEquation();
+        if (eg.isAssignment()) {
+            removeVariable(equation.getVariable());
+            invalidateEquations();
+        }
+
+        if (!eg.parseEquation()) {
+            validEquations.remove(eg);
+            return;
+        }
+
+        validEquations.add(eg);
+        equation = eg.getEquation();
+        if (eg.isAssignment()) {
+            addVariable(equation.getVariable());
+            validateEquations();
+            evaluateValidEquations();
+        }
+        else
+            eg.evaluate();
+    }
+
+    /**
      * Reevaluates all Equations in the event of a variable update.
      */
-    public void manageEquations() {
-        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
-        List<EquationGroup> equationGroups = new ArrayList<>();
-
-        for (int i = 0; i < children.size(); i++) {
-            EquationGroup eg = (EquationGroup) children.get(i);
-            if (eg.getEquation() != null)
-                equationGroups.add(eg);
-        }
-        equationGroups = topologicalOrdering(equationGroups);
+    public void evaluateValidEquations() {
+        List<EquationGroup> equationGroups = topologicalOrdering(new ArrayList<>(validEquations));
 
         for (EquationGroup eg : equationGroups) {
-            Quantity result = eg.reevaluate();
+            Quantity result = eg.evaluate();
             Equation eq = eg.getEquation();
 
             if (eq.isAssignment()) {
@@ -282,23 +304,50 @@ public class EquationController implements Initializable{
         output.add(eg);
     }
 
-    public void addBadEquation(EquationGroup eg) {
-        badEquations.add(eg);
+    /**
+     * Looks through all currently invalid Equations and checks if any of them successfully parse.
+     * If they do, they are marked valid Equations and we check if their inclusion validated any others.
+     */
+    private void validateEquations() {
+        javafx.collections.ObservableList<javafx.scene.Node> children = equationVBox.getChildren();
+
+        for (int i = 0; i < children.size(); i++) {
+            EquationGroup eg = (EquationGroup) children.get(i);
+
+            if (validEquations.contains(eg))
+                continue;
+
+            if (eg.parseEquation()) {
+                validEquations.add(eg);
+
+                if (eg.isAssignment()) {
+                    variables.put(eg.getEquation().getVariable(), null);
+                    i = 0;
+                }
+            }
+        }
     }
 
-    public void removeBadEquation(EquationGroup eg) {
-        badEquations.remove(eg);
-    }
-
-    public void manageBadEquations() {
-        Iterator<EquationGroup> iter = badEquations.iterator();
+    /**
+     * Looks through all currently valid Equations and checks if any of them unsuccessfully parse.
+     * If they do, they are marked invalid Equations and we check if their exclusion invalidated any others.
+     */
+    // Would be useful to add a parameter to mark which variable disappearing causes us to invalidate
+    private void invalidateEquations() {
+        Iterator<EquationGroup> iter = validEquations.iterator();
 
         while (iter.hasNext()) {
-            try {
-                iter.next().updateEquation();
-            }
-            catch (Exception e) {
-                System.out.println("FAIL");
+            EquationGroup eg = iter.next();
+            Equation equation = eg.getEquation();
+            boolean isAssignment = eg.isAssignment();
+
+            if (!eg.parseEquation()) {
+                iter.remove();
+
+                if (isAssignment) {
+                    variables.remove(equation.getVariable());
+                    iter = validEquations.iterator();
+                }
             }
         }
     }
