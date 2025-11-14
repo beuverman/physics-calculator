@@ -17,10 +17,12 @@ public class EquationSet extends VBox {
 
     public EquationSet(int sigFigs) {
         super();
-
         this.sigFigs = sigFigs;
         validEquations = new HashSet<>();
         variables = new HashMap<>();
+
+        setPrefHeight(0);
+        getChildren().add(new EquationGroup(this));
     }
 
     public int getSigFigs() {
@@ -41,7 +43,7 @@ public class EquationSet extends VBox {
     /**
      * Checks whether there are too many or too few equation groups
      */
-    public void manageEquationCount() {
+    private void manageEquationCount() {
         javafx.collections.ObservableList<javafx.scene.Node> children = getChildren();
         EquationGroup eqGroup = (EquationGroup) children.get(children.size() - 1);
 
@@ -70,14 +72,14 @@ public class EquationSet extends VBox {
         return variables.keySet();
     }
 
-    public void addVariable(String var) {
+    private void addVariable(String var) {
         if (variables.containsKey(var))
             throw new RuntimeException("Conflicting definitions for variable \"" + var + "\"");
         else
             variables.put(var, null);
     }
 
-    public void removeVariable(String var) {
+    private void removeVariable(String var) {
         variables.remove(var);
     }
 
@@ -119,6 +121,7 @@ public class EquationSet extends VBox {
      * Handler for when any managed EquationGroup is modified
      * @param eg The EquationGroup that was modified
      */
+    // Can I add the listener here instead of on each EquationGroup?
     public void EquationGroupModified(EquationGroup eg) {
         manageEquationCount();
         validEquations.remove(eg);
@@ -148,7 +151,7 @@ public class EquationSet extends VBox {
     /**
      * Reevaluates all Equations in the event of a variable update.
      */
-    public void evaluateValidEquations() {
+    private void evaluateValidEquations() {
         List<EquationGroup> equationGroups = topologicalOrdering(new ArrayList<>(validEquations));
 
         for (EquationGroup eg : equationGroups) {
