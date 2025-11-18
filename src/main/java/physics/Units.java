@@ -38,7 +38,7 @@ public class Units extends Quantity {
         new Units("5.050783699e-27",   new Dimension(0, 2, 0, 1, 0, 0, 0), "uN"),      // nuclear magneton
         new Units("5.29177210903e-11", new Dimension(0, 1, 0, 0, 0, 0, 0), "a0"),      // bohr radius
         new Units("10973731.6",        new Dimension(0, -1, 0, 0, 0, 0, 0), "R"),      // rydberg constant
-        new Units("6.02214e23",        new Dimension(0, 0, 0, 0, 0, 1, 0), "NA"),      // avogadro's number
+        new Units("6.02214e23",        new Dimension(0, 0, 0, 0, 0, -1, 0), "NA"),      // avogadro's number
         new Units("1.67262192e-27",    new Dimension(0, 0, 1, 0, 0, 0, 0), "mp"),      // proton mass
         new Units("9.1093837e-37",     new Dimension(0, 0, 1, 0, 0, 0, 0), "me"),      // electron mass
         new Units("1.67492749804e-27", new Dimension(0, 0, 1, 0, 0, 0, 0), "mn")       // neutron mass
