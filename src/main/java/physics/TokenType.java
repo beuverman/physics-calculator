@@ -7,5 +7,6 @@ public enum TokenType {
     FUNCTION,
     VARIABLE,
     LBRACKET,
-    RBRACKET
+    RBRACKET,
+    CHEMICAL
 }

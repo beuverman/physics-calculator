@@ -36,6 +36,23 @@ public class Quantity {
      * Creates a dimensionless quantity with a given value
      * @param value The value of the quantity
      */
+    public Quantity(int value) {
+        this(value, new Dimension(0, 0, 0, 0, 0, 0, 0));
+    }
+
+    /**
+     * Creates a quantity with given value and dimensions
+     * @param value Value of the quantity
+     * @param dimension Dimensions of the quantity
+     */
+    public Quantity(int value, Dimension dimension) {
+        this((new BigDecimal(value, MC)).setScale(SCALE, RM), dimension);
+    }
+
+    /**
+     * Creates a dimensionless quantity with a given value
+     * @param value The value of the quantity
+     */
     private Quantity(BigDecimal value) {
         this.value = value;
         this.dimension = new Dimension();

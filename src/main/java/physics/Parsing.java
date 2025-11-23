@@ -25,7 +25,7 @@ public class Parsing {
         String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
         String group2 = "([=()^+/*-])|"; // Operators
         String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
-        String group4 = "((?:con|M|BE|HL)\\([^)]+\\))|"; //Replacement functions
+        String group4 = "((?:con|M|BE|HL|MMass)\\([^)]+\\))|"; // Replacement functions
         String group5 = "((?:[QRYZEPTGMkhadcmunpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|Da|amu|eV|pc|bar|atm|cal))"; // Units
         String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables) + ")";
         Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
@@ -164,6 +164,10 @@ public class Parsing {
         else if (str.contains("HL(")) {
             return Nuclides.getHalfLife(str.substring(3, str.length() - 1));
         }
+        else if (str.contains("MMass(")) {
+            ChemicalFormula formula = new ChemicalFormula(parseChemicalFormula(str.substring(6, str.length() - 1)));
+            return formula.getMolarMass();
+        }
 
         return null;
     }
@@ -187,5 +191,38 @@ public class Parsing {
             case 6 -> VARIABLE;
             default -> null;
         };
+    }
+
+    /**
+     * Parses a string that represents a chemical formula into a series of tokens. Assumes that the formula is valid
+     * and contains only numbers, elements, and brackets.
+     * @param formula String that represents the formula
+     * @return Returns a list of ChemicalTokens, the formula having been broken into numbers, elements, and brackets.
+     */
+    public static List<ChemicalToken> parseChemicalFormula(String formula) {
+        String elements = String.join("|", Chemistry.getElementStrings());
+        Pattern pattern = Pattern.compile("(\\d+)|(\\()|(\\))|(" + elements + ")");
+        Matcher matcher = pattern.matcher(formula);
+        String token;
+        TokenType type;
+        int matchedGroup;
+        List<ChemicalToken> output = new ArrayList<>();
+
+        while (matcher.find()) {
+            token = matcher.group();
+            matchedGroup = matchedGroup(matcher);
+
+            type = switch(matchedGroup) {
+                case 1 -> NUMBER;
+                case 2 -> LBRACKET;
+                case 3 -> RBRACKET;
+                case 4 -> CHEMICAL;
+                default -> throw new IllegalStateException("Unexpected value: " + matchedGroup);
+            };
+
+            output.add(new ChemicalToken(token, type));
+        }
+
+        return output;
     }
 }
