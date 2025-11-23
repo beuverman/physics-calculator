@@ -187,8 +187,13 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         else if (temp.isFunction()) {
             ret = computeTerm(temp.getFunction(), evaluateNode(root.getLeft()));
         }
-        else if (temp.isVariable())
+        else if (temp.isVariable()) {
             ret = variables.apply(temp.getVariable());
+
+            if (ret == null) {
+                throw new RuntimeException("Variable \"" + temp.getVariable() + "\" is undefined.");
+            }
+        }
         else
             ret = temp.getValue();
 
@@ -296,7 +301,7 @@ public class Equation extends collections.LinkedBinaryTree<Token> {
         return prepend + switch (root.getElement().getOperator()) {
             case Parsing.IMPLICIT_M -> left
                     + (rightType == UNIT ? "\\: " : "")
-                    + (rightType == NUMBER ? "\\left(" + right + "\\right)" : right);
+                    + (rightType == NUMBER || rightType == OPERATOR ? "\\left(" + right + "\\right)" : right);
             case Parsing.IMPLICIT_D -> left + "/" + right;
             case '/' -> "\\frac{" + left + "}{" + right + "}";
             case '^' -> (getLeft().isAtom() ? left : ("\\left(" + left + "\\right)")) + "^{" + right + "}";
