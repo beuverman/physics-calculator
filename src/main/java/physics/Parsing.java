@@ -58,8 +58,16 @@ public class Parsing {
             }
 
             // Replace with value as necessary
-            if (matchGroup == 4)
+            if (matchGroup == 4) {
+                // Regex won't catch expressions with nested brackets properly
+                // So we manually find our input string to the function
+                int index = findBracketPair(equation, matcher.start() + tokenString.indexOf('('));
+
+                tokenString = equation.substring(matcher.start(), index + 1);
+                matcher.region(index + 1, equation.length());
+
                 tokens.add(new Token(replaceFunction(tokenString)));
+            }
             else
                 tokens.add(new Token(tokenString, type));
 
@@ -123,6 +131,31 @@ public class Parsing {
         }
 
         return tokens;
+    }
+
+    /**
+     * Given the index of a left bracket within a string, finds the index of its associated right bracket.
+     * @param str String to be searched.
+     * @param index Index at which left bracket is found.
+     * @return Returns the index of the associated right bracket. Returns -1 if no such bracket exists in the string.
+     */
+    private static int findBracketPair(String str, int index) {
+        int count = 1;
+        int len = str.length();
+        index++;
+
+        while (index < len && count > 0) {
+            char c =  str.charAt(index);
+            switch (c) {
+                case '(' -> count++;
+                case ')' -> count--;
+            }
+            index++;
+        }
+
+        if (index > len)
+            return -1;
+        return index - 1;
     }
 
     /**
