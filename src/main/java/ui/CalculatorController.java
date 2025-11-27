@@ -2,8 +2,10 @@ package ui;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Popup;
@@ -28,12 +30,16 @@ public class CalculatorController implements Initializable {
     private EquationSet equationSet;
 
     @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
     private Spinner<Integer> sigFigSpinner;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         equationSet = new EquationSet(sigFigSpinner.getValue());
-        scene.getChildren().add(equationSet);
+        scrollPane.setContent(equationSet);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
 
         equationSet.getChildren().add(new EquationGroup(equationSet));
         if (tempSave.exists()) {

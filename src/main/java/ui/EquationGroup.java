@@ -42,9 +42,6 @@ public class EquationGroup extends HBox {
         resultField.setMinWidth(200);
         resultField.setPrefWidth(200);
 
-        setPrefHeight(200);
-        setPrefWidth(600);
-
         //Handle moving between EquationGroups
         equationField.setOnKeyPressed(keyEvent -> {
             KeyCode keyCode = keyEvent.getCode();

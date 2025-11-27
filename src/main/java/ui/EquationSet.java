@@ -21,7 +21,6 @@ public class EquationSet extends VBox {
         validEquations = new HashSet<>();
         variables = new HashMap<>();
 
-        setPrefHeight(0);
         getChildren().add(new EquationGroup(this));
     }
 
