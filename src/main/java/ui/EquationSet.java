@@ -44,10 +44,26 @@ public class EquationSet extends VBox {
      */
     private void manageEquationCount() {
         javafx.collections.ObservableList<javafx.scene.Node> children = getChildren();
-        EquationGroup eqGroup = (EquationGroup) children.get(children.size() - 1);
+        int index = children.size() - 1;
+        EquationGroup lastGroup = (EquationGroup) children.get(index);
 
-        if (!eqGroup.isEmpty()) {
+        // Add additional group if necessary
+        if (!lastGroup.isEmpty()) {
             children.add(new EquationGroup(this));
+            return;
+        }
+        if (index == 0)
+            return;
+
+        // Remove extra groups if necessary
+        EquationGroup secondLastGroup = (EquationGroup) children.get(--index);
+        while (index > 0 && secondLastGroup.isEmpty()) {
+            children.remove(lastGroup);
+            lastGroup = secondLastGroup;
+            secondLastGroup = (EquationGroup) children.get(--index);
+        }
+        if (index == 0 && secondLastGroup.isEmpty()) {
+            children.remove(lastGroup);
         }
     }
 
