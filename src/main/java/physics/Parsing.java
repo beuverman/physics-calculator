@@ -22,20 +22,15 @@ public class Parsing {
      * @return Returns a list of tokens that represent the equation
      */
     public static List<Token> tokenizer(String equation, Set<String> variables) {
-        String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
-        String group2 = "([=()^+/*-])|"; // Operators
-        String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
-        String group4 = "((?:con|M|BE|HL|MMass)\\([^)]+\\))|"; // Replacement functions
-        String group5 = "((?:[QRYZEPTGMkhadcmunpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|Da|amu|eV|pc|bar|atm|cal))"; // Units
-        String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables) + ")";
-        Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
-        Matcher matcher = pattern.matcher(equation);
         ArrayList<Token> tokens = new ArrayList<>();
         Token token, prevToken;
         TokenType type, prevType, prevPrevType;
         String tokenString;
         int matchGroup;
         int expectedStart = 0;
+
+        equation = identifyAssignment(equation, tokens);
+        Matcher matcher = getMatcher(equation, variables);
 
         // Read out tokens from equation
         while (matcher.find()) {
@@ -46,15 +41,7 @@ public class Parsing {
             // Check for invalid token
             if (expectedStart != matcher.start()) {
                 String unidentified = equation.substring(expectedStart, matcher.start());
-
-                // Invalid token may be a newly assigned variable
-                if (tokenString.equals("=") && tokens.isEmpty()) {
-                    tokens.add(new Token(unidentified, VARIABLE));
-                    expectedStart = matcher.start();
-                }
-                else {
-                    throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
-                }
+                throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
             }
 
             // Replace with value as necessary
@@ -131,6 +118,49 @@ public class Parsing {
         }
 
         return tokens;
+    }
+
+    /**
+     * Builds the Matcher that will tokenize an equation.
+     * @param equation The equation to build the matcher on.
+     * @param variables List of allowed variable strings in the equation
+     * @return Returns a Matcher that will tokenize the equation.
+     */
+    private static Matcher getMatcher(String equation, Set<String> variables) {
+        String group1 = "(\\d+\\.?\\d*(?:E[-+]?\\d+)?)|"; // Numbers
+        String group2 = "([()^+/*-])|"; // Operators
+        String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
+        String group4 = "((?:con|M|BE|HL|MMass)\\([^)]+\\))|"; // Replacement functions
+        String group5 = "((?:[QRYZEPTGMkhadcmunpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|Da|amu|eV|pc|bar|atm|cal))"; // Units
+        String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables) + ")";
+        Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
+        return pattern.matcher(equation);
+    }
+
+    /**
+     * Checks whether there is an assignment operation in the equation, and extracts it
+     * @param equation The equation to be considered.
+     * @param tokens The list into which the equation will be tokenized.
+     * @return Returns the equation with the assignment removed, if it existed. Adds tokens to the token list that
+     * capture the assignment.
+     */
+    private static String identifyAssignment(String equation, List<Token> tokens) {
+        int eqIndex = equation.indexOf('=');
+
+        if (eqIndex == -1)
+            return equation;
+
+        String variable = equation.substring(0, eqIndex);
+        Pattern pattern = Pattern.compile("[a-zA-Z]"); // Can allow for more complex variable naming
+        Matcher matcher = pattern.matcher(variable);
+
+        if (!matcher.matches()) {
+            throw new RuntimeException("Invalid variable string: \"" + variable + "\"");
+        }
+
+        tokens.add(new Token(variable, VARIABLE));
+        tokens.add(new Token("=", OPERATOR));
+        return equation.substring(eqIndex + 1);
     }
 
     /**
