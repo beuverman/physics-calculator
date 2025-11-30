@@ -132,7 +132,7 @@ public class Parsing {
         String group3 = "(sqrt|ln|log|exp|a?(?:sin|cos|tan|sec|csc|cot)h?)|"; // Functions
         String group4 = "((?:con|M|BE|HL|MMass)\\([^)]+\\))|"; // Replacement functions
         String group5 = "((?:[QRYZEPTGMkhadcmunpfzyrq]|da)?(?:s|mol|g|A|K|min|cd|Hz|N|Pa|J|Wb|C|V|F|O|S|W|T|H|lm|lx|Bq|Gy|Sv|m|h|d|au|ha|l|Da|amu|eV|pc|bar|atm|cal))"; // Units
-        String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables) + ")";
+        String group6 = variables.isEmpty() ? "" : "|(" + String.join("|", variables).replaceAll("\\\\", "\\\\\\\\") + ")";
         Pattern pattern = Pattern.compile(group1 + group2 + group3 + group4 + group5 + group6);
         return pattern.matcher(equation);
     }
@@ -145,13 +145,18 @@ public class Parsing {
      * capture the assignment.
      */
     private static String identifyAssignment(String equation, List<Token> tokens) {
+        String[] latexStrings = new String[]
+            {"alpha", "beta", "gamma", "Gamma", "delta", "Delta", "epsilon", "varepsilon",
+            "zeta", "eta", "theta", "vartheta", "Theta", "iota", "kappa", "lambda", "Lambda", "mu", "nu", "xi", "Xi",
+            "pi", "Pi", "rho", "varrho", "Rho", "sigma", "Sigma", "tau", "upsilon", "Upsilon", "phi", "varphi", "Phi",
+            "chi", "psi", "Psi", "omega", "Omega"};
         int eqIndex = equation.indexOf('=');
 
         if (eqIndex == -1)
             return equation;
 
         String variable = equation.substring(0, eqIndex);
-        Pattern pattern = Pattern.compile("[a-zA-Z]"); // Can allow for more complex variable naming
+        Pattern pattern = Pattern.compile("[a-zA-Z]|\\\\" + String.join("|\\\\", latexStrings));
         Matcher matcher = pattern.matcher(variable);
 
         if (!matcher.matches()) {
