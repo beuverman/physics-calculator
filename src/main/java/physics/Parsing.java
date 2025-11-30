@@ -41,7 +41,8 @@ public class Parsing {
             // Check for invalid token
             if (expectedStart != matcher.start()) {
                 String unidentified = equation.substring(expectedStart, matcher.start());
-                throw new RuntimeException("Unidentified token: \"" + unidentified + "\"");
+                catchUnidentifiedToken(unidentified);
+                expectedStart += unidentified.length();
             }
 
             // Replace with value as necessary
@@ -64,7 +65,7 @@ public class Parsing {
         // Ended with unidentified token
         if (expectedStart != equation.length()) {
             tokenString = equation.substring(expectedStart);
-            throw new RuntimeException("Unidentified token: \"" + tokenString + "\"");
+            catchUnidentifiedToken(tokenString);
         }
 
         // Special rules at start of equation
@@ -155,7 +156,7 @@ public class Parsing {
         if (eqIndex == -1)
             return equation;
 
-        String variable = equation.substring(0, eqIndex);
+        String variable = equation.substring(0, eqIndex).replaceAll("\\s+", "");
         Pattern pattern = Pattern.compile("[a-zA-Z]|\\\\" + String.join("|\\\\", latexStrings));
         Matcher matcher = pattern.matcher(variable);
 
@@ -166,6 +167,19 @@ public class Parsing {
         tokens.add(new Token(variable, VARIABLE));
         tokens.add(new Token("=", OPERATOR));
         return equation.substring(eqIndex + 1);
+    }
+
+    /**
+     * Checks whether the given unidentified token can be ignored.
+     * If it is a whitespace, nothing happens. Otherwise an error is thrown.
+     * @param token The token to be considered.
+     */
+    private static void catchUnidentifiedToken(String token) {
+        Pattern p = Pattern.compile("\\s+");
+        Matcher m = p.matcher(token);
+
+        if (!m.matches())
+            throw new RuntimeException("Unidentified token: \"" + token + "\"");
     }
 
     /**
