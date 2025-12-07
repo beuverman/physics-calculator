@@ -7,6 +7,7 @@ module physicscalculator {
     requires ch.obermuhlner.math.big;
     requires jlatexmath;
     requires jscience;
+    requires tools.jackson.databind;
 
     opens ui to javafx.fxml;
     exports ui;
