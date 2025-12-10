@@ -1,0 +1,56 @@
+[
+  {
+    "name": "Electron volt",
+    "symbol": "eV",
+    "value": "1.602176634e-19",
+    "dims": [-2, 2, 1, 0, 0, 0, 0]
+  },
+  {
+    "name": "Minute",
+    "symbol": "min",
+    "value": "60",
+    "dims": [1, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "name": "Hour",
+    "symbol": "h",
+    "value": "3600",
+    "dims": [1, 0, 0, 0, 0, 0, 0]
+  },
+  {
+    "name": "Astronomical unit",
+    "symbol": "au",
+    "value": "149597870700",
+    "dims": [0, 1, 0, 0, 0, 0, 0]
+  },
+  {
+    "name": "Dalton",
+    "symbol": "Da",
+    "value": "1.66053906660e-27",
+    "dims": [0, 0, 1, 0, 0, 0, 0]
+  },
+  {
+    "name": "parsec",
+    "symbol": "pc",
+    "value": "3.0857e16",
+    "dims": [0, 1, 0, 0, 0, 0, 0]
+  },
+  {
+    "name": "Bar",
+    "symbol": "bar",
+    "value": "100000",
+    "dims": [-2, -1, 1, 0, 0, 0, 0]
+  },
+  {
+    "name": "Atmosphere",
+    "symbol": "atm",
+    "value": "101325",
+    "dims": [-2, -1, 1, 0, 0, 0, 0]
+  },
+  {
+    "name": "Food calorie",
+    "symbol": "cal",
+    "value": "4184",
+    "dims": [-2, 2, 1, 0, 0, 0, 0]
+  }
+]

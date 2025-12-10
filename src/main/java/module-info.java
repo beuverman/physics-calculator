@@ -10,5 +10,6 @@ module physicscalculator {
     requires tools.jackson.databind;
 
     opens ui to javafx.fxml;
+    opens physics to tools.jackson.databind;
     exports ui;
 }

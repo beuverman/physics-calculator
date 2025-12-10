@@ -1,5 +1,12 @@
 package physics;
 
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+
 /**
  * Handles definitions of constants and non-SI units
  * Handles SI prefixes
@@ -7,42 +14,8 @@ package physics;
 public class Units extends Quantity {
     private static final String[] smallPrefixes = {"d", "c", "m", "u", "n", "p", "f", "a", "z", "y", "r", "q"};
     private static final String[] bigPrefixes = {"da", "h", "k", "M", "G", "T", "P", "E", "Z", "Y", "R", "Q"};
-
-    private static final Units[] UNITS = new Units[]{
-        new Units("1.602176634e-19",   new Dimension(-2, 2, 1, 0, 0, 0, 0), "eV"),  // electron volt
-        new Units("60",                new Dimension(1, 0, 0, 0, 0, 0, 0),  "min"), // minute
-        new Units("3600",              new Dimension(1, 0, 0, 0, 0, 0, 0),  "h"),   // hour
-        new Units("149597870700",      new Dimension(0, 1, 0, 0, 0, 0, 0),  "au"),  // astronomical unit
-        new Units("1.66053906660e-27", new Dimension(0, 0, 1, 0, 0, 0, 0),  "Da"),  // dalton
-        new Units("3.0857e16",         new Dimension(0, 1, 0, 0, 0, 0, 0),  "pc"),  // parsec
-        new Units("100000",            new Dimension(-2, -1, 1, 0, 0, 0, 0),"bar"), // bar
-        new Units("101325",            new Dimension(-2, -1, 1, 0, 0, 0, 0),"atm"), // atmosphere
-        new Units("4184",              new Dimension(-2, 2, 1, 0, 0, 0, 0), "cal")  // calorie
-    };
-
-    private static final Units[] CONSTANTS = new Units[]{
-        new Units("3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679",
-                  new Dimension(0,0,0,0,0,0,0), "pi"),                                       // pi
-        new Units("2.7182818284590",   new Dimension(0,0,0,0,0,0,0), "e"),             // euler's number
-        new Units("299792458",         new Dimension(-1, 1, 0, 0, 0, 0, 0), "c"),      // speed of light
-        new Units("6.62607015e-34",    new Dimension(-1, 2, 1, 0, 0, 0, 0), "h"),      // planck's constant
-        new Units("1.054571817e-34",   new Dimension(-1, 2, 1, 0, 0, 0, 0), "h-"),     // reduced planck's constant
-        new Units("8.8541878128e-12",  new Dimension(4, -3, -1, 2, 0, 0, 0), "e0"),    // electric constant
-        new Units("1.380649e-23",      new Dimension(2, 2, 1, 0, 1, 0, 0), "kb"),      // boltzmann constant
-        new Units("6.67430e-11",       new Dimension(-2, 3, -1, 0, 0, 0, 0), "G"),     // gravitational constant
-        new Units("8.9875517923e9",    new Dimension(-4, 3, 1, -2, 0, 0, 0), "ke"),    // coulomb's constant
-        new Units("5.670374419e-8",    new Dimension(-3, 0, 1, 0, -4, 0, 0), "sigma"), // stefan-boltzmann constant
-        new Units("1.60217663e-19",    new Dimension(1, 0, 0, 1, 0, 0, 0), "e"),       // elementary charge
-        new Units("7.2973525693e-3",   new Dimension(0, 0, 0, 0, 0, 0, 0), "alpha"),   // fine-structure constant
-        new Units("9.2740100783e-24",  new Dimension(0, 2, 0, 1, 0, 0, 0), "uB"),      // bohr magneton
-        new Units("5.050783699e-27",   new Dimension(0, 2, 0, 1, 0, 0, 0), "uN"),      // nuclear magneton
-        new Units("5.29177210903e-11", new Dimension(0, 1, 0, 0, 0, 0, 0), "a0"),      // bohr radius
-        new Units("10973731.6",        new Dimension(0, -1, 0, 0, 0, 0, 0), "R"),      // rydberg constant
-        new Units("6.02214e23",        new Dimension(0, 0, 0, 0, 0, -1, 0), "NA"),      // avogadro's number
-        new Units("1.67262192e-27",    new Dimension(0, 0, 1, 0, 0, 0, 0), "mp"),      // proton mass
-        new Units("9.1093837e-37",     new Dimension(0, 0, 1, 0, 0, 0, 0), "me"),      // electron mass
-        new Units("1.67492749804e-27", new Dimension(0, 0, 1, 0, 0, 0, 0), "mn")       // neutron mass
-    };
+    private static final HashMap<String, Units> UNITS;
+    private static final HashMap<String, Units> CONSTANTS;
 
     private String alias;
 
@@ -78,9 +51,8 @@ public class Units extends Quantity {
         if (str.equals("g")) {
             return new Quantity("0.001", new Dimension("kg"));
         }
-        for (Units unit : UNITS) {
-            if (unit.alias.equals(str))
-                return unit;
+        if (UNITS.containsKey(str)) {
+            return UNITS.get(str);
         }
         try {
             Dimension dim = new Dimension(str);
@@ -113,12 +85,7 @@ public class Units extends Quantity {
      * @return Returns the quantity that represents the constant
      */
     public static Quantity getConstant(String str) {
-        for (Units unit : CONSTANTS) {
-            if (unit.alias.equals(str))
-                return unit;
-        }
-
-        return null;
+        return CONSTANTS.getOrDefault(str, null);
     }
 
     /**
@@ -144,5 +111,38 @@ public class Units extends Quantity {
         }
 
         return null;
+    }
+
+    /**
+     * Describes an entry in a JSON file defining a new unit or constant.
+     * @param name Name of the entry.
+     * @param symbol Symbol for use in equations.
+     * @param value Value of entry in base SI units.
+     * @param dims Dimensions of entry.
+     */
+    public record JSONEntry(
+            String name,
+            String symbol,
+            String value,
+            int[] dims
+    ) { }
+
+    // Initialize new units or constants from their JSON files.
+    static {
+        ObjectMapper mapper = new ObjectMapper();
+
+        File file = new File("src/main/resources/data/physical_constants.json");
+        List<JSONEntry> jsonEntries = mapper.readValue(file, new TypeReference<>() {});
+        CONSTANTS = new HashMap<>();
+        for (JSONEntry constant : jsonEntries) {
+            CONSTANTS.put(constant.symbol(), new Units(constant.value(), new Dimension(constant.dims()), constant.symbol()));
+        }
+
+        file = new File("src/main/resources/data/additional_units.json");
+        jsonEntries = mapper.readValue(file, new TypeReference<>() {});
+        UNITS = new HashMap<>();
+        for (JSONEntry constant : jsonEntries) {
+            UNITS.put(constant.symbol(), new Units(constant.value(), new Dimension(constant.dims()), constant.symbol()));
+        }
     }
 }

@@ -65,6 +65,16 @@ public class Dimension {
     }
 
     /**
+     * Creates a Dimension with its value in each SI quantity given by the array.
+     */
+    public Dimension(int[] dims) {
+        this(dims[0], dims[1], dims[2], dims[3], dims[4], dims[5], dims[6]);
+
+        if (dims.length != 7)
+            throw new RuntimeException("Cannot create Dimension with anything but 7 integers.");
+    }
+
+    /**
      * Creates a Dimension with the specified values in each SI base quantity
      * @param dimensions Array representing the dimensions in the following order:
      *                   time, length, mass, current, temperature, amount, intensity
