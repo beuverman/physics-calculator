@@ -2,35 +2,16 @@ package physics;
 
 import org.jscience.mathematics.number.Rational;
 
+import java.util.*;
+
 /**
  * Represents the dimensions of a quantity in terms of the SI fundamental units
  */
 public class Dimension {
+    private static final HashMap<String, Dimension> baseUnits1;
+    private static final HashMap<Dimension, String> baseUnits2;
+
     private static final Dimension DIMENSIONLESS = new Dimension(0, 0, 0, 0, 0, 0,0);
-    private static final Dimension SECOND = new Dimension(1, 0, 0, 0, 0, 0, 0);
-    private static final Dimension METRE = new Dimension(0, 1, 0, 0, 0, 0, 0);
-    private static final Dimension KILOGRAM = new Dimension(0, 0, 1, 0, 0, 0, 0);
-    private static final Dimension AMPERE = new Dimension(0, 0, 0, 1, 0, 0, 0);
-    private static final Dimension KELVIN = new Dimension(0, 0, 0, 0, 1, 0, 0);
-    private static final Dimension MOLE = new Dimension(0, 0, 0, 0, 0, 1, 0);
-    private static final Dimension CANDELA = new Dimension(0, 0, 0, 0, 0, 0, 1);
-    private static final Dimension HERTZ = new Dimension(-1, 0, 0, 0, 0, 0, 0);
-    private static final Dimension NEWTON = new Dimension(-2, 1, 1, 0, 0, 0, 0);
-    private static final Dimension PASCAL = new Dimension(-2, -1, 1, 0, 0, 0, 0);
-    private static final Dimension JOULE = new Dimension(-2, 2, 1, 0, 0, 0, 0);
-    private static final Dimension WATT = new Dimension(-3, 2, 1, 0, 0, 0, 0);
-    private static final Dimension COULOMB = new Dimension(1, 0, 0, 1, 0, 0, 0);
-    private static final Dimension VOLT = new Dimension(-3, 2, 1, -1, 0, 0, 0);
-    private static final Dimension FARAD = new Dimension(4, -2, -1, 2, 0, 0, 0);
-    private static final Dimension OHM = new Dimension(-3, 2, 1, -2, 0, 0, 0);
-    private static final Dimension SIEMENS = new Dimension(3, -2, -1, 2, 0, 0, 0);
-    private static final Dimension WEBER = new Dimension(-2, 2, 1, -1, 0, 0, 0);
-    private static final Dimension TESLA = new Dimension(-2, 0, 1, -1, 0, 0, 0);
-    private static final Dimension HENRY = new Dimension(-2, 2, 1, -2, 0, 0, 0);
-    //private static final Unit LUMEN = new Unit(0, 0, 0, 0, 0, 0, 0);
-    //private static final Unit LUX = new Unit(0, 0, 0, 0, 0, 0, 0);
-    private static final Dimension BECQUEREL = new Dimension(-1, 0, 0, 0, 0, 0, 0);
-    private static final Dimension SIEVERT = new Dimension(-2, 2, 0, 0, 0, 0, 0);
 
     private Rational[] dimensions = new Rational[7];
 
@@ -88,31 +69,11 @@ public class Dimension {
      * @param dimension Symbol of the SI unit (e.g., Hz for Hertz, W for Watt). Case-sensitive, official SI units only
      */
     public Dimension(String dimension) {
-        switch (dimension) {
-            case "s" -> setDimensions(SECOND.getDimensions());
-            case "m" -> setDimensions(METRE.getDimensions());
-            case "kg" -> setDimensions(KILOGRAM.getDimensions());
-            case "A" -> setDimensions(AMPERE.getDimensions());
-            case "K" -> setDimensions(KELVIN.getDimensions());
-            case "mol" -> setDimensions(MOLE.getDimensions());
-            case "cd" -> setDimensions(CANDELA.getDimensions());
-            case "Hz" -> setDimensions(HERTZ.getDimensions());
-            case "N" -> setDimensions(NEWTON.getDimensions());
-            case "Pa" -> setDimensions(PASCAL.getDimensions());
-            case "J" -> setDimensions(JOULE.getDimensions());
-            case "W" -> setDimensions(WATT.getDimensions());
-            case "C" -> setDimensions(COULOMB.getDimensions());
-            case "V" -> setDimensions(VOLT.getDimensions());
-            case "F" -> setDimensions(FARAD.getDimensions());
-            case "O" -> setDimensions(OHM.getDimensions());
-            case "S" -> setDimensions(SIEMENS.getDimensions());
-            case "Wb" -> setDimensions(WEBER.getDimensions());
-            case "T" -> setDimensions(TESLA.getDimensions());
-            case "H" -> setDimensions(HENRY.getDimensions());
-            case "Bq" -> setDimensions(BECQUEREL.getDimensions());
-            case "SV" -> setDimensions(SIEVERT.getDimensions());
-            default -> throw new RuntimeException("Unrecognized dimension");
-        }
+        Dimension dim = baseUnits1.get(dimension);
+        if (dim == null)
+            throw new RuntimeException("Unrecognized dimension: \"" + dimension + "\"");
+
+        setDimensions(dim.getDimensions());
     }
 
     /**
@@ -223,6 +184,19 @@ public class Dimension {
         return this.equals(DIMENSIONLESS);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dimension dimension = (Dimension) o;
+        return Objects.deepEquals(dimensions, dimension.dimensions);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(dimensions);
+    }
+
     /**
      * Returns a LaTeX string representation of this Dimension
      * @return Returns the SI symbol of the unit if there is a direct match.
@@ -248,28 +222,9 @@ public class Dimension {
      * @return Returns a string representation of this Dimension
      */
     private String toString(boolean isLatex) {
-        if (this.equals(SECOND)) return "s";
-        else if (this.equals(METRE)) return "m";
-        else if (this.equals(KILOGRAM)) return "kg";
-        else if (this.equals(AMPERE)) return "A";
-        else if (this.equals(KELVIN)) return "K";
-        else if (this.equals(MOLE)) return "mol";
-        else if (this.equals(CANDELA)) return "cd";
-        else if (this.equals(HERTZ)) return "Hz";
-        else if (this.equals(NEWTON)) return "N";
-        else if (this.equals(PASCAL)) return "Pa";
-        else if (this.equals(JOULE)) return "J";
-        else if (this.equals(WATT)) return "W";
-        else if (this.equals(COULOMB)) return "C";
-        else if (this.equals(VOLT)) return "V";
-        else if (this.equals(FARAD)) return "F";
-        else if (this.equals(OHM)) return "O";
-        else if (this.equals(SIEMENS)) return "S";
-        else if (this.equals(WEBER)) return "Wb";
-        else if (this.equals(TESLA)) return "T";
-        else if (this.equals(HENRY)) return "H";
-        else if (this.equals(BECQUEREL)) return "Bq";
-        else if (this.equals(SIEVERT)) return "Sv";
+        String str = baseUnits2.get(this);
+        if (str != null)
+            return str;
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < dimensions.length; i++) {
@@ -293,5 +248,40 @@ public class Dimension {
         }
 
         return sb.toString();
+    }
+
+    public static Set<String> getSIUnitStrings() {
+        return baseUnits1.keySet();
+    }
+
+    static {
+        baseUnits1 = new HashMap<>();
+        baseUnits1.put("s",   new Dimension(1, 0, 0, 0, 0, 0, 0));   // Second
+        baseUnits1.put("m",   new Dimension(0, 1, 0, 0, 0, 0, 0));   // Metre
+        baseUnits1.put("kg",  new Dimension(0, 0, 1, 0, 0, 0, 0));   // Kilogram
+        baseUnits1.put("A",   new Dimension(0, 0, 0, 1, 0, 0, 0));   // Ampere
+        baseUnits1.put("K",   new Dimension(0, 0, 0, 0, 1, 0, 0));   // Kelvin
+        baseUnits1.put("mol", new Dimension(0, 0, 0, 0, 0, 1, 0));   // Mole
+        baseUnits1.put("cd",  new Dimension(0, 0, 0, 0, 0, 0, 1));   // Candela
+        baseUnits1.put("Hz",  new Dimension(-1, 0, 0, 0, 0, 0, 0));  // Hertz
+        baseUnits1.put("N",   new Dimension(-2, 1, 1, 0, 0, 0, 0));  // Newton
+        baseUnits1.put("Pa",  new Dimension(-2, -1, 1, 0, 0, 0, 0)); // Pascal
+        baseUnits1.put("J",   new Dimension(-2, 2, 1, 0, 0, 0, 0));  // Joule
+        baseUnits1.put("W",   new Dimension(-3, 2, 1, 0, 0, 0, 0));  // Watt
+        baseUnits1.put("C",   new Dimension(1, 0, 0, 1, 0, 0, 0));   // Coulomb
+        baseUnits1.put("V",   new Dimension(-3, 2, 1, -1, 0, 0, 0)); // Volt
+        baseUnits1.put("F",   new Dimension(4, -2, -1, 2, 0, 0, 0)); // Farad
+        baseUnits1.put("O",   new Dimension(-3, 2, 1, -2, 0, 0, 0)); // Ohm
+        baseUnits1.put("S",   new Dimension(3, -2, -1, 2, 0, 0, 0)); // Siemens
+        baseUnits1.put("Wb",  new Dimension(-2, 2, 1, -1, 0, 0, 0)); // Weber
+        baseUnits1.put("T",   new Dimension(-2, 0, 1, -1, 0, 0, 0)); // Tesla
+        baseUnits1.put("H",   new Dimension(-2, 2, 1, -2, 0, 0, 0)); // Henry
+        baseUnits1.put("Bq",  new Dimension(-1, 0, 0, 0, 0, 0, 0));  // Becquerel
+        baseUnits1.put("Sv",  new Dimension(-2, 2, 0, 0, 0, 0, 0));  // Sievert
+
+        baseUnits2 = new HashMap<>();
+        for (Map.Entry<String, Dimension> entry : baseUnits1.entrySet()) {
+            baseUnits2.put(entry.getValue(), entry.getKey());
+        }
     }
 }
