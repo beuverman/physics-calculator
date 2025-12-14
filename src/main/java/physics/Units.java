@@ -6,6 +6,7 @@ import tools.jackson.databind.ObjectMapper;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles definitions of constants and non-SI units
@@ -79,6 +80,10 @@ public class Units extends Quantity {
         }
     }
 
+    public static Set<String> getUnitStrings() {
+        return UNITS.keySet();
+    }
+
     /**
      * Returns the constants that has the given alias
      * @param str Alias of the constant to be returned
@@ -86,6 +91,10 @@ public class Units extends Quantity {
      */
     public static Quantity getConstant(String str) {
         return CONSTANTS.getOrDefault(str, null);
+    }
+
+    public static Set<String> getConstantStrings() {
+        return CONSTANTS.keySet();
     }
 
     /**
