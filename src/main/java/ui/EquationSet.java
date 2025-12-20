@@ -14,12 +14,14 @@ public class EquationSet extends VBox {
     private int sigFigs;
     private final HashSet<EquationGroup> validEquations;
     private final HashMap<String, Quantity> variables;
+    private final HashMap<String, HashSet<EquationGroup>> dependencyGraph;
 
     public EquationSet(int sigFigs) {
         super();
         this.sigFigs = sigFigs;
         validEquations = new HashSet<>();
         variables = new HashMap<>();
+        dependencyGraph = new HashMap<>();
 
         getChildren().add(new EquationGroup(this));
     }
@@ -77,6 +79,7 @@ public class EquationSet extends VBox {
 
         variables.clear();
         validEquations.clear();
+        dependencyGraph.clear();
     }
 
     public Function<String, Quantity> getVariables() {
@@ -87,15 +90,38 @@ public class EquationSet extends VBox {
         return variables.keySet();
     }
 
-    private void addVariable(String var) {
-        if (variables.containsKey(var))
-            throw new RuntimeException("Conflicting definitions for variable \"" + var + "\"");
-        else
-            variables.put(var, null);
+    private void addValidEquation(EquationGroup eqGroup) {
+        validEquations.add(eqGroup);
+
+        Equation eq = eqGroup.getEquation();
+        if (eq.isAssignment()) {
+            String var = eq.getVariable();
+
+            if (variables.containsKey(var))
+                throw new RuntimeException("Conflicting definitions for variable \"" + var + "\"");
+            else
+                variables.put(var, null);
+        }
+
+        for (String dependency : eq.variableUsage) {
+            dependencyGraph.putIfAbsent(dependency, new HashSet<>());
+            dependencyGraph.get(dependency).add(eqGroup);
+        }
     }
 
-    private void removeVariable(String var) {
-        variables.remove(var);
+    private void removeValidEquation(EquationGroup eqGroup) {
+        if (!validEquations.contains(eqGroup))
+            return;
+
+        validEquations.remove(eqGroup);
+
+        Equation eq = eqGroup.getEquation();
+        if (eq.isAssignment())
+            variables.remove(eq.getVariable());
+
+        for (String dependency : eq.variableUsage) {
+            dependencyGraph.get(dependency).remove(eqGroup);
+        }
     }
 
     /**
@@ -139,23 +165,16 @@ public class EquationSet extends VBox {
     // Can I add the listener here instead of on each EquationGroup?
     public void EquationGroupModified(EquationGroup eg) {
         manageEquationCount();
-        validEquations.remove(eg);
 
-        // Remove previous variable if was defined here
-        Equation equation = eg.getEquation();
-        if (eg.isAssignment()) {
-            removeVariable(equation.getVariable());
-            invalidateEquations();
-        }
+        removeValidEquation(eg);
+        invalidateEquations();
 
         if (!eg.parseEquation()) {
             return;
         }
 
-        validEquations.add(eg);
-        equation = eg.getEquation();
+        addValidEquation(eg);
         if (eg.isAssignment()) {
-            addVariable(equation.getVariable());
             validateEquations();
             evaluateValidEquations();
         }
@@ -192,18 +211,9 @@ public class EquationSet extends VBox {
         boolean[] permanentMark = new boolean[num];
         boolean[] temporaryMark = new boolean[num];
 
-        HashMap<String, ArrayList<EquationGroup>> edges = new HashMap<>();
-
-        for (EquationGroup eg : equationGroups) {
-            for (String dependency : eg.getEquation().variableUsage) {
-                edges.putIfAbsent(dependency, new ArrayList<>());
-                edges.get(dependency).add(eg);
-            }
-        }
-
         for (int i = 0; i < num; i++) {
             if (!permanentMark[i])
-                visit(i, output, equationGroups, edges, permanentMark, temporaryMark);
+                visit(i, output, equationGroups, permanentMark, temporaryMark);
         }
 
         Collections.reverse(output);
@@ -211,7 +221,7 @@ public class EquationSet extends VBox {
     }
 
     // Recursive function for finding a topological ordering
-    private void visit(int i, List<EquationGroup> output, List<EquationGroup> equationGroups, HashMap<String, ArrayList<EquationGroup>> edges,
+    private void visit(int i, List<EquationGroup> output, List<EquationGroup> equationGroups,
                        boolean[] permanentMark, boolean[] temporaryMark) {
         if (permanentMark[i])
             return;
@@ -222,9 +232,9 @@ public class EquationSet extends VBox {
 
         EquationGroup eg = equationGroups.get(i);
         Equation eq = eg.getEquation();
-        if (eq.isAssignment() && edges.containsKey(eq.getVariable())) {
-            for (EquationGroup e : edges.get(eq.getVariable())) {
-                visit(equationGroups.indexOf(e), output, equationGroups, edges, permanentMark, temporaryMark);
+        if (eq.isAssignment() && dependencyGraph.containsKey(eq.getVariable())) {
+            for (EquationGroup e : dependencyGraph.get(eq.getVariable())) {
+                visit(equationGroups.indexOf(e), output, equationGroups, permanentMark, temporaryMark);
             }
         }
 
@@ -242,16 +252,11 @@ public class EquationSet extends VBox {
         for (int i = 0; i < children.size(); i++) {
             EquationGroup eg = (EquationGroup) children.get(i);
 
-            if (validEquations.contains(eg))
-                continue;
+            if (!validEquations.contains(eg) && eg.parseEquation()) {
+                addValidEquation(eg);
 
-            if (eg.parseEquation()) {
-                validEquations.add(eg);
-
-                if (eg.isAssignment()) {
-                    variables.put(eg.getEquation().getVariable(), null);
+                if (eg.isAssignment())
                     i = 0;
-                }
             }
         }
     }
