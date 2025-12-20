@@ -1,5 +1,9 @@
 package physics;
 
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+
+import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,6 +17,7 @@ public class Parsing {
     public static final char IMPLICIT_M = 9994;
     public static final char IMPLICIT_D = 9995;
     public static final String[] OPERATORS = {"=", "+-", "*/", new String(new char[]{IMPLICIT_M, IMPLICIT_D}), "^"};
+    private static final String[] LATEX_SYMBOLS;
 
     /**
      * Turns a string representing an equation into a series of tokens
@@ -152,18 +157,13 @@ public class Parsing {
      * capture the assignment.
      */
     private static String identifyAssignment(String equation, List<Token> tokens) {
-        String[] latexStrings = new String[]
-            {"alpha", "beta", "gamma", "Gamma", "delta", "Delta", "epsilon", "varepsilon",
-            "zeta", "eta", "theta", "vartheta", "Theta", "iota", "kappa", "lambda", "Lambda", "mu", "nu", "xi", "Xi",
-            "pi", "Pi", "rho", "varrho", "Rho", "sigma", "Sigma", "tau", "upsilon", "Upsilon", "phi", "varphi", "Phi",
-            "chi", "psi", "Psi", "omega", "Omega"};
         int eqIndex = equation.indexOf('=');
 
         if (eqIndex == -1)
             return equation;
 
         String variable = equation.substring(0, eqIndex).replaceAll("\\s+", "");
-        String validVariable = "[a-zA-Z]|\\\\" + String.join("|\\\\", latexStrings);
+        String validVariable = "[a-zA-Z]|\\\\" + String.join("|\\\\", LATEX_SYMBOLS);
         String validSubscript = "(?:[0-9]|" + validVariable + "|\\{.+})";
         Pattern pattern = Pattern.compile("(" + validVariable + ")(?:_" + validSubscript + ")?");
         Matcher matcher = pattern.matcher(variable);
@@ -314,5 +314,11 @@ public class Parsing {
         }
 
         return output;
+    }
+
+    static {
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File("src/main/resources/data/latex_symbols.json");
+        LATEX_SYMBOLS = mapper.readValue(file, new TypeReference<>() {});
     }
 }
